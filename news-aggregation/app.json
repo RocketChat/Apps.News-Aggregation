@@ -11,5 +11,35 @@
     "name": "News Aggregation",
     "nameSlug": "news-aggregation",
     "classFile": "NewsAggregationApp.ts",
-    "description": "Aggregates news from top websites and displays news in a configurable, user-friendly format with categorization. Provides centralized access to curated news within Rocket.Chat."
+    "description": "Aggregates news from top websites and displays news in a configurable, user-friendly format with categorization. Provides centralized access to curated news within Rocket.Chat.",
+    "implements": [],
+    "permissions": [
+        {
+            "name": "server-setting.read"
+        },
+        {
+            "name": "room.read"
+        },
+        {
+            "name": "persistence"
+        },
+        {
+            "name": "ui.interact"
+        },
+        {
+            "name": "networking"
+        },
+        {
+            "name": "message.write"
+        },
+        {
+            "name": "user.read"
+        },
+        {
+            "name": "room.write"
+        },
+        {
+            "name": "message.read"
+        }
+    ]
 }
