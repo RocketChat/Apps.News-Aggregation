@@ -23,6 +23,8 @@ export class NewsAggregationApp extends App {
         persistence: IPersistence,
         modify: IModify
     ): Promise<void> {
+        console.log('news app installed');
+
         const user = context.user;
         await sendDirectMessageOnInstall(read, modify, user, persistence);
     }

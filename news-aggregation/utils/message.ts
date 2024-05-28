@@ -32,7 +32,7 @@ export async function getDirectRoom(
             .setMembersToBeAddedByUsernames(usernames);
         roomId = await modify.getCreator().finish(newRoom);
 
-        return await read.getRoomReader().getById(room);
+        return await read.getRoomReader().getById(roomId);
     }
 }
 
@@ -44,6 +44,10 @@ export async function sendDirectMessageOnInstall(
     blocks?: Array<Block>
 ): Promise<string> {
     const appUser = (await read.getUserReader().getAppUser()) as IUser;
+    console.log('appUser:', appUser);
+    console.log('user:', user);
+
+
     const directRoom = (await getDirectRoom(read, modify, appUser, user.username)) as IRoom;
 
 
