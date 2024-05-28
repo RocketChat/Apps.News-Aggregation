@@ -51,7 +51,9 @@ export async function sendDirectMessageOnInstall(
     const directRoom = (await getDirectRoom(read, modify, appUser, user.username)) as IRoom;
 
 
-    const text = `Hey **${user.username}** ! ${OnInstallContent.WELCOME_TEXT.toString()} ${OnInstallContent.WELCOMING_MESSAGE.toString()}`;
+    const text = `${OnInstallContent.APP_INSTALLED_TEXT}\n
+        Hey **${user.username}** ! ${OnInstallContent.WELCOME_TEXT.toString()} ${OnInstallContent.WELCOMING_MESSAGE.toString()}
+    `;
 
     return await sendMessage(modify, directRoom, appUser, text);
 
