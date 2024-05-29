@@ -1,6 +1,8 @@
 import {
     IAppAccessors,
     IAppInstallationContext,
+    IConfigurationExtend,
+    IEnvironmentRead,
     IHttp,
     ILogger,
     IModify,
@@ -10,6 +12,7 @@ import {
 import { App } from '@rocket.chat/apps-engine/definition/App';
 import { IAppInfo } from '@rocket.chat/apps-engine/definition/metadata';
 import { sendDirectMessageOnInstall } from './utils/message';
+import { NewsCommand } from './commands/NewsCommand';
 
 export class NewsAggregationApp extends App {
     constructor(info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
@@ -27,5 +30,16 @@ export class NewsAggregationApp extends App {
 
         const user = context.user;
         await sendDirectMessageOnInstall(read, modify, user, persistence);
+    }
+
+    public async extendConfiguration(
+        configuration: IConfigurationExtend,
+        environmentRead: IEnvironmentRead
+    ): Promise<void> {
+        const newsCommand: NewsCommand = new NewsCommand(this);
+
+        await Promise.all([
+            configuration.slashCommands.provideSlashCommand(newsCommand),
+        ]);
     }
 }

@@ -15,6 +15,15 @@
     "implements": [],
     "permissions": [
         {
+            "name": "ui.registerButtons"
+        },
+        {
+            "name": "api"
+        },
+        {
+            "name": "slashcommand"
+        },
+        {
             "name": "server-setting.read"
         },
         {
