@@ -4,6 +4,8 @@ import { IRoom } from "@rocket.chat/apps-engine/definition/rooms";
 import { SlashCommandContext } from "@rocket.chat/apps-engine/definition/slashcommands";
 import { IHttp, IModify, IPersistence, IRead } from "@rocket.chat/apps-engine/definition/accessors";
 import { NewsAggregationApp } from "../NewsAggregationApp";
+import { CommandEnum } from "../enums/commandEnum";
+import { sendHelperMessage } from "./message";
 
 export class CommandUtility implements ICommandUtility {
     sender: IUser;
@@ -17,7 +19,7 @@ export class CommandUtility implements ICommandUtility {
     app: NewsAggregationApp;
 
     constructor(props: ICommandUtilityParams) {
-        this.app = props.app;
+        this.sender = props.sender;
         this.room = props.room;
         this.command = props.command;
         this.context = props.context;
@@ -28,7 +30,23 @@ export class CommandUtility implements ICommandUtility {
         this.app = props.app;
     }
 
-    public async resolveCommand(): Promise<void> {
+    private async helperMessage() {
+        await sendHelperMessage(
+            this.room,
+            this.read,
+            this.modify,
+            this.sender,
+            this.http,
+            this.persistence
+        );
+    }
 
+    public async resolveCommand(): Promise<void> {
+        switch (this.command[0]) {
+            case CommandEnum.HELP:
+            default:
+                await this.helperMessage();
+                break;
+        }
     }
 }

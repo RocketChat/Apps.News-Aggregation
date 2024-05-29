@@ -1,4 +1,4 @@
-import { IModify, IPersistence, IRead } from "@rocket.chat/apps-engine/definition/accessors";
+import { IHttp, IModify, IPersistence, IRead } from "@rocket.chat/apps-engine/definition/accessors";
 import { IRoom, RoomType } from "@rocket.chat/apps-engine/definition/rooms";
 import { IUser } from "@rocket.chat/apps-engine/definition/users";
 import { Block } from "@rocket.chat/ui-kit";
@@ -59,6 +59,30 @@ export async function sendDirectMessageOnInstall(
 
 }
 
+export async function sendNotification(
+    read: IRead,
+    modify: IModify,
+    user: IUser,
+    room: IRoom,
+    message: string,
+    blocks?: Array<Block>
+): Promise<void> {
+    const appUser = (await read.getUserReader().getAppUser()) as IUser;
+
+    const msg = modify
+        .getCreator()
+        .startMessage()
+        .setSender(appUser)
+        .setRoom(room)
+        .setText(message)
+
+    if (blocks !== undefined) {
+        msg.setBlocks(blocks);
+    }
+
+    return read.getNotifier().notifyUser(user, msg.getMessage());
+}
+
 export async function sendMessage(
     modify: IModify,
     room: IRoom,
@@ -79,4 +103,24 @@ export async function sendMessage(
     }
 
     return await modify.getCreator().finish(msg);
+}
+
+export async function sendHelperMessage(
+    room: IRoom,
+    read: IRead,
+    modify: IModify,
+    user: IUser,
+    http: IHttp,
+    persis: IPersistence,
+    blocks?: Array<Block>
+): Promise<void> {
+    let helperText = `### News Aggregation App
+    *The app can be accessed with the slash command /news*
+    1. Get news on-demand (if the app is configured)                    \`/news alert\`
+    2. Get the channels in which the app is configured                  \`/news channels\`
+    3. Subscribe to the latest news through custom configuration        \`/news subscribe\`
+    4. Unsubscribe from the news updates within the current channel     \`/news unsubscribe\`
+    `;
+
+    return await sendNotification(read, modify, user, room, helperText);
 }
