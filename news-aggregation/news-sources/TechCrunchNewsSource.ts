@@ -6,9 +6,10 @@ import {
 } from "@rocket.chat/apps-engine/definition/accessors";
 import { NewsAggregationApp } from "../NewsAggregationApp";
 import { NewsItem } from "../definitions/NewsItem";
-import { NewsSource } from "../definitions/NewsSource";
 import { IRoom } from "@rocket.chat/apps-engine/definition/rooms";
+import { createNewsSource } from "../definitions/NewsSource";
 
+const NewsSource = createNewsSource();
 export class TechCrunchNewsSource extends NewsSource {
     app: NewsAggregationApp;
     newsItems: NewsItem[] = [];
@@ -39,7 +40,7 @@ export class TechCrunchNewsSource extends NewsSource {
                 image: newsItem.jetpack_featured_media_url,
                 source: "TechCrunch",
                 author: newsItem.yoast_head_json.author,
-                publishedAt: new Date(newsItem.date),
+                publishedAt: new Date(newsItem.date).toISOString(),
             }));
             console.log('NewsItems:', this.newsItems);
         } catch (err) {
