@@ -7,9 +7,31 @@ import {
 import { NewsAggregationApp } from "../NewsAggregationApp";
 import { NewsItem } from "../definitions/NewsItem";
 import { IRoom } from "@rocket.chat/apps-engine/definition/rooms";
-import { createNewsSource } from "../definitions/NewsSource";
 
-const NewsSource = createNewsSource();
+export class NewsSource {
+    news: NewsItem[] = [];
+
+    constructor(app: NewsAggregationApp, news: NewsItem[]) {
+        this.news = news;
+    }
+
+    async fetchNews(
+        read: IRead,
+        modify: IModify,
+        room: IRoom,
+        http: IHttp,
+        persis: IPersistence
+    ): Promise<any> {}
+
+    async getNews(
+        read: IRead,
+        modify: IModify,
+        room: IRoom,
+        http: IHttp,
+        persis: IPersistence
+    ): Promise<any> {}
+}
+
 export class TechCrunchNewsSource extends NewsSource {
     app: NewsAggregationApp;
     newsItems: NewsItem[] = [];
@@ -40,7 +62,7 @@ export class TechCrunchNewsSource extends NewsSource {
                 image: newsItem.jetpack_featured_media_url,
                 source: "TechCrunch",
                 author: newsItem.yoast_head_json.author,
-                publishedAt: new Date(newsItem.date).toISOString(),
+                publishedAt: new Date(newsItem.date),
             }));
             console.log('NewsItems:', this.newsItems);
         } catch (err) {
