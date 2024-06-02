@@ -16,6 +16,7 @@ import { CommandEnum } from "../enums/commandEnum";
 import { sendHelperMessage } from "./message";
 import { TechCrunchNewsSource } from "../news-sources/TechCrunchNewsSource";
 import { NewsItem } from "../definitions/NewsItem";
+
 export class CommandUtility implements ICommandUtility {
     sender: IUser;
     room: IRoom;
