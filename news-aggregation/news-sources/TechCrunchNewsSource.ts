@@ -7,6 +7,7 @@ import {
 import { NewsAggregationApp } from "../NewsAggregationApp";
 import { NewsItem } from "../definitions/NewsItem";
 import { IRoom } from "@rocket.chat/apps-engine/definition/rooms";
+// import { NewsSource } from "../definitions/NewsSource";
 
 export class NewsSource {
     news: NewsItem[] = [];
