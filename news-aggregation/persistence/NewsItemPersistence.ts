@@ -29,7 +29,7 @@ export class NewsItemPersistence {
         const associations: Array<RocketChatAssociationRecord> = [
             new RocketChatAssociationRecord(
                 RocketChatAssociationModel.MISC,
-                "news-aggregation-subscribed-room",
+                "save-news",
             ),
             new RocketChatAssociationRecord(
                 RocketChatAssociationModel.MISC,
@@ -46,11 +46,33 @@ export class NewsItemPersistence {
             console.log("News saved!!", recordId);
         } catch (err) {
             console.error(err);
-            this.app.getLogger().info(err);
+            this.app
+                .getLogger()
+                .error("Could not save news in persistence.", err);
         }
     }
 
-    async deleteNews(news: NewsItem, id: string) {
-        // const associations: Array<RocketChatAssociationRecord> = [];
+    async removeNewsById(news: NewsItem, id: string) {
+        const associations: Array<RocketChatAssociationRecord> = [
+            new RocketChatAssociationRecord(
+                RocketChatAssociationModel.MISC,
+                "save-news",
+            ),
+            new RocketChatAssociationRecord(
+                RocketChatAssociationModel.MISC,
+                id,
+            ),
+        ];
+
+        let removedNews: object;
+        try {
+            removedNews =
+                await this.persistence.removeByAssociations(associations);
+        } catch (err) {
+            console.error(err);
+            this.app
+                .getLogger()
+                .error("Could not remove desired news from persistence.", err);
+        }
     }
 }
