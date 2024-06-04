@@ -112,4 +112,22 @@ export class NewsItemPersistence {
                 .error("Could not remove desired news from persistence.", err);
         }
     }
+
+    async removeAllNews() {
+        const associations: Array<RocketChatAssociationRecord> = [
+            new RocketChatAssociationRecord(
+                RocketChatAssociationModel.MISC,
+                "news-aggregation",
+            ),
+        ];
+
+        try {
+            await this.persistence.removeByAssociations(associations);
+        } catch (err) {
+            console.error("Could not remove all news from persistence.", err);
+            this.app
+                .getLogger()
+                .error("Could not remove all news from persistence.", err);
+        }
+    }
 }
