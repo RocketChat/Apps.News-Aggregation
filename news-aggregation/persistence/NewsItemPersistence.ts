@@ -25,7 +25,7 @@ export class NewsItemPersistence {
         this.persistenceRead = persistenceRead;
     }
 
-    async saveNews(news: NewsItem, id: string) {
+    async saveNews(news: NewsItem) {
         const associations: Array<RocketChatAssociationRecord> = [
             new RocketChatAssociationRecord(
                 RocketChatAssociationModel.MISC,
@@ -33,7 +33,7 @@ export class NewsItemPersistence {
             ),
             new RocketChatAssociationRecord(
                 RocketChatAssociationModel.MISC,
-                id,
+                news.id,
             ),
         ];
 
@@ -52,7 +52,7 @@ export class NewsItemPersistence {
         }
     }
 
-    async getNewsById(news: NewsItem, id: string): Promise<object[]> {
+    async getNewsById(news: NewsItem): Promise<object[]> {
         const associations: Array<RocketChatAssociationRecord> = [
             new RocketChatAssociationRecord(
                 RocketChatAssociationModel.MISC,
@@ -60,7 +60,7 @@ export class NewsItemPersistence {
             ),
             new RocketChatAssociationRecord(
                 RocketChatAssociationModel.MISC,
-                id,
+                news.id,
             ),
         ];
 
@@ -86,7 +86,7 @@ export class NewsItemPersistence {
         return newsObjectArray;
     }
 
-    async removeNewsById(news: NewsItem, id: string) {
+    async removeNewsById(news: NewsItem) {
         const associations: Array<RocketChatAssociationRecord> = [
             new RocketChatAssociationRecord(
                 RocketChatAssociationModel.MISC,
@@ -94,15 +94,18 @@ export class NewsItemPersistence {
             ),
             new RocketChatAssociationRecord(
                 RocketChatAssociationModel.MISC,
-                id,
+                news.id,
             ),
         ];
 
-        let removedNews: object;
+        const newsToBeDeleted = await this.getNewsById(news);
+
+        let removedNews: object[];
         try {
             removedNews =
                 await this.persistence.removeByAssociations(associations);
         } catch (err) {
+            removedNews = [];
             console.error(
                 "Could not remove desired news from persistence.",
                 err,
