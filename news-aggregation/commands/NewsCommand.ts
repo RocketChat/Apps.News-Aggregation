@@ -26,6 +26,7 @@ export class NewsCommand implements ISlashCommand {
 		http: IHttp,
 		persis: IPersistence
 	): Promise<void> {
+		const persistenceRead = read.getPersistenceReader();
 		const command = context.getArguments();
 		const sender = context.getSender();
 		const room = context.getRoom();
@@ -48,6 +49,7 @@ export class NewsCommand implements ISlashCommand {
 			modify: modify,
 			http: http,
 			persistence: persis,
+			persistenceRead: persistenceRead,
 			app: this.app,
 		});
 		await commandUtility.resolveCommand();

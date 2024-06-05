@@ -3,11 +3,13 @@ import {
     IModify,
     IHttp,
     IPersistence,
+    IPersistenceRead,
 } from "@rocket.chat/apps-engine/definition/accessors";
 import { NewsAggregationApp } from "../../NewsAggregationApp";
 import { NewsItem } from "../../definitions/NewsItem";
 import { IRoom } from "@rocket.chat/apps-engine/definition/rooms";
 import { INewsSourceAdapter } from "../INewsSourceAdapter";
+import { NewsItemPersistence } from "../../persistence/NewsItemPersistence";
 
 export class TechCrunchAdapter implements INewsSourceAdapter {
     app: NewsAggregationApp;
@@ -20,7 +22,7 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
         room: IRoom,
         http: IHttp,
         persis: IPersistence,
-    ): Promise<any> {
+    ): Promise<NewsItem[]> {
         try {
             const response = await http.get(this.fetchUrl);
 
@@ -38,9 +40,34 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
             console.log("NewsItems:", this.newsItems);
         } catch (err) {
             console.error(err); // for development purposes
-            this.app.getLogger().info(err);
+            this.app.getLogger().error(err);
         }
 
         return this.newsItems;
+    }
+
+    public async saveNews(
+        read: IRead,
+        modify: IModify,
+        room: IRoom,
+        http: IHttp,
+        persistence: IPersistence,
+        persistenceRead: IPersistenceRead,
+    ): Promise<any> {
+        const newsStorage = new NewsItemPersistence(
+            this.app,
+            persistence,
+            persistenceRead,
+        );
+
+        try {
+            for (const news of this.newsItems) {
+                await newsStorage.saveNews(news);
+            }
+            console.log("all news-items saved");
+        } catch (err) {
+            console.error("News Items could not be save", err);
+            this.app.getLogger().error("News Items could not be save", err);
+        }
     }
 }

@@ -2,6 +2,7 @@ import {
     IHttp,
     IModify,
     IPersistence,
+    IPersistenceRead,
     IRead,
 } from "@rocket.chat/apps-engine/definition/accessors";
 
@@ -32,8 +33,26 @@ export class NewsSource {
         room: IRoom,
         http: IHttp,
         persis: IPersistence,
-    ): Promise<any> {
+    ): Promise<NewsItem[]> {
         return this.adapter.fetchNews(read, modify, room, http, persis);
+    }
+
+    async saveNews(
+        read: IRead,
+        modify: IModify,
+        room: IRoom,
+        http: IHttp,
+        persistence: IPersistence,
+        persistenceRead: IPersistenceRead,
+    ): Promise<any> {
+        return this.adapter.saveNews(
+            read,
+            modify,
+            room,
+            http,
+            persistence,
+            persistenceRead,
+        );
     }
 
     async getNews(
@@ -41,6 +60,6 @@ export class NewsSource {
         modify: IModify,
         room: IRoom,
         http: IHttp,
-        persis: IPersistence,
+        persistenceRead: IPersistenceRead,
     ): Promise<any> {}
 }
