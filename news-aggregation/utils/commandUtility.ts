@@ -9,6 +9,7 @@ import {
 	IHttp,
 	IModify,
 	IPersistence,
+	IPersistenceRead,
 	IRead,
 } from '@rocket.chat/apps-engine/definition/accessors';
 import { NewsAggregationApp } from '../NewsAggregationApp';
@@ -28,6 +29,7 @@ export class CommandUtility implements ICommandUtility {
 	modify: IModify;
 	http: IHttp;
 	persistence: IPersistence;
+	persistenceRead: IPersistenceRead;
 	app: NewsAggregationApp;
 	triggerId?: string | undefined;
 
@@ -40,6 +42,7 @@ export class CommandUtility implements ICommandUtility {
 		this.modify = props.modify;
 		this.http = props.http;
 		this.persistence = props.persistence;
+		this.persistenceRead = props.persistenceRead;
 		this.app = props.app;
 		this.triggerId = props.triggerId;
 	}
@@ -56,25 +59,31 @@ export class CommandUtility implements ICommandUtility {
 	}
 
 	private async fetchNewsFromSource() {
-		const news: NewsItem[] = [];
-
+		let news: NewsItem[] = [];
 		// const techCrunchSource = new TechCrunchNewsSource(this.app, news);
 		// await techCrunchSource.fetchNews(this.read, this.modify, this.room, this.http, this.persistence);
 
 		const techCrunchAdapter = new TechCrunchAdapter();
-
 		const techCrunchNewsSource = new NewsSource(
 			this.app,
 			techCrunchAdapter,
 			news
 		);
-
-		await techCrunchNewsSource.fetchNews(
+		news = await techCrunchNewsSource.fetchNews(
 			this.read,
 			this.modify,
 			this.room,
 			this.http,
 			this.persistence
+		);
+
+		await techCrunchNewsSource.saveNews(
+			this.read,
+			this.modify,
+			this.room,
+			this.http,
+			this.persistence,
+			this.persistenceRead
 		);
 	}
 

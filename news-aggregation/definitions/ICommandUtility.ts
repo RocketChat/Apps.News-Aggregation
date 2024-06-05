@@ -2,6 +2,7 @@ import {
 	IHttp,
 	IModify,
 	IPersistence,
+	IPersistenceRead,
 	IRead,
 } from '@rocket.chat/apps-engine/definition/accessors';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
@@ -18,6 +19,7 @@ export interface ICommandUtility {
 	modify: IModify;
 	http: IHttp;
 	persistence: IPersistence;
+	persistenceRead: IPersistenceRead;
 	app: NewsAggregationApp;
 	triggerId?: string;
 
@@ -33,6 +35,7 @@ export interface ICommandUtilityParams {
 	modify: IModify;
 	http: IHttp;
 	persistence: IPersistence;
+	persistenceRead: IPersistenceRead;
 	app: NewsAggregationApp;
 	triggerId?: string;
 }

@@ -52,6 +52,25 @@ export class NewsItemPersistence {
         }
     }
 
+    // TO-DO
+    // async saveAllNews(allNews: NewsItem[]) {
+    //     const associations: Array<RocketChatAssociationRecord> = [
+    //         new RocketChatAssociationRecord(
+    //             RocketChatAssociationModel.MISC,
+    //             "news-aggregation",
+    //         ),
+    //     ];
+
+    //     const idAssociation = allNews.map((news) => (
+    //         new RocketChatAssociationRecord(
+    //             RocketChatAssociationModel.MISC,
+    //             news.id,
+    //         )
+    //     ));
+
+    //     associations.push(idAssociation);
+    // }
+
     async getNewsById(news: NewsItem): Promise<object[]> {
         const associations: Array<RocketChatAssociationRecord> = [
             new RocketChatAssociationRecord(
