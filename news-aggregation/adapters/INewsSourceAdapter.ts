@@ -2,6 +2,7 @@ import {
     IHttp,
     IModify,
     IPersistence,
+    IPersistenceRead,
     IRead,
 } from "@rocket.chat/apps-engine/definition/accessors";
 import { IRoom } from "@rocket.chat/apps-engine/definition/rooms";
@@ -14,5 +15,14 @@ export interface INewsSourceAdapter {
         room: IRoom,
         http: IHttp,
         persis: IPersistence,
+    ): Promise<NewsItem[]>;
+
+    saveNews(
+        read: IRead,
+        modify: IModify,
+        room: IRoom,
+        http: IHttp,
+        persistence: IPersistence,
+        persistenceRead: IPersistenceRead,
     ): Promise<any>;
 }
