@@ -1,4 +1,9 @@
-import { IHttp, IModify, IPersistence, IRead } from "@rocket.chat/apps-engine/definition/accessors";
+import {
+    IHttp,
+    IModify,
+    IPersistence,
+    IRead,
+} from "@rocket.chat/apps-engine/definition/accessors";
 import { IRoom, RoomType } from "@rocket.chat/apps-engine/definition/rooms";
 import { IUser } from "@rocket.chat/apps-engine/definition/users";
 import { Block } from "@rocket.chat/ui-kit";
@@ -9,7 +14,7 @@ export async function getDirectRoom(
     read: IRead,
     modify: IModify,
     appUser: IUser,
-    username: string
+    username: string,
 ): Promise<IRoom | undefined> {
     const usernames = [appUser.username, username];
     let room: IRoom;
@@ -41,23 +46,49 @@ export async function sendDirectMessageOnInstall(
     modify: IModify,
     user: IUser,
     persistence: IPersistence,
-    blocks?: Array<Block>
+    blocks?: Array<Block>,
 ): Promise<string> {
     const appUser = (await read.getUserReader().getAppUser()) as IUser;
-    console.log('appUser:', appUser);
-    console.log('user:', user);
+    console.log("appUser:", appUser);
+    console.log("user:", user);
 
-
-    const directRoom = (await getDirectRoom(read, modify, appUser, user.username)) as IRoom;
-
+    const directRoom = (await getDirectRoom(
+        read,
+        modify,
+        appUser,
+        user.username,
+    )) as IRoom;
 
     const text = `${OnInstallContent.APP_INSTALLED_TEXT}\n
         Hey **${user.username}** ! ${OnInstallContent.WELCOME_TEXT.toString()} ${OnInstallContent.WELCOMING_MESSAGE.toString()}
     `;
 
     return await sendMessage(modify, directRoom, appUser, text);
-
 }
+
+// export async function sendNotification(
+//     read: IRead,
+//     modify: IModify,
+//     user: IUser,
+//     room: IRoom,
+//     message: string,
+//     blocks?: Array<Block>
+// ): Promise<void> {
+//     const appUser = (await read.getUserReader().getAppUser()) as IUser;
+
+//     const msg = modify
+//         .getCreator()
+//         .startMessage()
+//         .setSender(appUser)
+//         .setRoom(room)
+//         .setText(message)
+
+//     if (blocks !== undefined) {
+//         msg.setBlocks(blocks);
+//     }
+
+//     return read.getNotifier().notifyUser(user, msg.getMessage());
+// }
 
 export async function sendNotification(
     read: IRead,
@@ -65,7 +96,7 @@ export async function sendNotification(
     user: IUser,
     room: IRoom,
     message: string,
-    blocks?: Array<Block>
+    blocks?: Array<Block>,
 ): Promise<void> {
     const appUser = (await read.getUserReader().getAppUser()) as IUser;
 
@@ -74,7 +105,7 @@ export async function sendNotification(
         .startMessage()
         .setSender(appUser)
         .setRoom(room)
-        .setText(message)
+        .setText(message);
 
     if (blocks !== undefined) {
         msg.setBlocks(blocks);
@@ -88,7 +119,7 @@ export async function sendMessage(
     room: IRoom,
     sender: IUser,
     message: string,
-    blocks?: Array<Block>
+    blocks?: Array<Block>,
 ): Promise<string> {
     const msg = modify
         .getCreator()
@@ -112,7 +143,7 @@ export async function sendHelperMessage(
     user: IUser,
     http: IHttp,
     persis: IPersistence,
-    blocks?: Array<Block>
+    blocks?: Array<Block>,
 ): Promise<void> {
     let helperText = `### News Aggregation App
     *The app can be accessed with the slash command /news*
