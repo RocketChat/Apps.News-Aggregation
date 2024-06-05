@@ -14,6 +14,9 @@ import {
 import { NewsAggregationApp } from "../NewsAggregationApp";
 import { CommandEnum } from "../enums/commandEnum";
 import { sendHelperMessage } from "./message";
+import { TechCrunchAdapter } from "../adapters/source-adapters/TechCrunchAdapter";
+import { NewsItem } from "../definitions/NewsItem";
+import { NewsSource } from "../definitions/NewsSource";
 
 export class CommandUtility implements ICommandUtility {
     sender: IUser;
@@ -45,23 +48,29 @@ export class CommandUtility implements ICommandUtility {
             this.modify,
             this.sender,
             this.http,
-            this.persistence
+            this.persistence,
         );
     }
 
-    // private async fetchNewsFromSource() {
-    //     const news: NewsItem[] = [];
+    private async fetchNewsFromSource() {
+        const news: NewsItem[] = [];
+        // const techCrunchSource = new TechCrunchNewsSource(this.app, news);
+        // await techCrunchSource.fetchNews(this.read, this.modify, this.room, this.http, this.persistence);
 
-    //     const techCrunchSource = new TechCrunchNewsSource(this.app, news);
-
-    //     await techCrunchSource.fetchNews(
-    //         this.read,
-    //         this.modify,
-    //         this.room,
-    //         this.http,
-    //         this.persistence
-    //     );
-    // }
+        const techCrunchAdapter = new TechCrunchAdapter();
+        const techCrunchNewsSource = new NewsSource(
+            this.app,
+            techCrunchAdapter,
+            news,
+        );
+        await techCrunchNewsSource.fetchNews(
+            this.read,
+            this.modify,
+            this.room,
+            this.http,
+            this.persistence,
+        );
+    }
 
     // public async getNewsFromSource() {
     //     const news: NewsItem[] = [];
@@ -84,7 +93,7 @@ export class CommandUtility implements ICommandUtility {
 
         switch (singleParamCommand) {
             case CommandEnum.ALERT:
-            // await this.fetchNewsFromSource();
+                await this.fetchNewsFromSource();
 
             case CommandEnum.SUBSCRIBE:
                 await this.subscribeNews();
