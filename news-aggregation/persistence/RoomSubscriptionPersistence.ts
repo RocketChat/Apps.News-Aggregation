@@ -117,6 +117,34 @@ export class RoomSubscriptionPersistence {
         return subscriptions;
     }
 
+    async getSubscriptionById(
+        subscriptionId: string,
+    ): Promise<Array<ISubscription>> {
+        const associations: Array<RocketChatAssociationRecord> = [
+            new RocketChatAssociationRecord(
+                RocketChatAssociationModel.MISC,
+                "news-aggregation-subscription",
+            ),
+            new RocketChatAssociationRecord(
+                RocketChatAssociationModel.MISC,
+                subscriptionId,
+            ),
+        ];
+
+        let subscriptions: Array<ISubscription>;
+        try {
+            subscriptions = (await this.persistenceRead.readByAssociations(
+                associations,
+            )) as Array<ISubscription>;
+        } catch (err) {
+            subscriptions = [];
+            console.error("Could not get subscriptions", err);
+            this.app.getLogger().info("Could not get subscriptions", err);
+        }
+
+        return subscriptions;
+    }
+
     async deleteSubscriptionsByRoom(room: IRoom) {
         const associations: Array<RocketChatAssociationRecord> = [
             new RocketChatAssociationRecord(
