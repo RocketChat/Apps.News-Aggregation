@@ -160,4 +160,38 @@ export class RoomSubscriptionPersistence {
                 .info("Could not delete subscriptions by room", err);
         }
     }
+
+    async deleteSubscriptionById(
+        subscriptionId: string,
+        room: IRoom,
+        user: IUser,
+    ) {
+        const associations: Array<RocketChatAssociationRecord> = [
+            new RocketChatAssociationRecord(
+                RocketChatAssociationModel.MISC,
+                "news-aggregation-subscription",
+            ),
+            new RocketChatAssociationRecord(
+                RocketChatAssociationModel.MISC,
+                subscriptionId,
+            ),
+            new RocketChatAssociationRecord(
+                RocketChatAssociationModel.ROOM,
+                room.id,
+            ),
+            new RocketChatAssociationRecord(
+                RocketChatAssociationModel.USER,
+                user.id,
+            ),
+        ];
+
+        try {
+            await this.persistence.removeByAssociations(associations);
+        } catch (err) {
+            console.error("Could not delete subscription by id", err);
+            this.app
+                .getLogger()
+                .info("Could not delete subscription by id", err);
+        }
+    }
 }
