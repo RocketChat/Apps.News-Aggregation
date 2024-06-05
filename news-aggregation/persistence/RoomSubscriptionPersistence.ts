@@ -69,7 +69,33 @@ export class RoomSubscriptionPersistence {
         }
     }
 
-    async getSubscribedRooms(): Promise<Array<ISubscription>> {
+    async getSubscribedRooms(room: IRoom): Promise<Array<ISubscription>> {
+        const associations: Array<RocketChatAssociationRecord> = [
+            new RocketChatAssociationRecord(
+                RocketChatAssociationModel.MISC,
+                "news-aggregation-subscription",
+            ),
+            new RocketChatAssociationRecord(
+                RocketChatAssociationModel.ROOM,
+                room.id,
+            ),
+        ];
+
+        let subscriptions: Array<ISubscription>;
+        try {
+            subscriptions = (await this.persistenceRead.readByAssociations(
+                associations,
+            )) as Array<ISubscription>;
+        } catch (err) {
+            subscriptions = [];
+            console.error("Could not get subscribed rooms", err);
+            this.app.getLogger().info("Could not get subscribed rooms", err);
+        }
+
+        return subscriptions;
+    }
+
+    async getSubscriptions(): Promise<Array<ISubscription>> {
         const associations: Array<RocketChatAssociationRecord> = [
             new RocketChatAssociationRecord(
                 RocketChatAssociationModel.MISC,
@@ -84,8 +110,8 @@ export class RoomSubscriptionPersistence {
             )) as Array<ISubscription>;
         } catch (err) {
             subscriptions = [];
-            console.error("Could not get subscribed rooms", err);
-            this.app.getLogger().info("Could not get subscribed rooms", err);
+            console.error("Could not get subscriptions", err);
+            this.app.getLogger().info("Could not get subscriptions", err);
         }
 
         return subscriptions;
