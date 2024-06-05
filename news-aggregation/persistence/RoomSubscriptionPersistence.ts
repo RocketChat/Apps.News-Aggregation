@@ -25,4 +25,47 @@ export class RoomSubscriptionPersistence {
         this.persistenceRead = persistenceRead;
         this.persistence = persistence;
     }
+
+    async createSubscription(interval: string, user: IUser, room: IRoom) {
+        const associations: Array<RocketChatAssociationRecord> = [
+            new RocketChatAssociationRecord(
+                RocketChatAssociationModel.MISC,
+                "news-aggregation-subscription",
+            ),
+            new RocketChatAssociationRecord(
+                RocketChatAssociationModel.MISC,
+                interval,
+            ),
+            new RocketChatAssociationRecord(
+                RocketChatAssociationModel.USER,
+                user.id,
+            ),
+            new RocketChatAssociationRecord(
+                RocketChatAssociationModel.ROOM,
+                room.id,
+            ),
+        ];
+
+        let subscriptionRecord: ISubscription = {
+            userId: user.id,
+            interval: interval,
+            createdOn: new Date(),
+            user: user,
+            room: room,
+        };
+
+        let subscriptionId: string;
+        try {
+            subscriptionId = await this.persistence.createWithAssociations(
+                subscriptionRecord,
+                associations,
+            );
+            console.log("subscription created!!", subscriptionId);
+        } catch (err) {
+            console.error("Could not create news subscription", err);
+            this.app
+                .getLogger()
+                .info("Could not create news subscription", err);
+        }
+    }
 }
