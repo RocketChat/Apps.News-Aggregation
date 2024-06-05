@@ -11,7 +11,7 @@ import {
 } from "@rocket.chat/apps-engine/definition/metadata";
 import { ISubscription } from "../definitions/ISubscription";
 
-export class RoomSubscriptionPersistence {
+export class SubscriptionPersistence {
     app: NewsAggregationApp;
     persistenceRead: IPersistenceRead;
     persistence: IPersistence;
