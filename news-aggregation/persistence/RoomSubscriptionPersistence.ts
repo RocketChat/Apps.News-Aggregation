@@ -68,4 +68,26 @@ export class RoomSubscriptionPersistence {
                 .info("Could not create news subscription", err);
         }
     }
+
+    async getSubscribedRooms(): Promise<Array<ISubscription>> {
+        const associations: Array<RocketChatAssociationRecord> = [
+            new RocketChatAssociationRecord(
+                RocketChatAssociationModel.MISC,
+                "news-aggregation-subscription",
+            ),
+        ];
+
+        let subscriptions: Array<ISubscription>;
+        try {
+            subscriptions = (await this.persistenceRead.readByAssociations(
+                associations,
+            )) as Array<ISubscription>;
+        } catch (err) {
+            subscriptions = [];
+            console.error("Could not get subscribed rooms", err);
+            this.app.getLogger().info("Could not get subscribed rooms", err);
+        }
+
+        return subscriptions;
+    }
 }
