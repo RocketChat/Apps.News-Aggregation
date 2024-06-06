@@ -54,15 +54,18 @@ export class CommandUtility implements ICommandUtility {
 
 	private async fetchNewsFromSource() {
 		const news: NewsItem[] = [];
+
 		// const techCrunchSource = new TechCrunchNewsSource(this.app, news);
 		// await techCrunchSource.fetchNews(this.read, this.modify, this.room, this.http, this.persistence);
 
 		const techCrunchAdapter = new TechCrunchAdapter();
+
 		const techCrunchNewsSource = new NewsSource(
 			this.app,
 			techCrunchAdapter,
 			news
 		);
+
 		await techCrunchNewsSource.fetchNews(
 			this.read,
 			this.modify,
