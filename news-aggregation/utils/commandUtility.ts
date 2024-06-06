@@ -77,14 +77,7 @@ export class CommandUtility implements ICommandUtility {
 			this.persistence
 		);
 
-		await techCrunchNewsSource.saveNews(
-			this.read,
-			this.modify,
-			this.room,
-			this.http,
-			this.persistence,
-			this.persistenceRead
-		);
+		await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
 	}
 
 	// public async getNewsFromSource() {
@@ -99,6 +92,7 @@ export class CommandUtility implements ICommandUtility {
 		switch (singleParamCommand) {
 			case CommandEnum.ALERT:
 				await this.fetchNewsFromSource();
+				break;
 
 			case CommandEnum.SUBSCRIBE:
 				await handler.subscribeNews();
@@ -107,7 +101,6 @@ export class CommandUtility implements ICommandUtility {
 				await handler.unsubscribeNews();
 
 			case CommandEnum.HELP:
-
 			default:
 				await this.helperMessage();
 				break;
@@ -121,13 +114,14 @@ export class CommandUtility implements ICommandUtility {
 
 	public async resolveCommand(): Promise<void> {
 		const handler = new Handler({
-			app: this.app,
-			room: this.room,
 			sender: this.sender,
+			room: this.room,
 			read: this.read,
 			modify: this.modify,
 			http: this.http,
 			persistence: this.persistence,
+			persistenceRead: this.persistenceRead,
+			app: this.app,
 			triggerId: this.triggerId,
 		});
 		switch (this.command.length) {
