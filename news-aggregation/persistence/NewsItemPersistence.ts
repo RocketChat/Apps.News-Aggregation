@@ -66,6 +66,37 @@ export class NewsItemPersistence {
 	//     associations.push(idAssociation);
 	// }
 
+	async getNews(allNews: NewsItem[]) {
+		const associations: Array<RocketChatAssociationRecord> = [
+			new RocketChatAssociationRecord(
+				RocketChatAssociationModel.MISC,
+				'news-aggregation'
+			),
+		];
+
+		for (const news of allNews) {
+			const currNewsAssociation = new RocketChatAssociationRecord(
+				RocketChatAssociationModel.MISC,
+				news.id
+			);
+			associations.push(currNewsAssociation);
+		}
+
+		let allNewsObjectArray: object[];
+		try {
+			allNewsObjectArray =
+				await this.persistenceRead.readByAssociations(associations);
+
+			if (allNewsObjectArray.length === 0) {
+				console.error("News doesn't exist");
+				this.app.getLogger().error("News doesn't exist");
+			}
+		} catch (err) {
+			console.error('Could not get the all news by id', err);
+			this.app.getLogger().error('Could not get the all news by id', err);
+		}
+	}
+
 	async getNewsById(news: NewsItem): Promise<object[]> {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
