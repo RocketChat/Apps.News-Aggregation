@@ -66,7 +66,7 @@ export class NewsItemPersistence {
 	//     associations.push(idAssociation);
 	// }
 
-	async getNews(allNews: NewsItem[]) {
+	async getAllNewsById(allNews: NewsItem[]) {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,
