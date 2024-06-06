@@ -1,20 +1,20 @@
 import {
-	IHttp,
-	IModify,
-	IPersistence,
-	IRead,
-} from '@rocket.chat/apps-engine/definition/accessors';
-import { IRoom, RoomType } from '@rocket.chat/apps-engine/definition/rooms';
-import { IUser } from '@rocket.chat/apps-engine/definition/users';
-import { Block } from '@rocket.chat/ui-kit';
-import { OnInstallContent } from '../enums/messageEnum';
+    IHttp,
+    IModify,
+    IPersistence,
+    IRead,
+} from "@rocket.chat/apps-engine/definition/accessors";
+import { IRoom, RoomType } from "@rocket.chat/apps-engine/definition/rooms";
+import { IUser } from "@rocket.chat/apps-engine/definition/users";
+import { Block } from "@rocket.chat/ui-kit";
+import { OnInstallContent } from "../enums/messageEnum";
 
 // getDirect room creates a direct room for conversation betweeen the user and the bot.
 export async function getDirectRoom(
-	read: IRead,
-	modify: IModify,
-	appUser: IUser,
-	username: string
+    read: IRead,
+    modify: IModify,
+    appUser: IUser,
+    username: string,
 ): Promise<IRoom | undefined> {
 	const usernames = [appUser.username, username];
 	let room: IRoom;
@@ -42,46 +42,70 @@ export async function getDirectRoom(
 }
 
 export async function sendDirectMessageOnInstall(
-	read: IRead,
-	modify: IModify,
-	user: IUser,
-	persistence: IPersistence,
-	blocks?: Array<Block>
+    read: IRead,
+    modify: IModify,
+    user: IUser,
+    persistence: IPersistence,
+    blocks?: Array<Block>,
 ): Promise<string> {
-	const appUser = (await read.getUserReader().getAppUser()) as IUser;
-	console.log('appUser:', appUser);
-	console.log('user:', user);
+    const appUser = (await read.getUserReader().getAppUser()) as IUser;
+    console.log("appUser:", appUser);
+    console.log("user:", user);
 
-	const directRoom = (await getDirectRoom(
-		read,
-		modify,
-		appUser,
-		user.username
-	)) as IRoom;
+    const directRoom = (await getDirectRoom(
+        read,
+        modify,
+        appUser,
+        user.username,
+    )) as IRoom;
 
-	const text = `${OnInstallContent.APP_INSTALLED_TEXT}\n
+    const text = `${OnInstallContent.APP_INSTALLED_TEXT}\n
         Hey **${user.username}** ! ${OnInstallContent.WELCOME_TEXT.toString()} ${OnInstallContent.WELCOMING_MESSAGE.toString()}
     `;
 
-	return await sendMessage(modify, directRoom, appUser, text);
+    return await sendMessage(modify, directRoom, appUser, text);
 }
 
+// export async function sendNotification(
+//     read: IRead,
+//     modify: IModify,
+//     user: IUser,
+//     room: IRoom,
+//     message: string,
+//     blocks?: Array<Block>
+// ): Promise<void> {
+//     const appUser = (await read.getUserReader().getAppUser()) as IUser;
+
+//     const msg = modify
+//         .getCreator()
+//         .startMessage()
+//         .setSender(appUser)
+//         .setRoom(room)
+//         .setText(message)
+
+//     if (blocks !== undefined) {
+//         msg.setBlocks(blocks);
+//     }
+
+//     return read.getNotifier().notifyUser(user, msg.getMessage());
+// }
+
 export async function sendNotification(
-	read: IRead,
-	modify: IModify,
-	user: IUser,
-	room: IRoom,
-	message: string,
-	blocks?: Array<Block>
+    read: IRead,
+    modify: IModify,
+    user: IUser,
+    room: IRoom,
+    message: string,
+    blocks?: Array<Block>,
 ): Promise<void> {
 	const appUser = (await read.getUserReader().getAppUser()) as IUser;
 
-	const msg = modify
-		.getCreator()
-		.startMessage()
-		.setSender(appUser)
-		.setRoom(room)
-		.setText(message);
+    const msg = modify
+        .getCreator()
+        .startMessage()
+        .setSender(appUser)
+        .setRoom(room)
+        .setText(message);
 
 	if (blocks !== undefined) {
 		msg.setBlocks(blocks);
@@ -91,11 +115,11 @@ export async function sendNotification(
 }
 
 export async function sendMessage(
-	modify: IModify,
-	room: IRoom,
-	sender: IUser,
-	message: string,
-	blocks?: Array<Block>
+    modify: IModify,
+    room: IRoom,
+    sender: IUser,
+    message: string,
+    blocks?: Array<Block>,
 ): Promise<string> {
 	const msg = modify
 		.getCreator()
@@ -113,13 +137,13 @@ export async function sendMessage(
 }
 
 export async function sendHelperMessage(
-	room: IRoom,
-	read: IRead,
-	modify: IModify,
-	user: IUser,
-	http: IHttp,
-	persis: IPersistence,
-	blocks?: Array<Block>
+    room: IRoom,
+    read: IRead,
+    modify: IModify,
+    user: IUser,
+    http: IHttp,
+    persis: IPersistence,
+    blocks?: Array<Block>,
 ): Promise<void> {
 	let helperText = `### News Aggregation App
     *The app can be accessed with the slash command /news*
