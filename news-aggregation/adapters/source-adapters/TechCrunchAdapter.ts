@@ -29,6 +29,7 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 			console.log('Res:', response.data, 'Done');
 
 			this.newsItems = response?.data?.map((newsItem) => ({
+				id: newsItem.id.toString(),
 				title: newsItem.yoast_head_json.title,
 				description: newsItem.yoast_head_json.description,
 				link: newsItem.link,
