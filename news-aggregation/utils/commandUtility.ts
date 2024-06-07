@@ -30,6 +30,7 @@ export class CommandUtility implements ICommandUtility {
 	persistence: IPersistence;
 	persistenceRead: IPersistenceRead;
 	app: NewsAggregationApp;
+	// news: NewsItem[];
 
 	constructor(props: ICommandUtilityParams) {
 		this.sender = props.sender;
@@ -64,6 +65,7 @@ export class CommandUtility implements ICommandUtility {
 		const techCrunchNewsSource = new NewsSource(
 			this.app,
 			techCrunchAdapter,
+			// this.news
 			news
 		);
 		news = await techCrunchNewsSource.fetchNews(
@@ -77,11 +79,54 @@ export class CommandUtility implements ICommandUtility {
 		await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
 	}
 
-	// public async getNewsFromSource() {
-	//     const news: NewsItem[] = [];
-	//     const techCrunchSource = new TechCrunchNewsSource(this.app, news);
-	//     await techCrunchSource.
-	// }
+	public async getNewsFromSource() {
+		let news: NewsItem[] = [];
+
+		const techCrunchAdapter = new TechCrunchAdapter();
+		const techCrunchNewsSource = new NewsSource(
+			this.app,
+			techCrunchAdapter,
+			// this.news
+			news
+		);
+
+		try {
+			news = await techCrunchNewsSource.getNews(
+				this.read,
+				this.modify,
+				this.room,
+				this.http,
+				this.persistence
+			);
+			console.log('fetched!!', news, 'FETCHED FROM PERSISTENCE!');
+		} catch (err) {
+			console.error(err);
+		}
+	}
+
+	public async deleteNewsFromPersistence() {
+		let news: NewsItem[] = [];
+		const techCrunchAdapter = new TechCrunchAdapter();
+		const techCrunchNewsSource = new NewsSource(
+			this.app,
+			techCrunchAdapter,
+			news
+		);
+
+		try {
+			await techCrunchNewsSource.deleteNews(
+				this.read,
+				this.modify,
+				this.room,
+				this.http,
+				this.persistence
+			);
+
+			console.log('all news deleted!');
+		} catch (err) {
+			console.error(err);
+		}
+	}
 
 	public async subscribeNews() {
 		console.log('news subscribe working.');
@@ -99,6 +144,14 @@ export class CommandUtility implements ICommandUtility {
 		switch (singleParamCommand) {
 			case CommandEnum.ALERT:
 				await this.fetchNewsFromSource();
+				break;
+
+			case CommandEnum.GET:
+				await this.getNewsFromSource();
+				break;
+
+			case CommandEnum.DELETE:
+				await this.deleteNewsFromPersistence();
 				break;
 
 			case CommandEnum.SUBSCRIBE:
