@@ -1,6 +1,7 @@
 import {
 	ActionsBlock,
 	ContextBlock,
+	InputBlock,
 	PreviewBlockBase,
 	PreviewBlockWithThumb,
 	SectionBlock,
@@ -9,6 +10,7 @@ import { SectionBlockParam } from './ISectionBlock';
 import { ActionBlockParam } from './IActionBlock';
 import { PreviewBlockParam } from './IPreviewBlock';
 import { ContextBlockParam } from './IContextBlock';
+import { InputBlockParam } from './IInputBlock';
 
 export interface IBlockBuilder {
 	createSectionBlock(param: SectionBlockParam): SectionBlock;
@@ -21,7 +23,7 @@ export interface IBlockBuilder {
 
 	createContextBlock(param: ContextBlockParam): ContextBlock;
 
-	// createInputBlock(param: InputBlockParam): InputBlock;
+	createInputBlock(param: InputBlockParam): InputBlock;
 
 	// createDividerBlock(blockId?: string): DividerBlock;
 }
