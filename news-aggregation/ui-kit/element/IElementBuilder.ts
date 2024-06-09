@@ -1,5 +1,6 @@
 import {
 	ButtonElement,
+	ImageElement,
 	MultiStaticSelectElement,
 	Option,
 	StaticSelectElement,
@@ -11,6 +12,7 @@ import {
 	StaticSelectParam,
 } from './IStaticSelectElement';
 import { MultiStaticSelectParam } from './IMultiStaticSelectElement';
+import { ImageParam } from './IImageElement';
 
 export interface IElementBuilder {
 	createButton(
@@ -32,4 +34,9 @@ export interface IElementBuilder {
 		param: MultiStaticSelectParam,
 		interactionParam: ElementInteractionParam
 	): MultiStaticSelectElement;
+
+	createImage(
+		param: ImageParam,
+		interactionParam: ElementInteractionParam
+	): ImageElement;
 }
