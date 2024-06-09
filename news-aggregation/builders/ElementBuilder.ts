@@ -1,13 +1,19 @@
 import {
 	BlockElementType,
 	ButtonElement,
+	MultiStaticSelectElement,
+	Option,
 	StaticSelectElement,
 	TextObjectType,
 } from '@rocket.chat/ui-kit';
 import { ButtonParam } from '../ui-kit/element/IButtonElement';
 import { IElementBuilder } from '../ui-kit/element/IElementBuilder';
 import { ElementInteractionParam } from '../ui-kit/element/IInteractionElement';
-import { StaticSelectParam } from '../ui-kit/element/IStaticSelectElement';
+import {
+	StaticSelectOptionParam,
+	StaticSelectParam,
+} from '../ui-kit/element/IStaticSelectElement';
+import { MultiStaticSelectParam } from '../ui-kit/element/IMultiStaticSelectElement';
 
 export class ElementBuilder implements IElementBuilder {
 	constructor(private readonly appId: string) {}
@@ -71,4 +77,35 @@ export class ElementBuilder implements IElementBuilder {
 
 		return dropdown;
 	}
+
+	public createDropdownOptions(param: StaticSelectOptionParam): Option[] {
+		const options: Array<Option> = param?.map((option) => {
+			const { text, value, description, url } = option;
+			const optionElement: Option = {
+				text: {
+					type: TextObjectType.PLAIN_TEXT,
+					text: text,
+					emoji: true,
+				},
+				value,
+				...(description
+					? {
+							description: {
+								type: TextObjectType.PLAIN_TEXT,
+								text: description,
+							},
+						}
+					: undefined),
+				url,
+			};
+			return optionElement;
+		});
+
+		return options;
+	}
+
+	public createMultiStaticSelectDropdown(
+		param: MultiStaticSelectParam,
+		interactionParam: ElementInteractionParam
+	): MultiStaticSelectElement {}
 }
