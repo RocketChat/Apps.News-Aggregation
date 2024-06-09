@@ -1,6 +1,7 @@
 import {
 	ActionsBlock,
 	ContextBlock,
+	DividerBlock,
 	InputBlock,
 	PreviewBlockBase,
 	PreviewBlockWithThumb,
@@ -25,5 +26,5 @@ export interface IBlockBuilder {
 
 	createInputBlock(param: InputBlockParam): InputBlock;
 
-	// createDividerBlock(blockId?: string): DividerBlock;
+	createDividerBlock(blockId?: string): DividerBlock;
 }
