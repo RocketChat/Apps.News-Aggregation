@@ -1,4 +1,4 @@
-import { StaticSelectElement, TextObject } from '@rocket.chat/ui-kit';
+import { StaticSelectElement } from '@rocket.chat/ui-kit';
 
 export type StaticSelectParam = Pick<
 	StaticSelectElement,
@@ -10,7 +10,7 @@ export type StaticSelectParam = Pick<
 > & { placeholder: string };
 
 export type StaticSelectOptionParam = Array<{
-	text: TextObject;
+	text: string;
 	value: string;
 	description?: string;
 	url?: string;

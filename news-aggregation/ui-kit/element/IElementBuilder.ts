@@ -27,10 +27,7 @@ export interface IElementBuilder {
 		interactionParam: ElementInteractionParam
 	): StaticSelectElement;
 
-	createDropdownOptions(
-		param: StaticSelectOptionParam,
-		interactionParam: ElementInteractionParam
-	): Array<Option>;
+	createDropdownOptions(param: StaticSelectOptionParam): Array<Option>;
 
 	createMultiStaticSelectDropdown(
 		param: MultiStaticSelectParam,
