@@ -1,5 +1,6 @@
 import {
 	ActionsBlock,
+	ContextBlock,
 	PreviewBlockBase,
 	PreviewBlockWithThumb,
 	SectionBlock,
@@ -7,6 +8,7 @@ import {
 import { SectionBlockParam } from './ISectionBlock';
 import { ActionBlockParam } from './IActionBlock';
 import { PreviewBlockParam } from './IPreviewBlock';
+import { ContextBlockParam } from './IContextBlock';
 
 export interface IBlockBuilder {
 	createSectionBlock(param: SectionBlockParam): SectionBlock;
@@ -17,7 +19,7 @@ export interface IBlockBuilder {
 		param: PreviewBlockParam
 	): PreviewBlockBase | PreviewBlockWithThumb;
 
-	// createContextBlock(param: ContextBlockParam): ContextBlock;
+	createContextBlock(param: ContextBlockParam): ContextBlock;
 
 	// createInputBlock(param: InputBlockParam): InputBlock;
 
