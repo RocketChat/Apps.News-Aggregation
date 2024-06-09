@@ -107,5 +107,38 @@ export class ElementBuilder implements IElementBuilder {
 	public createMultiStaticSelectDropdown(
 		param: MultiStaticSelectParam,
 		interactionParam: ElementInteractionParam
-	): MultiStaticSelectElement {}
+	): MultiStaticSelectElement {
+		const {
+			text,
+			options,
+			optionGroups,
+			maxSelectItems,
+			initialOption,
+			initialValue,
+			dispatchActionConfig,
+			confirm,
+		} = param;
+
+		const { blockId, actionId } = interactionParam;
+
+		const multiStaticSelectDropdown: MultiStaticSelectElement = {
+			type: BlockElementType.MULTI_STATIC_SELECT,
+			placeholder: {
+				type: TextObjectType.PLAIN_TEXT,
+				text: text,
+			},
+			options,
+			optionGroups,
+			maxSelectItems,
+			initialOption,
+			initialValue,
+			appId: this.appId,
+			blockId,
+			actionId,
+			dispatchActionConfig,
+			confirm,
+		};
+
+		return multiStaticSelectDropdown;
+	}
 }
