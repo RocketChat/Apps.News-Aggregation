@@ -7,7 +7,7 @@ export type StaticSelectParam = Pick<
 	| 'initialOption'
 	| 'initialValue'
 	| 'dispatchActionConfig'
-> & { placeholder: TextObject };
+> & { placeholder: string };
 
 export type StaticSelectOptionParam = Array<{
 	text: TextObject;
