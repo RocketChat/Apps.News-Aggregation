@@ -3,6 +3,7 @@ import {
 	ImageElement,
 	MultiStaticSelectElement,
 	Option,
+	PlainTextInputElement,
 	StaticSelectElement,
 } from '@rocket.chat/ui-kit';
 import { ButtonParam } from './IButtonElement';
@@ -13,6 +14,7 @@ import {
 } from './IStaticSelectElement';
 import { MultiStaticSelectParam } from './IMultiStaticSelectElement';
 import { ImageParam } from './IImageElement';
+import { PlainTextInputParam } from './IPlainTextInputElement';
 
 export interface IElementBuilder {
 	createButton(
@@ -39,4 +41,9 @@ export interface IElementBuilder {
 		param: ImageParam,
 		interactionParam: ElementInteractionParam
 	): ImageElement;
+
+	createPlainTextInput(
+		param: PlainTextInputParam,
+		interactionParam: ElementInteractionParam
+	): PlainTextInputElement;
 }
