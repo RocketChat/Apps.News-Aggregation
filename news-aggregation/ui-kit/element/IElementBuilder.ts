@@ -34,10 +34,7 @@ export interface IElementBuilder {
 		interactionParam: ElementInteractionParam
 	): MultiStaticSelectElement;
 
-	createImage(
-		param: ImageParam,
-		interactionParam: ElementInteractionParam
-	): ImageElement;
+	createImage(param: ImageParam): ImageElement;
 
 	createPlainTextInput(
 		param: PlainTextInputParam,

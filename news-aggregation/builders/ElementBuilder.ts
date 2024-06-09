@@ -1,6 +1,7 @@
 import {
 	BlockElementType,
 	ButtonElement,
+	ImageElement,
 	MultiStaticSelectElement,
 	Option,
 	StaticSelectElement,
@@ -14,6 +15,7 @@ import {
 	StaticSelectParam,
 } from '../ui-kit/element/IStaticSelectElement';
 import { MultiStaticSelectParam } from '../ui-kit/element/IMultiStaticSelectElement';
+import { ImageParam } from '../ui-kit/element/IImageElement';
 
 export class ElementBuilder implements IElementBuilder {
 	constructor(private readonly appId: string) {}
@@ -140,5 +142,16 @@ export class ElementBuilder implements IElementBuilder {
 		};
 
 		return multiStaticSelectDropdown;
+	}
+
+	public createImage(param: ImageParam): ImageElement {
+		const { imageUrl, altText } = param;
+		const image: ImageElement = {
+			type: BlockElementType.IMAGE,
+			imageUrl,
+			altText,
+		};
+
+		return image;
 	}
 }
