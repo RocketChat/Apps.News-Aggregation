@@ -1,5 +1,6 @@
 import {
 	ButtonElement,
+	MultiStaticSelectElement,
 	Option,
 	StaticSelectElement,
 } from '@rocket.chat/ui-kit';
@@ -9,6 +10,7 @@ import {
 	StaticSelectOptionParam,
 	StaticSelectParam,
 } from './IStaticSelectElement';
+import { MultiStaticSelectParam } from './IMultiStaticSelectElement';
 
 export interface IElementBuilder {
 	createButton(
@@ -25,4 +27,9 @@ export interface IElementBuilder {
 		param: StaticSelectOptionParam,
 		interactionParam: ElementInteractionParam
 	): Array<Option>;
+
+	createMultiStaticSelectDropdown(
+		param: MultiStaticSelectParam,
+		interactionParam: ElementInteractionParam
+	): MultiStaticSelectElement;
 }
