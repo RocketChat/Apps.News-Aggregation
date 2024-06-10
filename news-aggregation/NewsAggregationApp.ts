@@ -13,10 +13,20 @@ import { App } from '@rocket.chat/apps-engine/definition/App';
 import { IAppInfo } from '@rocket.chat/apps-engine/definition/metadata';
 import { sendDirectMessageOnInstall } from './utils/message';
 import { NewsCommand } from './commands/NewsCommand';
+import { IAppBuilders } from './definitions/IAppBuilders';
+import { BlockBuilder } from './builders/BlockBuilder';
+import { ElementBuilder } from './builders/ElementBuilder';
 
 export class NewsAggregationApp extends App {
 	constructor(info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
 		super(info, logger, accessors);
+	}
+
+	public getBuilders(): IAppBuilders {
+		const elementBuilder = new ElementBuilder(this.getID());
+		const blockBuilder = new BlockBuilder(this.getID());
+
+		return { elementBuilder, blockBuilder };
 	}
 
 	public async onInstall(
