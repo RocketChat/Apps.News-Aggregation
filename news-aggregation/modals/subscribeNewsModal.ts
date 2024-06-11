@@ -27,6 +27,30 @@ export async function subscribeNewsModal(
 	const { elementBuilder, blockBuilder } = app.getBuilders();
 
 	const blocks: Block[] = [];
+	let text = 'hello';
+
+	const inputElement = elementBuilder.createPlainTextInput(
+		{
+			text: 'Hello',
+			initialValue: 'This is for testing',
+			multiline: true,
+		},
+		{
+			blockId: 'input-element-block-id',
+			actionId: 'input-element-action-id',
+		}
+	);
+
+	const inputBlock = blockBuilder.createInputBlock({
+		text,
+		element: inputElement,
+		optional: true,
+	});
+	blocks.push(inputBlock);
+
+	const dividerBlock = blockBuilder.createDividerBlock('divider-block-id');
+	blocks.push(dividerBlock);
+	blocks.push(inputBlock);
 
 	const submitButton = elementBuilder.createButton(
 		{
