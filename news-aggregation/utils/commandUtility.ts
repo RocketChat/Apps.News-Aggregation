@@ -17,6 +17,7 @@ import { sendHelperMessage } from './message';
 import { TechCrunchAdapter } from '../adapters/source-adapters/TechCrunchAdapter';
 import { NewsItem } from '../definitions/NewsItem';
 import { NewsSource } from '../definitions/NewsSource';
+import { Handler } from '../handlers/Handler';
 
 export class CommandUtility implements ICommandUtility {
 	sender: IUser;
@@ -28,6 +29,7 @@ export class CommandUtility implements ICommandUtility {
 	http: IHttp;
 	persistence: IPersistence;
 	app: NewsAggregationApp;
+	triggerId?: string | undefined;
 
 	constructor(props: ICommandUtilityParams) {
 		this.sender = props.sender;
@@ -39,6 +41,7 @@ export class CommandUtility implements ICommandUtility {
 		this.http = props.http;
 		this.persistence = props.persistence;
 		this.app = props.app;
+		this.triggerId = props.triggerId;
 	}
 
 	private async helperMessage() {
@@ -81,17 +84,7 @@ export class CommandUtility implements ICommandUtility {
 	//     await techCrunchSource.
 	// }
 
-	public async subscribeNews() {
-		console.log('news subscribe working.');
-		this.app.getLogger().info('news subscribe working.');
-	}
-
-	public async unsubscribeNews() {
-		console.log('news unsubscribe working.');
-		this.app.getLogger().info('news unsubscribe working.');
-	}
-
-	private async handleSingleParamCommand() {
+	private async handleSingleParamCommand(handler: Handler) {
 		const singleParamCommand = this.command[0];
 
 		switch (singleParamCommand) {
@@ -99,10 +92,10 @@ export class CommandUtility implements ICommandUtility {
 				await this.fetchNewsFromSource();
 
 			case CommandEnum.SUBSCRIBE:
-				await this.subscribeNews();
+				await handler.subscribeNews();
 
 			case CommandEnum.UNSUBSCRIBE:
-				await this.unsubscribeNews();
+				await handler.unsubscribeNews();
 
 			case CommandEnum.HELP:
 
@@ -118,9 +111,19 @@ export class CommandUtility implements ICommandUtility {
 	}
 
 	public async resolveCommand(): Promise<void> {
+		const handler = new Handler({
+			app: this.app,
+			room: this.room,
+			sender: this.sender,
+			read: this.read,
+			modify: this.modify,
+			http: this.http,
+			persistence: this.persistence,
+			triggerId: this.triggerId,
+		});
 		switch (this.command.length) {
 			case 1: {
-				await this.handleSingleParamCommand();
+				await this.handleSingleParamCommand(handler);
 				break;
 			}
 

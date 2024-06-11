@@ -19,6 +19,7 @@ export interface ICommandUtility {
 	http: IHttp;
 	persistence: IPersistence;
 	app: NewsAggregationApp;
+	triggerId?: string;
 
 	resolveCommand(): Promise<void>;
 }
@@ -33,4 +34,5 @@ export interface ICommandUtilityParams {
 	http: IHttp;
 	persistence: IPersistence;
 	app: NewsAggregationApp;
+	triggerId?: string;
 }
