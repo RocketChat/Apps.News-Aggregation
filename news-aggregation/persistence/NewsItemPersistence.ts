@@ -150,6 +150,7 @@ export class NewsItemPersistence {
 				this.app.getLogger().error("News doesn't exist");
 				return allNewsObjectArray;
 			}
+			// console.log('news exist in persistence', allNewsObjectArray);
 		} catch (err) {
 			allNewsObjectArray = [];
 			console.error('Could not get the all news by id', err);
