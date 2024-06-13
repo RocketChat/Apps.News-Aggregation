@@ -66,4 +66,46 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 			this.app.getLogger().error('News Items could not be save', err);
 		}
 	}
+
+	public async getNews(
+		read: IRead,
+		modify: IModify,
+		room: IRoom,
+		http: IHttp,
+		persis: IPersistence
+	): Promise<NewsItem[]> {
+		const persisRead = read.getPersistenceReader();
+		const newsStorage = new NewsItemPersistence(this.app, persis, persisRead);
+
+		let newsObject: NewsItem[];
+		try {
+			newsObject = (await newsStorage.getAllNewsById(
+				this.newsItems
+			)) as NewsItem[];
+			// console.log('news fetched FROM PERSIS');
+		} catch (err) {
+			newsObject = [];
+			console.error(err);
+			this.app.getLogger().error(err);
+		}
+		return newsObject;
+	}
+
+	public async deleteNews(
+		read: IRead,
+		modify: IModify,
+		room: IRoom,
+		http: IHttp,
+		persis: IPersistence
+	) {
+		const persisRead = read.getPersistenceReader();
+		const newsStorage = new NewsItemPersistence(this.app, persis, persisRead);
+
+		try {
+			await newsStorage.removeAllNews();
+			console.log('Removed all news !!!');
+		} catch (err) {
+			console.error(err);
+		}
+	}
 }

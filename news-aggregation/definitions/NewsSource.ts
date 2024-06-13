@@ -49,6 +49,18 @@ export class NewsSource {
 		modify: IModify,
 		room: IRoom,
 		http: IHttp,
-		persistenceRead: IPersistenceRead
-	): Promise<any> {}
+		persis: IPersistence
+	): Promise<NewsItem[]> {
+		return this.adapter.getNews(read, modify, room, http, persis);
+	}
+
+	async deleteNews(
+		read: IRead,
+		modify: IModify,
+		room: IRoom,
+		http: IHttp,
+		persis: IPersistence
+	) {
+		return this.adapter.deleteNews(read, modify, room, http, persis);
+	}
 }
