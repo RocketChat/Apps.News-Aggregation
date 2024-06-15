@@ -13,6 +13,7 @@ import { App } from '@rocket.chat/apps-engine/definition/App';
 import { IAppInfo } from '@rocket.chat/apps-engine/definition/metadata';
 import { sendDirectMessageOnInstall } from './utils/message';
 import { NewsCommand } from './commands/NewsCommand';
+import { DeleteNewsProcessor } from './processors/DeleteNewsProcessor';
 
 export class NewsAggregationApp extends App {
 	constructor(info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
@@ -40,6 +41,7 @@ export class NewsAggregationApp extends App {
 
 		await Promise.all([
 			configuration.slashCommands.provideSlashCommand(newsCommand),
+			configuration.scheduler.registerProcessors([new DeleteNewsProcessor()]),
 		]);
 	}
 }
