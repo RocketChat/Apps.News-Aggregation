@@ -1,54 +1,57 @@
 {
-	"id": "6c73643a-fc9b-49b7-bc96-d6305a76f2cc",
-	"version": "0.0.1",
-	"requiredApiVersion": "^1.4.0",
-	"iconFile": "icon.png",
-	"author": {
-		"name": "Umang Utkarsh",
-		"homepage": "https://github.com/umangutkarsh",
-		"support": "https://github.com/RocketChat/News-Aggregation-App"
-	},
-	"name": "News Aggregation",
-	"nameSlug": "news-aggregation",
-	"classFile": "NewsAggregationApp.ts",
-	"description": "Aggregates news from top websites and displays news in a configurable, user-friendly format with categorization. Provides centralized access to curated news within Rocket.Chat.",
-	"implements": [],
-	"permissions": [
-		{
-			"name": "ui.registerButtons"
-		},
-		{
-			"name": "api"
-		},
-		{
-			"name": "slashcommand"
-		},
-		{
-			"name": "server-setting.read"
-		},
-		{
-			"name": "room.read"
-		},
-		{
-			"name": "persistence"
-		},
-		{
-			"name": "ui.interact"
-		},
-		{
-			"name": "networking"
-		},
-		{
-			"name": "message.write"
-		},
-		{
-			"name": "user.read"
-		},
-		{
-			"name": "room.write"
-		},
-		{
-			"name": "message.read"
-		}
-	]
+    "id": "6c73643a-fc9b-49b7-bc96-d6305a76f2cc",
+    "version": "0.0.1",
+    "requiredApiVersion": "^1.4.0",
+    "iconFile": "icon.png",
+    "author": {
+        "name": "Umang Utkarsh",
+        "homepage": "https://github.com/umangutkarsh",
+        "support": "https://github.com/RocketChat/News-Aggregation-App"
+    },
+    "name": "News Aggregation",
+    "nameSlug": "news-aggregation",
+    "classFile": "NewsAggregationApp.ts",
+    "description": "Aggregates news from top websites and displays news in a configurable, user-friendly format with categorization. Provides centralized access to curated news within Rocket.Chat.",
+    "implements": [],
+    "permissions": [
+        {
+            "name": "ui.registerButtons"
+        },
+        {
+            "name": "api"
+        },
+        {
+            "name": "slashcommand"
+        },
+        {
+            "name": "scheduler"
+        },
+        {
+            "name": "server-setting.read"
+        },
+        {
+            "name": "room.read"
+        },
+        {
+            "name": "persistence"
+        },
+        {
+            "name": "ui.interact"
+        },
+        {
+            "name": "networking"
+        },
+        {
+            "name": "message.write"
+        },
+        {
+            "name": "user.read"
+        },
+        {
+            "name": "room.write"
+        },
+        {
+            "name": "message.read"
+        }
+    ]
 }
