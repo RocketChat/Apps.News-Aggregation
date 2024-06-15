@@ -35,7 +35,7 @@ export async function subscribeNewsModal(
 
 	const inputElement = elementBuilder.createPlainTextInput(
 		{
-			text: 'Hello',
+			text,
 			initialValue: 'This is for testing',
 			multiline: true,
 		},
