@@ -20,7 +20,10 @@ import { ImageParam } from '../ui-kit/element/IImageElement';
 import { PlainTextInputParam } from '../ui-kit/element/IPlainTextInputElement';
 
 export class ElementBuilder implements IElementBuilder {
-	constructor(private readonly appId: string) {}
+	appId: string;
+	constructor(appId: string) {
+		this.appId = appId;
+	}
 
 	public createButton(
 		param: ButtonParam,

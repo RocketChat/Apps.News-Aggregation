@@ -14,11 +14,15 @@ import {
 } from '@rocket.chat/apps-engine/definition/accessors';
 import { NewsAggregationApp } from '../NewsAggregationApp';
 import { CommandEnum } from '../enums/commandEnum';
-import { sendHelperMessage } from './message';
+import { sendHelperMessage, sendMessage } from './message';
 import { TechCrunchAdapter } from '../adapters/source-adapters/TechCrunchAdapter';
 import { NewsItem } from '../definitions/NewsItem';
 import { NewsSource } from '../definitions/NewsSource';
 import { Handler } from '../handlers/Handler';
+import { BlockBuilder } from '../builders/BlockBuilder';
+import { Block, ImageElement } from '@rocket.chat/ui-kit';
+import { getSectionBlock } from './blocks';
+import { ElementBuilder } from '../builders/ElementBuilder';
 
 export class CommandUtility implements ICommandUtility {
 	sender: IUser;
@@ -84,6 +88,8 @@ export class CommandUtility implements ICommandUtility {
 
 	public async getNewsFromSource() {
 		let news: NewsItem[] = [];
+		let blockBuilder = new BlockBuilder(this.app.getID());
+		const elementBuilder = new ElementBuilder(this.app.getID());
 
 		const techCrunchAdapter = new TechCrunchAdapter();
 		const techCrunchNewsSource = new NewsSource(
@@ -102,7 +108,46 @@ export class CommandUtility implements ICommandUtility {
 				this.persistence
 			);
 			console.log('fetched!!', news, 'FETCHED FROM PERSISTENCE!');
+
+			let blocks: Block[] = [];
+			for (const newsItem of news) {
+				const titleBlock = blockBuilder.createSectionBlock({
+					blockId: 'title-block-id',
+					text: newsItem.title,
+				});
+
+				const descriptionBlock = blockBuilder.createSectionBlock({
+					blockId: 'desccription-block-id',
+					text: newsItem.description,
+				});
+
+				let imageElements: ImageElement[] = [];
+				const image = elementBuilder.createImage({
+					imageUrl: newsItem.image,
+					altText: newsItem.title,
+				});
+				imageElements.push(image);
+				const imageBlock = blockBuilder.createContextBlock({
+					contextElements: imageElements,
+					blockId: 'image-block-id',
+				});
+
+				blocks.push(titleBlock);
+				blocks.push(descriptionBlock);
+				blocks.push(imageBlock);
+				// const sectionBlock = getSectionBlock('title-block-id', newsItem.title);
+				// blocks.push(sectionBlock);
+			}
+
+			await sendMessage(
+				this.modify,
+				this.room,
+				this.sender,
+				'News Get From Persistenec',
+				blocks
+			);
 		} catch (err) {
+			this.app.getLogger().error(err);
 			console.error(err);
 		}
 	}

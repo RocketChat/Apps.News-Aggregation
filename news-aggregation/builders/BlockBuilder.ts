@@ -4,6 +4,7 @@ import {
 	DividerBlock,
 	InputBlock,
 	LayoutBlockType,
+	Markdown,
 	PreviewBlockBase,
 	PreviewBlockWithThumb,
 	SectionBlock,
@@ -16,9 +17,13 @@ import { ActionBlockParam } from '../ui-kit/block/IActionBlock';
 import { PreviewBlockParam } from '../ui-kit/block/IPreviewBlock';
 import { ContextBlockParam } from '../ui-kit/block/IContextBlock';
 import { InputBlockParam } from '../ui-kit/block/IInputBlock';
+import { MardownBlockParam } from '../ui-kit/block/IMarkdownBlock';
 
 export class BlockBuilder implements IBlockBuilder {
-	constructor(private readonly appId: string) {}
+	appId: string;
+	constructor(appId: string) {
+		this.appId = appId;
+	}
 
 	public createTextObjects(fields: Array<string>): Array<TextObject> {
 		const objects = fields?.map((field) => {
@@ -131,6 +136,17 @@ export class BlockBuilder implements IBlockBuilder {
 			type: LayoutBlockType.DIVIDER,
 			appId: this.appId,
 			blockId,
+		};
+
+		return block;
+	}
+
+	public createMarkdownBlock(param: MardownBlockParam): Markdown {
+		const { verbatim } = param;
+		const block: Markdown = {
+			type: TextObjectType.MRKDWN,
+			text: 'HI',
+			verbatim,
 		};
 
 		return block;
