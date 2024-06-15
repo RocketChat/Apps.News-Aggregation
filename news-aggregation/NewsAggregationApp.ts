@@ -13,21 +13,24 @@ import { App } from '@rocket.chat/apps-engine/definition/App';
 import { IAppInfo } from '@rocket.chat/apps-engine/definition/metadata';
 import { sendDirectMessageOnInstall } from './utils/message';
 import { NewsCommand } from './commands/NewsCommand';
-import { IAppBuilders } from './definitions/IAppBuilders';
+// import { IAppBuilders } from './definitions/IAppBuilders';
 import { BlockBuilder } from './builders/BlockBuilder';
 import { ElementBuilder } from './builders/ElementBuilder';
 
 export class NewsAggregationApp extends App {
+	// private elementBuilder: ElementBuilder;
+	// private blockBuilder: BlockBuilder;
 	constructor(info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
 		super(info, logger, accessors);
 	}
 
-	public getBuilders(): IAppBuilders {
-		const elementBuilder = new ElementBuilder(this.getID());
-		const blockBuilder = new BlockBuilder(this.getID());
-
-		return { elementBuilder, blockBuilder };
-	}
+	// public async initialize(
+	// 	configurationExtend: IConfigurationExtend,
+	// 	environmentRead: IEnvironmentRead
+	// ): Promise<void> {
+	// 	// this.elementBuilder = new ElementBuilder(this.getID());
+	// 	// this.blockBuilder = new BlockBuilder(this.getID());
+	// }
 
 	public async onInstall(
 		context: IAppInstallationContext,
@@ -51,5 +54,15 @@ export class NewsAggregationApp extends App {
 		await Promise.all([
 			configuration.slashCommands.provideSlashCommand(newsCommand),
 		]);
+
+		// this.elementBuilder = new ElementBuilder(this.getID());
+		// this.blockBuilder = new BlockBuilder(this.getID());
 	}
+
+	// public getBuilders(): IAppBuilders {
+	// 	return {
+	// 		elementBuilder: this.elementBuilder,
+	// 		blockBuilder: this.blockBuilder,
+	// 	};
+	// }
 }

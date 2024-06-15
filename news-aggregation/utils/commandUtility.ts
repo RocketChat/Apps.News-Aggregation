@@ -179,6 +179,7 @@ export class CommandUtility implements ICommandUtility {
 
 	private async handleSingleParamCommand(handler: Handler) {
 		const singleParamCommand = this.command[0];
+		console.log(this.command);
 
 		switch (singleParamCommand) {
 			case CommandEnum.ALERT:
@@ -195,9 +196,11 @@ export class CommandUtility implements ICommandUtility {
 
 			case CommandEnum.SUBSCRIBE:
 				await handler.subscribeNews();
+				break;
 
 			case CommandEnum.UNSUBSCRIBE:
 				await handler.unsubscribeNews();
+				break;
 
 			case CommandEnum.HELP:
 			default:

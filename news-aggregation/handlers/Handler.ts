@@ -8,7 +8,7 @@ import { NewsAggregationApp } from '../NewsAggregationApp';
 import { IHandler, IHandlerParams } from '../definitions/IHandler';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
-// import { subscribeNewsModal } from '../modals/subscribeNewsModal';
+import { subscribeNewsModal } from '../modals/subscribeNewsModal';
 
 export class Handler implements IHandler {
 	public app: NewsAggregationApp;
