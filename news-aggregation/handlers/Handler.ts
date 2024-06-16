@@ -9,6 +9,8 @@ import { IHandler, IHandlerParams } from '../definitions/IHandler';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { subscribeNewsModal } from '../modals/subscribeNewsModal';
+import { sendMessage } from '../utils/message';
+import { getSubscribeBlock } from '../utils/blocks';
 
 export class Handler implements IHandler {
 	public app: NewsAggregationApp;
@@ -56,6 +58,15 @@ export class Handler implements IHandler {
 		// 		.getUiController()
 		// 		.openSurfaceView(modal, { triggerId: this.triggerId }, this.sender);
 		// }
+
+		// const subscribeBlock = await getSubscribeBlock(this.app.getID());
+		// const mesageId = await sendMessage(
+		// 	this.modify,
+		// 	this.room,
+		// 	this.sender,
+		// 	'Subscribe Button',
+		// 	subscribeBlock
+		// );
 	}
 
 	public async unsubscribeNews(): Promise<void> {
