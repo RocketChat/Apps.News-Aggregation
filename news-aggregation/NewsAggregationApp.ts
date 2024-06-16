@@ -13,9 +13,14 @@ import { App } from '@rocket.chat/apps-engine/definition/App';
 import { IAppInfo } from '@rocket.chat/apps-engine/definition/metadata';
 import { sendDirectMessageOnInstall } from './utils/message';
 import { NewsCommand } from './commands/NewsCommand';
-import { DeleteNewsProcessor } from './processors/DeleteNewsProcessor';
+import {
+	IUIKitInteractionHandler,
+	UIKitBlockInteractionContext,
+} from '@rocket.chat/apps-engine/definition/uikit';
+import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 
 export class NewsAggregationApp extends App {
+	// implements IUIKitInteractionHandler
 	constructor(info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
 		super(info, logger, accessors);
 	}
@@ -41,7 +46,24 @@ export class NewsAggregationApp extends App {
 
 		await Promise.all([
 			configuration.slashCommands.provideSlashCommand(newsCommand),
-			configuration.scheduler.registerProcessors([new DeleteNewsProcessor()]),
 		]);
 	}
+
+	// public async executeBlockActionHandler(
+	// 	context: UIKitBlockInteractionContext,
+	// 	read: IRead,
+	// 	http: IHttp,
+	// 	persis: IPersistence,
+	// 	modify: IModify
+	// ): Promise<IUIKitResponse> {
+	// 	const handler = new ExecuteBlockActionHandler(
+	// 		this,
+	// 		read,
+	// 		modify,
+	// 		http,
+	// 		persis,
+	// 		context
+	// 	);
+	// 	return await handler.handleActions();
+	// }
 }
