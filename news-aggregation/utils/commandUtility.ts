@@ -31,7 +31,7 @@ export class CommandUtility implements ICommandUtility {
 	persistence: IPersistence;
 	persistenceRead: IPersistenceRead;
 	app: NewsAggregationApp;
-	triggerId: string;
+	triggerId?: string | undefined;
 	// news: NewsItem[];
 
 	constructor(props: ICommandUtilityParams) {

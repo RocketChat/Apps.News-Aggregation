@@ -21,7 +21,7 @@ export interface ICommandUtility {
 	persistence: IPersistence;
 	persistenceRead: IPersistenceRead;
 	app: NewsAggregationApp;
-	triggerId: string;
+	triggerId?: string;
 
 	resolveCommand(): Promise<void>;
 }
@@ -37,5 +37,5 @@ export interface ICommandUtilityParams {
 	persistence: IPersistence;
 	persistenceRead: IPersistenceRead;
 	app: NewsAggregationApp;
-	triggerId: string;
+	triggerId?: string;
 }
