@@ -37,6 +37,7 @@ export class Handler implements IHandler {
 		console.log('news subscribe working.');
 		this.app.getLogger().info('news subscribe working.');
 
+		// TO-DO
 		// const modal = await subscribeNewsModal(
 		// 	this.app,
 		// 	this.room,

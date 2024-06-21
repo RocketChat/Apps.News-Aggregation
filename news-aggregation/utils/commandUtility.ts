@@ -45,6 +45,7 @@ export class CommandUtility implements ICommandUtility {
 		this.persistence = props.persistence;
 		this.persistenceRead = props.persistenceRead;
 		this.app = props.app;
+		this.triggerId = props.triggerId;
 	}
 
 	private async helperMessage() {
