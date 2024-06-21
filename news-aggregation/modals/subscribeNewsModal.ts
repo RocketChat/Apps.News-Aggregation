@@ -60,7 +60,6 @@ export async function subscribeNewsModal(
 		{
 			text: ModalEnum.SUBSCRIBE_NEWS_SUBMIT_BUTTON,
 			style: ButtonStyle.PRIMARY,
-			secondary: false,
 		},
 		{
 			blockId: ModalEnum.SUBSCRIBE_NEWS_MODAL_SUBMIT_BLOCK_ID,
@@ -72,7 +71,6 @@ export async function subscribeNewsModal(
 		{
 			text: ModalEnum.SUBSCRIBE_NEWS_CLOSE_BUTTON,
 			style: ButtonStyle.DANGER,
-			secondary: true,
 		},
 		{
 			blockId: ModalEnum.SUBSCRIBE_NEWS_MODAL_CLOSE_BLOCK_ID,

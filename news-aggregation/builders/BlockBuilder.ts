@@ -20,10 +20,7 @@ import { InputBlockParam } from '../ui-kit/block/IInputBlock';
 import { MardownBlockParam } from '../ui-kit/block/IMarkdownBlock';
 
 export class BlockBuilder implements IBlockBuilder {
-	appId: string;
-	constructor(appId: string) {
-		this.appId = appId;
-	}
+	constructor(private readonly appId: string) {}
 
 	public createTextObjects(fields: Array<string>): Array<TextObject> {
 		const objects = fields?.map((field) => {

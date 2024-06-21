@@ -7,8 +7,7 @@ export function getButton(
 	actionId: string,
 	appId: string,
 	style?: ButtonStyle.PRIMARY | ButtonStyle.DANGER,
-	value?: string,
-	secondary?: boolean
+	value?: string
 ) {
 	const button: ButtonElement = {
 		type: 'button',
@@ -22,7 +21,6 @@ export function getButton(
 		actionId,
 		style,
 		value,
-		secondary: secondary,
 	};
 
 	return button;

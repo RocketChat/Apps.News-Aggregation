@@ -20,16 +20,13 @@ import { ImageParam } from '../ui-kit/element/IImageElement';
 import { PlainTextInputParam } from '../ui-kit/element/IPlainTextInputElement';
 
 export class ElementBuilder implements IElementBuilder {
-	appId: string;
-	constructor(appId: string) {
-		this.appId = appId;
-	}
+	constructor(private readonly appId: string) {}
 
 	public createButton(
 		param: ButtonParam,
 		interactionParam: ElementInteractionParam
 	): ButtonElement {
-		const { text, url, value, style, secondary } = param;
+		const { text, url, value, style } = param;
 		const { blockId, actionId } = interactionParam;
 
 		const button: ButtonElement = {
@@ -45,7 +42,6 @@ export class ElementBuilder implements IElementBuilder {
 			url,
 			value,
 			style,
-			secondary: secondary,
 		};
 
 		return button;

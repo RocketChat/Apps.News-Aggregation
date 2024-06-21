@@ -10,19 +10,19 @@ import {
 } from '@rocket.chat/ui-kit';
 import { getButton } from './button';
 
-export function getTextObjects(fields: Array<string>): Array<TextObject> {
-	const objects = fields?.map((field) => {
-		const textObject: TextObject = {
-			type: TextObjectType.PLAIN_TEXT,
-			text: field,
-			emoji: true,
-		};
+// export function getTextObjects(fields: Array<string>): Array<TextObject> {
+// 	const objects = fields?.map((field) => {
+// 		const textObject: TextObject = {
+// 			type: TextObjectType.PLAIN_TEXT,
+// 			text: field,
+// 			emoji: true,
+// 		};
 
-		return textObject;
-	});
+// 		return textObject;
+// 	});
 
-	return objects;
-}
+// 	return objects;
+// }
 
 export function getSectionBlock(
 	blockId: string,
@@ -38,7 +38,7 @@ export function getSectionBlock(
 			text: text ? text : '',
 			emoji: true,
 		},
-		fields: fields ? getTextObjects(fields) : undefined,
+		// fields: fields ? getTextObjects(fields) : undefined,
 		accessory,
 		appId: this.appId,
 		blockId,
