@@ -10,6 +10,7 @@ import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 // import { subscribeNewsModal } from '../modals/subscribeNewsModal';
 import { sendMessage } from '../utils/message';
+import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence';
 // import { getSubscribeBlock } from '../utils/blocks';
 
 export class Handler implements IHandler {
@@ -36,6 +37,8 @@ export class Handler implements IHandler {
 	public async subscribeNews(): Promise<void> {
 		console.log('news subscribe working.');
 		this.app.getLogger().info('news subscribe working.');
+
+		const persisRead = this.read.getPersistenceReader();
 
 		// TO-DO
 		// const modal = await subscribeNewsModal(
@@ -68,6 +71,18 @@ export class Handler implements IHandler {
 		// 	'Subscribe Button',
 		// 	subscribeBlock
 		// );
+
+		const subscriptionPersistence = new SubscriptionPersistence(
+			this.app,
+			persisRead,
+			this.persis
+		);
+
+		await subscriptionPersistence.createSubscription(
+			'',
+			this.sender,
+			this.room
+		);
 	}
 
 	public async unsubscribeNews(): Promise<void> {

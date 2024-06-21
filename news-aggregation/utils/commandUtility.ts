@@ -19,6 +19,7 @@ import { TechCrunchAdapter } from '../adapters/source-adapters/TechCrunchAdapter
 import { NewsItem } from '../definitions/NewsItem';
 import { NewsSource } from '../definitions/NewsSource';
 import { NewsFetchService } from '../services/NewsFetchService';
+import { Handler } from '../handlers/Handler';
 
 export class CommandUtility implements ICommandUtility {
 	sender: IUser;
@@ -166,7 +167,7 @@ export class CommandUtility implements ICommandUtility {
 		this.app.getLogger().info('news unsubscribe working.');
 	}
 
-	private async handleSingleParamCommand() {
+	private async handleSingleParamCommand(handler: Handler) {
 		const singleParamCommand = this.command[0];
 
 		switch (singleParamCommand) {
@@ -183,11 +184,11 @@ export class CommandUtility implements ICommandUtility {
 				break;
 
 			case CommandEnum.SUBSCRIBE:
-				await this.subscribeNews();
+				await handler.subscribeNews();
 				break;
 
 			case CommandEnum.UNSUBSCRIBE:
-				await this.unsubscribeNews();
+				await handler.unsubscribeNews();
 				break;
 
 			case CommandEnum.HELP:
@@ -203,9 +204,20 @@ export class CommandUtility implements ICommandUtility {
 	}
 
 	public async resolveCommand(): Promise<void> {
+		const handler = new Handler({
+			app: this.app,
+			sender: this.sender,
+			room: this.room,
+			read: this.read,
+			modify: this.modify,
+			http: this.http,
+			persistence: this.persistence,
+			persistenceRead: this.persistenceRead,
+			triggerId: this.triggerId,
+		});
 		switch (this.command.length) {
 			case 1: {
-				await this.handleSingleParamCommand();
+				await this.handleSingleParamCommand(handler);
 				break;
 			}
 
