@@ -59,7 +59,7 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 
 		try {
 			for (const news of this.newsItems) {
-				await newsStorage.saveNews(news);
+				await newsStorage.saveNews(news, 'TechCrunch');
 			}
 			console.log('all news-items saved!!');
 		} catch (err) {
@@ -78,12 +78,19 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 		const persisRead = read.getPersistenceReader();
 		const newsStorage = new NewsItemPersistence(this.app, persis, persisRead);
 
-		let newsObject: NewsItem[];
+		let newsObject: NewsItem[] = [];
 		try {
-			newsObject = (await newsStorage.getAllNewsById(
-				this.newsItems
-			)) as NewsItem[];
-			// console.log('news fetched FROM PERSIS');
+			// newsObject = (await newsStorage.getAllNewsById(
+			// 	this.newsItems
+			// )) as NewsItem[];
+			for (const newsItem of this.newsItems) {
+				const news = (await newsStorage.getNewsById(
+					newsItem.id,
+					'TechCrunch'
+				)) as NewsItem;
+				newsObject.push(news);
+			}
+			console.log('news fetched FROM PERSIS');
 		} catch (err) {
 			newsObject = [];
 			console.error(err);
