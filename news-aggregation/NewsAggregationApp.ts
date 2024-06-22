@@ -8,6 +8,7 @@ import {
 	ILogger,
 	IModify,
 	IPersistence,
+	IPersistenceRead,
 	IRead,
 } from '@rocket.chat/apps-engine/definition/accessors';
 import { App } from '@rocket.chat/apps-engine/definition/App';
@@ -24,6 +25,8 @@ import { NewsDeliveryService } from './services/NewsDeliveryService';
 
 export class NewsAggregationApp extends App {
 	// implements IUIKitInteractionHandler
+	persistence: IPersistence;
+	persistenceRead: IPersistenceRead;
 	constructor(info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
 		super(info, logger, accessors);
 	}
@@ -37,19 +40,24 @@ export class NewsAggregationApp extends App {
 	): Promise<void> {
 		console.log('news app installed');
 
-		const persistenceRead = read.getPersistenceReader();
 		const user = context.user;
 		await sendDirectMessageOnInstall(read, modify, user, persistence);
+	}
 
+	public async onEnable(
+		environment: IEnvironmentRead,
+		configurationModify: IConfigurationModify
+	): Promise<boolean> {
 		const deliveryService = new NewsDeliveryService(
 			this,
-			persistence,
-			persistenceRead
+			this.persistence,
+			this.persistenceRead
 		);
 
-		await modify
-			.getScheduler()
-			.scheduleRecurring(await deliveryService.deliverDailyNews());
+		await configurationModify.scheduler.scheduleRecurring(
+			await deliveryService.deliverDailyNews()
+		);
+		return true;
 	}
 
 	public async extendConfiguration(
@@ -63,7 +71,7 @@ export class NewsAggregationApp extends App {
 		]);
 
 		await configuration.scheduler.registerProcessors([
-			new FetchNewsProcessors(),
+			new FetchNewsProcessors(this),
 		]);
 	}
 
