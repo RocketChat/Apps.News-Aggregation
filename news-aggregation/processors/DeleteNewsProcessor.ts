@@ -23,6 +23,6 @@ export class DeleteNewsProcessor implements IProcessor {
 		persis: IPersistence
 	): Promise<void> {
 		const payload = jobContext;
-		console.log('delete-payload', payload);
+		console.log('DELETED!! delete-payload', payload);
 	}
 }

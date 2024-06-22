@@ -27,6 +27,8 @@ export class NewsDeliveryService {
 			this.persistence,
 			this.persistenceRead
 		);
+		console.log('newslelo');
+
 		const newsFromStorage = await newsStorage.getAllNews();
 		console.log('newss', newsFromStorage);
 
@@ -34,7 +36,7 @@ export class NewsDeliveryService {
 			id: 'fetch-news',
 			interval: '* * * * *',
 			data: {
-				news: newsFromStorage,
+				news: { newsFromStorage },
 			},
 		};
 

@@ -83,13 +83,14 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 			// newsObject = (await newsStorage.getAllNewsById(
 			// 	this.newsItems
 			// )) as NewsItem[];
-			for (const newsItem of this.newsItems) {
-				const news = (await newsStorage.getNewsById(
-					newsItem.id,
-					'TechCrunch'
-				)) as NewsItem;
-				newsObject.push(news);
-			}
+			// for (const newsItem of this.newsItems) {
+			// 	const news = (await newsStorage.getNewsById(
+			// 		newsItem.id,
+			// 		'TechCrunch'
+			// 	)) as NewsItem;
+			// 	newsObject.push(news);
+			// }
+			newsObject = (await newsStorage.getAllNews()) as NewsItem[];
 			console.log('news fetched FROM PERSIS');
 		} catch (err) {
 			newsObject = [];

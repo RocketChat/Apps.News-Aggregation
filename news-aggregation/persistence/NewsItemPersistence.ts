@@ -138,10 +138,10 @@ export class NewsItemPersistence {
 
 	async getNewsById(newsId: string, source: string): Promise<object> {
 		const associations: Array<RocketChatAssociationRecord> = [
-			// new RocketChatAssociationRecord(
-			// 	RocketChatAssociationModel.MISC,
-			// 	'news-aggregation'
-			// ),
+			new RocketChatAssociationRecord(
+				RocketChatAssociationModel.MISC,
+				'news-aggregation'
+			),
 			new RocketChatAssociationRecord(RocketChatAssociationModel.MISC, source),
 			new RocketChatAssociationRecord(RocketChatAssociationModel.MISC, newsId),
 		];
