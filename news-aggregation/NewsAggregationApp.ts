@@ -2,6 +2,7 @@ import {
 	IAppAccessors,
 	IAppInstallationContext,
 	IConfigurationExtend,
+	IConfigurationModify,
 	IEnvironmentRead,
 	IHttp,
 	ILogger,
@@ -18,6 +19,8 @@ import {
 	UIKitBlockInteractionContext,
 } from '@rocket.chat/apps-engine/definition/uikit';
 import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
+import { FetchNewsProcessors } from './processors/FetchNewsProcessor';
+import { NewsDeliveryService } from './services/NewsDeliveryService';
 
 export class NewsAggregationApp extends App {
 	// implements IUIKitInteractionHandler
@@ -34,8 +37,19 @@ export class NewsAggregationApp extends App {
 	): Promise<void> {
 		console.log('news app installed');
 
+		const persistenceRead = read.getPersistenceReader();
 		const user = context.user;
 		await sendDirectMessageOnInstall(read, modify, user, persistence);
+
+		const deliveryService = new NewsDeliveryService(
+			this,
+			persistence,
+			persistenceRead
+		);
+
+		await modify
+			.getScheduler()
+			.scheduleRecurring(await deliveryService.deliverDailyNews());
 	}
 
 	public async extendConfiguration(
@@ -46,6 +60,10 @@ export class NewsAggregationApp extends App {
 
 		await Promise.all([
 			configuration.slashCommands.provideSlashCommand(newsCommand),
+		]);
+
+		await configuration.scheduler.registerProcessors([
+			new FetchNewsProcessors(),
 		]);
 	}
 

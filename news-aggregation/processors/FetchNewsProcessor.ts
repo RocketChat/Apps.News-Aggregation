@@ -8,6 +8,7 @@ import {
 	IJobContext,
 	IProcessor,
 } from '@rocket.chat/apps-engine/definition/scheduler';
+import { NewsDeliveryService } from '../services/NewsDeliveryService';
 
 export class FetchNewsProcessors implements IProcessor {
 	id: string = 'fetch-news';
@@ -18,5 +19,8 @@ export class FetchNewsProcessors implements IProcessor {
 		modify: IModify,
 		http: IHttp,
 		persis: IPersistence
-	): Promise<void> {}
+	): Promise<void> {
+		const data = jobContext;
+		console.log('Data', data);
+	}
 }
