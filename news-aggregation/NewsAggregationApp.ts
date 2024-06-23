@@ -44,21 +44,21 @@ export class NewsAggregationApp extends App {
 		await sendDirectMessageOnInstall(read, modify, user, persistence);
 	}
 
-	public async onEnable(
-		environment: IEnvironmentRead,
-		configurationModify: IConfigurationModify
-	): Promise<boolean> {
-		const deliveryService = new NewsDeliveryService(
-			this,
-			this.persistence,
-			this.persistenceRead
-		);
+	// public async onEnable(
+	// 	environment: IEnvironmentRead,
+	// 	configurationModify: IConfigurationModify
+	// ): Promise<boolean> {
+	// 	const deliveryService = new NewsDeliveryService(
+	// 		this,
+	// 		this.persistence,
+	// 		this.persistenceRead
+	// 	);
 
-		await configurationModify.scheduler.scheduleRecurring(
-			await deliveryService.deliverDailyNews()
-		);
-		return true;
-	}
+	// 	await configurationModify.scheduler.scheduleRecurring(
+	// 		await deliveryService.deliverDailyNews()
+	// 	);
+	// 	return true;
+	// }
 
 	public async extendConfiguration(
 		configuration: IConfigurationExtend,
@@ -71,7 +71,7 @@ export class NewsAggregationApp extends App {
 		]);
 
 		await configuration.scheduler.registerProcessors([
-			new FetchNewsProcessors(this),
+			new FetchNewsProcessors(),
 		]);
 	}
 

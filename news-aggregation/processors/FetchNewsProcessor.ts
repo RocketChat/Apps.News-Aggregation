@@ -14,11 +14,11 @@ import { NewsAggregationApp } from '../NewsAggregationApp';
 
 export class FetchNewsProcessors implements IProcessor {
 	id: string = 'fetch-news';
-	private app: NewsAggregationApp;
+	// private app: NewsAggregationApp;
 
-	public constructor(app: NewsAggregationApp) {
-		this.app = app;
-	}
+	// public constructor(app: NewsAggregationApp) {
+	// 	this.app = app;
+	// }
 
 	async processor(
 		jobContext: IJobContext,
@@ -28,10 +28,10 @@ export class FetchNewsProcessors implements IProcessor {
 		persis: IPersistence
 	): Promise<void> {
 		const data = jobContext;
-		const persisRead = read.getPersistenceReader();
-		const newsStorage = new NewsItemPersistence(this.app, persis, persisRead);
-		const newsFromStorage = await newsStorage.getAllNews();
-		console.log('newss', newsFromStorage);
+		// const persisRead = read.getPersistenceReader();
+		// const newsStorage = new NewsItemPersistence(this.app, persis, persisRead);
+		// const newsFromStorage = await newsStorage.getAllNews();
+		// console.log('newss', newsFromStorage);
 		console.log('Data', data);
 	}
 }

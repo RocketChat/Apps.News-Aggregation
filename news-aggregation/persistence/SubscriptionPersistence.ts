@@ -56,9 +56,12 @@ export class SubscriptionPersistence {
 			);
 			console.log('subscription created!!', subscriptionId);
 		} catch (err) {
+			subscriptionId = '';
 			console.error('Could not create news subscription', err);
 			this.app.getLogger().info('Could not create news subscription', err);
 		}
+
+		return subscriptionId;
 	}
 
 	async getSubscribedRooms(room: IRoom): Promise<Array<ISubscription>> {

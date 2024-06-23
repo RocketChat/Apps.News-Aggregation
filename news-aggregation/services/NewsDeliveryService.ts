@@ -36,7 +36,7 @@ export class NewsDeliveryService {
 			id: 'fetch-news',
 			interval: '* * * * *',
 			data: {
-				news: { newsFromStorage },
+				newsFromStorage,
 			},
 		};
 
