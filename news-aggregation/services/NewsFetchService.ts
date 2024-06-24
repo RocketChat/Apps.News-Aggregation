@@ -10,7 +10,6 @@ import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { TechCrunchAdapter } from '../adapters/source-adapters/TechCrunchAdapter';
 import { NewsSource } from '../definitions/NewsSource';
 import { NewsItem } from '../definitions/NewsItem';
-import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 
 export class NewsFetchService {
 	app: NewsAggregationApp;
@@ -43,20 +42,22 @@ export class NewsFetchService {
 			this.persistence
 		);
 
-		const newsStorage = new NewsItemPersistence(
-			this.app,
-			this.persistence,
-			this.persistenceRead
-		);
-		try {
-			for (const item of news) {
-				await newsStorage.saveNews(item, 'TechCrunch');
-			}
-			console.log('all news-items saved!!');
-		} catch (err) {
-			console.error('News Items could not be save', err);
-			this.app.getLogger().error('News Items could not be save', err);
-		}
+		// await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
+
+		// const newsStorage = new NewsItemPersistence(
+		// 			this.app,
+		// 			this.persistence,
+		// 			this.persistenceRead
+		// 		);
+		// 		try {
+		// 			for (const item of news) {
+		// 				await newsStorage.saveNews(item, 'TechCrunch');
+		// 			}
+		// 			console.log('all news-items saved!!');
+		// 		} catch (err) {
+		// 			console.error('News Items could not be save', err);
+		// 			this.app.getLogger().error('News Items could not be save', err);
+		// 		}
 	}
 
 	async deleteNewsScheduler(

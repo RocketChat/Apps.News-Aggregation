@@ -83,12 +83,12 @@ export class CommandUtility implements ICommandUtility {
 
 		// await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
 
-		const fetchService = new NewsFetchService(
-			this.app,
-			this.persistence,
-			this.persistenceRead
-		);
-		await fetchService.fetchNewsAndStore(this.read, this.modify, this.http);
+		// const fetchService = new NewsFetchService(
+		// 	this.app,
+		// 	this.persistence,
+		// 	this.persistenceRead
+		// );
+		// await fetchService.fetchNewsAndStore(this.read, this.modify, this.http);
 	}
 
 	public async getNewsFromPersistence() {
