@@ -14,13 +14,16 @@ import {
 } from '@rocket.chat/apps-engine/definition/accessors';
 import { NewsAggregationApp } from '../NewsAggregationApp';
 import { CommandEnum } from '../enums/commandEnum';
-import { sendHelperMessage } from './message';
+import { sendHelperMessage, sendMessage } from './message';
 import { TechCrunchAdapter } from '../adapters/source-adapters/TechCrunchAdapter';
 import { NewsItem } from '../definitions/NewsItem';
 import { NewsSource } from '../definitions/NewsSource';
 import { NewsFetchService } from '../services/NewsFetchService';
 import { Handler } from '../handlers/Handler';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
+import { Block } from '@rocket.chat/ui-kit';
+import { buildNewsBlock } from '../blocks/UtilityBlocks';
+import { sendNewsMessage } from './sendNewsMessage';
 
 export class CommandUtility implements ICommandUtility {
 	sender: IUser;
@@ -80,17 +83,12 @@ export class CommandUtility implements ICommandUtility {
 
 		// await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
 
-		// const fetchService = new NewsFetchService(
-		// 	this.app,
-		// 	this.persistence,
-		// 	this.persistenceRead
-		// );
-		// await fetchService.fetchNewsAndStore(
-		// 	this.read,
-		// 	this.modify,
-		// 	this.room,
-		// 	this.http
-		// );
+		const fetchService = new NewsFetchService(
+			this.app,
+			this.persistence,
+			this.persistenceRead
+		);
+		await fetchService.fetchNewsAndStore(this.read, this.modify, this.http);
 	}
 
 	public async getNewsFromPersistence() {
@@ -104,6 +102,12 @@ export class CommandUtility implements ICommandUtility {
 			news
 		);
 
+		const newsStorage = new NewsItemPersistence(
+			this.app,
+			this.persistence,
+			this.persistenceRead
+		);
+
 		try {
 			// news = await techCrunchNewsSource.getNews(
 			// 	this.read,
@@ -112,7 +116,25 @@ export class CommandUtility implements ICommandUtility {
 			// 	this.http,
 			// 	this.persistence
 			// );
+			news = (await newsStorage.getAllNews()) as NewsItem[];
 			console.log('fetched!!', news, 'FETCHED FROM PERSISTENCE!');
+
+			let newsBlocks: Array<Array<Block>> = [];
+			for (const item of news) {
+				const newsBlock = await buildNewsBlock(item);
+				// newsBlocks.push(newsBlock);
+
+				await sendMessage(this.modify, this.room, this.sender, '', newsBlock);
+			}
+
+			// await sendNewsMessage(
+			// 	this.modify,
+			// 	this.room,
+			// 	this.sender,
+			// 	'',
+			// 	newsBlocks
+			// );
+			console.log('news displayed!');
 		} catch (err) {
 			console.error(err);
 		}

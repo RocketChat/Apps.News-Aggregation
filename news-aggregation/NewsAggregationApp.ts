@@ -44,18 +44,18 @@ export class NewsAggregationApp extends App {
 		await sendDirectMessageOnInstall(read, modify, user, persistence);
 	}
 
-	public async onEnable(
-		environment: IEnvironmentRead,
-		configurationModify: IConfigurationModify
-	): Promise<boolean> {
-		await Promise.all([
-			configurationModify.scheduler.scheduleRecurring({
-				id: 'fetch-news',
-				interval: '* * * * * *',
-			}),
-		]);
-		return true;
-	}
+	// public async onEnable(
+	// 	environment: IEnvironmentRead,
+	// 	configurationModify: IConfigurationModify
+	// ): Promise<boolean> {
+	// 	await Promise.all([
+	// 		configurationModify.scheduler.scheduleRecurring({
+	// 			id: 'fetch-news',
+	// 			interval: '* * * * * *',
+	// 		}),
+	// 	]);
+	// 	return true;
+	// }
 
 	public async extendConfiguration(
 		configuration: IConfigurationExtend,
@@ -67,9 +67,9 @@ export class NewsAggregationApp extends App {
 			configuration.slashCommands.provideSlashCommand(newsCommand),
 		]);
 
-		await configuration.scheduler.registerProcessors([
-			new FetchNewsProcessor(this),
-		]);
+		// await configuration.scheduler.registerProcessors([
+		// 	new FetchNewsProcessor(this),
+		// ]);
 	}
 
 	// public async executeBlockActionHandler(
@@ -90,9 +90,9 @@ export class NewsAggregationApp extends App {
 	// 	return await handler.handleActions();
 	// }
 
-	public async onDisable(
-		configurationModify: IConfigurationModify
-	): Promise<void> {
-		await Promise.all([configurationModify.scheduler.cancelJob('fetch-news')]);
-	}
+	// public async onDisable(
+	// 	configurationModify: IConfigurationModify
+	// ): Promise<void> {
+	// 	await Promise.all([configurationModify.scheduler.cancelJob('fetch-news')]);
+	// }
 }
