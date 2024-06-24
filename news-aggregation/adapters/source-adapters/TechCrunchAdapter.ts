@@ -19,7 +19,6 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 	public async fetchNews(
 		read: IRead,
 		modify: IModify,
-		room: IRoom,
 		http: IHttp,
 		persis: IPersistence
 	): Promise<NewsItem[]> {
@@ -47,74 +46,74 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 		return this.newsItems;
 	}
 
-	public async saveNews(
-		persistence: IPersistence,
-		persistenceRead: IPersistenceRead
-	): Promise<any> {
-		const newsStorage = new NewsItemPersistence(
-			this.app,
-			persistence,
-			persistenceRead
-		);
+	// public async saveNews(
+	// 	persistence: IPersistence,
+	// 	persistenceRead: IPersistenceRead
+	// ): Promise<any> {
+	// 	const newsStorage = new NewsItemPersistence(
+	// 		this.app,
+	// 		persistence,
+	// 		persistenceRead
+	// 	);
 
-		try {
-			for (const news of this.newsItems) {
-				await newsStorage.saveNews(news, 'TechCrunch');
-			}
-			console.log('all news-items saved!!');
-		} catch (err) {
-			console.error('News Items could not be save', err);
-			this.app.getLogger().error('News Items could not be save', err);
-		}
-	}
+	// 	try {
+	// 		for (const news of this.newsItems) {
+	// 			await newsStorage.saveNews(news, 'TechCrunch');
+	// 		}
+	// 		console.log('all news-items saved!!');
+	// 	} catch (err) {
+	// 		console.error('News Items could not be save', err);
+	// 		this.app.getLogger().error('News Items could not be save', err);
+	// 	}
+	// }
 
-	public async getNews(
-		read: IRead,
-		modify: IModify,
-		room: IRoom,
-		http: IHttp,
-		persis: IPersistence
-	): Promise<NewsItem[]> {
-		const persisRead = read.getPersistenceReader();
-		const newsStorage = new NewsItemPersistence(this.app, persis, persisRead);
+	// public async getNews(
+	// 	read: IRead,
+	// 	modify: IModify,
+	// 	room: IRoom,
+	// 	http: IHttp,
+	// 	persis: IPersistence
+	// ): Promise<NewsItem[]> {
+	// 	const persisRead = read.getPersistenceReader();
+	// 	const newsStorage = new NewsItemPersistence(this.app, persis, persisRead);
 
-		let newsObject: NewsItem[] = [];
-		try {
-			// newsObject = (await newsStorage.getAllNewsById(
-			// 	this.newsItems
-			// )) as NewsItem[];
-			// for (const newsItem of this.newsItems) {
-			// 	const news = (await newsStorage.getNewsById(
-			// 		newsItem.id,
-			// 		'TechCrunch'
-			// 	)) as NewsItem;
-			// 	newsObject.push(news);
-			// }
-			newsObject = (await newsStorage.getAllNews()) as NewsItem[];
-			console.log('news fetched FROM PERSIS');
-		} catch (err) {
-			newsObject = [];
-			console.error(err);
-			this.app.getLogger().error(err);
-		}
-		return newsObject;
-	}
+	// 	let newsObject: NewsItem[] = [];
+	// 	try {
+	// 		// newsObject = (await newsStorage.getAllNewsById(
+	// 		// 	this.newsItems
+	// 		// )) as NewsItem[];
+	// 		// for (const newsItem of this.newsItems) {
+	// 		// 	const news = (await newsStorage.getNewsById(
+	// 		// 		newsItem.id,
+	// 		// 		'TechCrunch'
+	// 		// 	)) as NewsItem;
+	// 		// 	newsObject.push(news);
+	// 		// }
+	// 		newsObject = (await newsStorage.getAllNews()) as NewsItem[];
+	// 		console.log('news fetched FROM PERSIS');
+	// 	} catch (err) {
+	// 		newsObject = [];
+	// 		console.error(err);
+	// 		this.app.getLogger().error(err);
+	// 	}
+	// 	return newsObject;
+	// }
 
-	public async deleteNews(
-		read: IRead,
-		modify: IModify,
-		room: IRoom,
-		http: IHttp,
-		persis: IPersistence
-	) {
-		const persisRead = read.getPersistenceReader();
-		const newsStorage = new NewsItemPersistence(this.app, persis, persisRead);
+	// public async deleteNews(
+	// 	read: IRead,
+	// 	modify: IModify,
+	// 	room: IRoom,
+	// 	http: IHttp,
+	// 	persis: IPersistence
+	// ) {
+	// 	const persisRead = read.getPersistenceReader();
+	// 	const newsStorage = new NewsItemPersistence(this.app, persis, persisRead);
 
-		try {
-			await newsStorage.removeAllNews();
-			console.log('Removed all news !!!');
-		} catch (err) {
-			console.error(err);
-		}
-	}
+	// 	try {
+	// 		await newsStorage.removeAllNews();
+	// 		console.log('Removed all news !!!');
+	// 	} catch (err) {
+	// 		console.error(err);
+	// 	}
+	// }
 }

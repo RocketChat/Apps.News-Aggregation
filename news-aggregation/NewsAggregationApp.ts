@@ -20,7 +20,7 @@ import {
 	UIKitBlockInteractionContext,
 } from '@rocket.chat/apps-engine/definition/uikit';
 import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
-import { FetchNewsProcessors } from './processors/FetchNewsProcessor';
+import { FetchNewsProcessor } from './processors/FetchNewsProcessor';
 import { NewsDeliveryService } from './services/NewsDeliveryService';
 
 export class NewsAggregationApp extends App {
@@ -44,21 +44,18 @@ export class NewsAggregationApp extends App {
 		await sendDirectMessageOnInstall(read, modify, user, persistence);
 	}
 
-	// public async onEnable(
-	// 	environment: IEnvironmentRead,
-	// 	configurationModify: IConfigurationModify
-	// ): Promise<boolean> {
-	// 	const deliveryService = new NewsDeliveryService(
-	// 		this,
-	// 		this.persistence,
-	// 		this.persistenceRead
-	// 	);
-
-	// 	await configurationModify.scheduler.scheduleRecurring(
-	// 		await deliveryService.deliverDailyNews()
-	// 	);
-	// 	return true;
-	// }
+	public async onEnable(
+		environment: IEnvironmentRead,
+		configurationModify: IConfigurationModify
+	): Promise<boolean> {
+		await Promise.all([
+			configurationModify.scheduler.scheduleRecurring({
+				id: 'fetch-news',
+				interval: '* * * * * *',
+			}),
+		]);
+		return true;
+	}
 
 	public async extendConfiguration(
 		configuration: IConfigurationExtend,
@@ -71,7 +68,7 @@ export class NewsAggregationApp extends App {
 		]);
 
 		await configuration.scheduler.registerProcessors([
-			new FetchNewsProcessors(),
+			new FetchNewsProcessor(this),
 		]);
 	}
 
@@ -92,4 +89,10 @@ export class NewsAggregationApp extends App {
 	// 	);
 	// 	return await handler.handleActions();
 	// }
+
+	public async onDisable(
+		configurationModify: IConfigurationModify
+	): Promise<void> {
+		await Promise.all([configurationModify.scheduler.cancelJob('fetch-news')]);
+	}
 }

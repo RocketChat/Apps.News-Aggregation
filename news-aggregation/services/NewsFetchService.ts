@@ -26,12 +26,7 @@ export class NewsFetchService {
 		this.persistenceRead = persistenceRead;
 	}
 
-	async fetchNewsAndStore(
-		read: IRead,
-		modify: IModify,
-		room: IRoom,
-		http: IHttp
-	) {
+	async fetchNewsAndStore(read: IRead, modify: IModify, http: IHttp) {
 		let news: NewsItem[] = [];
 		const techCrunchAdapter = new TechCrunchAdapter();
 		const techCrunchNewsSource = new NewsSource(
@@ -43,12 +38,11 @@ export class NewsFetchService {
 		news = await techCrunchNewsSource.fetchNews(
 			read,
 			modify,
-			room,
 			http,
 			this.persistence
 		);
 
-		await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
+		// await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
 	}
 
 	async deleteNewsScheduler(
@@ -67,7 +61,7 @@ export class NewsFetchService {
 		);
 
 		try {
-			await techCrunchNewsSource.deleteNews(read, modify, room, http, persis);
+			// await techCrunchNewsSource.deleteNews(read, modify, room, http, persis);
 			console.log('all news deleted!');
 		} catch (err) {
 			console.error(err);

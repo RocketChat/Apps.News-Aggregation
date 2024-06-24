@@ -26,7 +26,7 @@ export class SubscriptionPersistence {
 		this.persistence = persistence;
 	}
 
-	async createSubscription(interval: string, user: IUser, room: IRoom) {
+	public async createSubscription(interval: string, user: IUser, room: IRoom) {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,
@@ -44,8 +44,8 @@ export class SubscriptionPersistence {
 			userId: user.id,
 			interval: interval,
 			createdOn: new Date(),
-			user: user,
-			room: room,
+			user: user.id,
+			room: room.id,
 		};
 
 		let subscriptionId: string;
@@ -64,7 +64,7 @@ export class SubscriptionPersistence {
 		return subscriptionId;
 	}
 
-	async getSubscribedRooms(room: IRoom): Promise<Array<ISubscription>> {
+	public async getSubscribedRooms(room: IRoom): Promise<Array<ISubscription>> {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,
@@ -87,7 +87,7 @@ export class SubscriptionPersistence {
 		return subscriptions;
 	}
 
-	async getSubscriptions(): Promise<Array<ISubscription>> {
+	public async getSubscriptions(): Promise<Array<ISubscription>> {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,
@@ -109,7 +109,7 @@ export class SubscriptionPersistence {
 		return subscriptions;
 	}
 
-	async getSubscriptionById(
+	public async getSubscriptionById(
 		subscriptionId: string
 	): Promise<Array<ISubscription>> {
 		const associations: Array<RocketChatAssociationRecord> = [
@@ -137,7 +137,7 @@ export class SubscriptionPersistence {
 		return subscriptions;
 	}
 
-	async deleteSubscriptionsByRoom(room: IRoom) {
+	public async deleteSubscriptionsByRoom(room: IRoom) {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,
@@ -154,7 +154,7 @@ export class SubscriptionPersistence {
 		}
 	}
 
-	async deleteSubscriptionsByUser(user: IUser) {
+	public async deleteSubscriptionsByUser(user: IUser) {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,
@@ -171,7 +171,7 @@ export class SubscriptionPersistence {
 		}
 	}
 
-	async deleteSubscriptionById(
+	public async deleteSubscriptionById(
 		subscriptionId: string,
 		room: IRoom,
 		user: IUser
@@ -197,7 +197,7 @@ export class SubscriptionPersistence {
 		}
 	}
 
-	async isSubscribed(room: IRoom) {
+	public async isSubscribed(room: IRoom) {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,

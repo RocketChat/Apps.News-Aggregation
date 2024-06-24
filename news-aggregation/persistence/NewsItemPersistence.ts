@@ -25,7 +25,31 @@ export class NewsItemPersistence {
 		this.persistenceRead = persistenceRead;
 	}
 
-	async saveNews(news: NewsItem, source: string) {
+	public async checkNews(newsId: string, source: string): Promise<boolean> {
+		const associations: Array<RocketChatAssociationRecord> = [
+			new RocketChatAssociationRecord(
+				RocketChatAssociationModel.MISC,
+				'news-aggregation'
+			),
+			new RocketChatAssociationRecord(RocketChatAssociationModel.MISC, newsId),
+			new RocketChatAssociationRecord(RocketChatAssociationModel.MISC, source),
+		];
+
+		let news: object[] = [];
+		try {
+			news = await this.persistenceRead.readByAssociations(associations);
+			if (news.length !== 0) {
+				return true;
+			}
+		} catch (err) {
+			this.app.getLogger().error(err);
+			console.error(err);
+		}
+
+		return false;
+	}
+
+	public async saveNews(news: NewsItem, source: string) {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,
@@ -36,15 +60,20 @@ export class NewsItemPersistence {
 		];
 
 		let recordId: string;
-		try {
-			recordId = await this.persistence.createWithAssociations(
-				news,
-				associations
-			);
-			console.log('News saved in Persistence!!', recordId);
-		} catch (err) {
-			console.error('Could not save news in persistence.', err);
-			this.app.getLogger().error('Could not save news in persistence.', err);
+		if ((await this.checkNews(news.id, source)) === true) {
+			console.log('news with this id exists');
+			return;
+		} else {
+			try {
+				recordId = await this.persistence.createWithAssociations(
+					news,
+					associations
+				);
+				console.log('News saved in Persistence!!', recordId);
+			} catch (err) {
+				console.error('Could not save news in persistence.', err);
+				this.app.getLogger().error('Could not save news in persistence.', err);
+			}
 		}
 	}
 
@@ -68,7 +97,7 @@ export class NewsItemPersistence {
 	// }
 
 	// Question
-	async getAllNewsById(allNews: NewsItem[]): Promise<object[]> {
+	public async getAllNewsById(allNews: NewsItem[]): Promise<object[]> {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,
@@ -105,7 +134,7 @@ export class NewsItemPersistence {
 		return allNewsObjectArray;
 	}
 
-	async getAllNews(): Promise<object[]> {
+	public async getAllNews(): Promise<object[]> {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,
@@ -136,7 +165,7 @@ export class NewsItemPersistence {
 		return allNewsObjectArray;
 	}
 
-	async getNewsById(newsId: string, source: string): Promise<object> {
+	public async getNewsById(newsId: string, source: string): Promise<object> {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,
@@ -155,6 +184,7 @@ export class NewsItemPersistence {
 			if (newsObjectArray.length === 0) {
 				console.error("News with the given id doesn't exist");
 				this.app.getLogger().error("News with the given id doesn't exist");
+				return {};
 			}
 
 			for (const news of newsObjectArray) {
@@ -171,7 +201,7 @@ export class NewsItemPersistence {
 		return newsObject;
 	}
 
-	async removeNewsById(news: NewsItem) {
+	public async removeNewsById(news: NewsItem) {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,
@@ -194,7 +224,7 @@ export class NewsItemPersistence {
 		}
 	}
 
-	async removeAllNews() {
+	public async removeAllNews() {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,

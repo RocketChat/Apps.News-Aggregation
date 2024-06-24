@@ -20,6 +20,7 @@ import { NewsItem } from '../definitions/NewsItem';
 import { NewsSource } from '../definitions/NewsSource';
 import { NewsFetchService } from '../services/NewsFetchService';
 import { Handler } from '../handlers/Handler';
+import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 
 export class CommandUtility implements ICommandUtility {
 	sender: IUser;
@@ -61,10 +62,7 @@ export class CommandUtility implements ICommandUtility {
 	}
 
 	private async fetchNewsFromSource() {
-		let news: NewsItem[] = [];
-		// const techCrunchSource = new TechCrunchNewsSource(this.app, news);
-		// await techCrunchSource.fetchNews(this.read, this.modify, this.room, this.http, this.persistence);
-
+		let newsItems: NewsItem[] = [];
 		// const techCrunchAdapter = new TechCrunchAdapter();
 		// const techCrunchNewsSource = new NewsSource(
 		// 	this.app,
@@ -82,17 +80,17 @@ export class CommandUtility implements ICommandUtility {
 
 		// await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
 
-		const fetchService = new NewsFetchService(
-			this.app,
-			this.persistence,
-			this.persistenceRead
-		);
-		await fetchService.fetchNewsAndStore(
-			this.read,
-			this.modify,
-			this.room,
-			this.http
-		);
+		// const fetchService = new NewsFetchService(
+		// 	this.app,
+		// 	this.persistence,
+		// 	this.persistenceRead
+		// );
+		// await fetchService.fetchNewsAndStore(
+		// 	this.read,
+		// 	this.modify,
+		// 	this.room,
+		// 	this.http
+		// );
 	}
 
 	public async getNewsFromPersistence() {
@@ -107,13 +105,13 @@ export class CommandUtility implements ICommandUtility {
 		);
 
 		try {
-			news = await techCrunchNewsSource.getNews(
-				this.read,
-				this.modify,
-				this.room,
-				this.http,
-				this.persistence
-			);
+			// news = await techCrunchNewsSource.getNews(
+			// 	this.read,
+			// 	this.modify,
+			// 	this.room,
+			// 	this.http,
+			// 	this.persistence
+			// );
 			console.log('fetched!!', news, 'FETCHED FROM PERSISTENCE!');
 		} catch (err) {
 			console.error(err);

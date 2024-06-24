@@ -9,7 +9,6 @@ import {
 import { NewsAggregationApp } from '../NewsAggregationApp';
 
 import { NewsItem } from './NewsItem';
-import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { INewsSourceAdapter } from '../adapters/INewsSourceAdapter';
 
 export class NewsSource {
@@ -27,40 +26,39 @@ export class NewsSource {
 		this.news = news;
 	}
 
-	async fetchNews(
+	public async fetchNews(
 		read: IRead,
 		modify: IModify,
-		room: IRoom,
 		http: IHttp,
 		persis: IPersistence
 	): Promise<NewsItem[]> {
-		return this.adapter.fetchNews(read, modify, room, http, persis);
+		return this.adapter.fetchNews(read, modify, http, persis);
 	}
 
-	async saveNews(
-		persistence: IPersistence,
-		persistenceRead: IPersistenceRead
-	): Promise<any> {
-		return this.adapter.saveNews(persistence, persistenceRead);
-	}
+	// async saveNews(
+	// 	persistence: IPersistence,
+	// 	persistenceRead: IPersistenceRead
+	// ): Promise<any> {
+	// 	return this.adapter.saveNews(persistence, persistenceRead);
+	// }
 
-	async getNews(
-		read: IRead,
-		modify: IModify,
-		room: IRoom,
-		http: IHttp,
-		persis: IPersistence
-	): Promise<NewsItem[]> {
-		return this.adapter.getNews(read, modify, room, http, persis);
-	}
+	// async getNews(
+	// 	read: IRead,
+	// 	modify: IModify,
+	// 	room: IRoom,
+	// 	http: IHttp,
+	// 	persis: IPersistence
+	// ): Promise<NewsItem[]> {
+	// 	return this.adapter.getNews(read, modify, room, http, persis);
+	// }
 
-	async deleteNews(
-		read: IRead,
-		modify: IModify,
-		room: IRoom,
-		http: IHttp,
-		persis: IPersistence
-	) {
-		return this.adapter.deleteNews(read, modify, room, http, persis);
-	}
+	// async deleteNews(
+	// 	read: IRead,
+	// 	modify: IModify,
+	// 	room: IRoom,
+	// 	http: IHttp,
+	// 	persis: IPersistence
+	// ) {
+	// 	return this.adapter.deleteNews(read, modify, room, http, persis);
+	// }
 }
