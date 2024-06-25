@@ -8,7 +8,6 @@ import {
 	IJobContext,
 	IProcessor,
 } from '@rocket.chat/apps-engine/definition/scheduler';
-import { NewsDeliveryService } from '../services/NewsDeliveryService';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 import { NewsAggregationApp } from '../NewsAggregationApp';
 import { TechCrunchAdapter } from '../adapters/source-adapters/TechCrunchAdapter';
@@ -60,9 +59,10 @@ export class FetchNewsProcessor implements IProcessor {
 
 		const newsStorage = new NewsItemPersistence(this.app, persis, persisRead);
 		try {
-			for (const news of this.newsItems) {
-				await newsStorage.saveNews(news, 'TechCrunch');
-			}
+			const saveNews = this.newsItems.map((newsItem) =>
+				newsStorage.saveNews(newsItem, 'TechCrunch')
+			);
+			await Promise.all(saveNews);
 			console.log('all news-items saved!!');
 		} catch (err) {
 			console.error('News Items could not be save', err);

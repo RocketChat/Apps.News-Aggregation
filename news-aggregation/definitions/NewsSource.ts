@@ -34,31 +34,4 @@ export class NewsSource {
 	): Promise<NewsItem[]> {
 		return this.adapter.fetchNews(read, modify, http, persis);
 	}
-
-	// async saveNews(
-	// 	persistence: IPersistence,
-	// 	persistenceRead: IPersistenceRead
-	// ): Promise<any> {
-	// 	return this.adapter.saveNews(persistence, persistenceRead);
-	// }
-
-	// async getNews(
-	// 	read: IRead,
-	// 	modify: IModify,
-	// 	room: IRoom,
-	// 	http: IHttp,
-	// 	persis: IPersistence
-	// ): Promise<NewsItem[]> {
-	// 	return this.adapter.getNews(read, modify, room, http, persis);
-	// }
-
-	// async deleteNews(
-	// 	read: IRead,
-	// 	modify: IModify,
-	// 	room: IRoom,
-	// 	http: IHttp,
-	// 	persis: IPersistence
-	// ) {
-	// 	return this.adapter.deleteNews(read, modify, room, http, persis);
-	// }
 }

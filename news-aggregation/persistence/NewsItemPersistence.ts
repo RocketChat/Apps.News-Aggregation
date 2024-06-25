@@ -25,7 +25,7 @@ export class NewsItemPersistence {
 		this.persistenceRead = persistenceRead;
 	}
 
-	public async checkNews(newsId: string, source: string): Promise<boolean> {
+	public async newsExists(newsId: string, source: string): Promise<boolean> {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,
@@ -60,7 +60,7 @@ export class NewsItemPersistence {
 		];
 
 		let recordId: string;
-		if ((await this.checkNews(news.id, source)) === true) {
+		if ((await this.newsExists(news.id, source)) === true) {
 			console.log('news with this id exists');
 			return;
 		} else {
@@ -96,8 +96,7 @@ export class NewsItemPersistence {
 	//     associations.push(idAssociation);
 	// }
 
-	// Question
-	public async getAllNewsById(allNews: NewsItem[]): Promise<object[]> {
+	public async getAllNewsById(newsIds: string[]): Promise<NewsItem[]> {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,
@@ -105,15 +104,15 @@ export class NewsItemPersistence {
 			),
 		];
 
-		for (const news of allNews) {
+		for (const newsId of newsIds) {
 			const currNewsAssociation = new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,
-				news.id
+				newsId
 			);
 			associations.push(currNewsAssociation);
 		}
 
-		let allNewsObjectArray: object[];
+		let allNewsObjectArray: NewsItem[];
 		try {
 			allNewsObjectArray = (await this.persistenceRead.readByAssociations(
 				associations

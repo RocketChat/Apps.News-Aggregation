@@ -3,8 +3,7 @@ import { IUser } from '@rocket.chat/apps-engine/definition/users';
 
 export interface ISubscription {
 	userId: string;
+	roomId: string;
 	interval: string;
 	createdOn: Date;
-	user: string;
-	room: string;
 }

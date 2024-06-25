@@ -42,13 +42,12 @@ export class SubscriptionPersistence {
 
 		let subscriptionRecord: ISubscription = {
 			userId: user.id,
+			roomId: room.id,
 			interval: interval,
 			createdOn: new Date(),
-			user: user.id,
-			room: room.id,
 		};
 
-		let subscriptionId: string;
+		let subscriptionId: any;
 		try {
 			subscriptionId = await this.persistence.createWithAssociations(
 				subscriptionRecord,
@@ -56,7 +55,7 @@ export class SubscriptionPersistence {
 			);
 			console.log('subscription created!!', subscriptionId);
 		} catch (err) {
-			subscriptionId = '';
+			subscriptionId = null;
 			console.error('Could not create news subscription', err);
 			this.app.getLogger().info('Could not create news subscription', err);
 		}

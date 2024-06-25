@@ -14,25 +14,4 @@ export interface INewsSourceAdapter {
 		http: IHttp,
 		persis: IPersistence
 	): Promise<NewsItem[]>;
-
-	// saveNews(
-	// 	persistence: IPersistence,
-	// 	persistenceRead: IPersistenceRead
-	// ): Promise<any>;
-
-	// getNews(
-	// 	read: IRead,
-	// 	modify: IModify,
-	// 	room: IRoom,
-	// 	http: IHttp,
-	// 	persis: IPersistence
-	// ): Promise<NewsItem[]>;
-
-	// deleteNews(
-	// 	read: IRead,
-	// 	modify: IModify,
-	// 	room: IRoom,
-	// 	http: IHttp,
-	// 	persis: IPersistence
-	// ): Promise<any>;
 }
