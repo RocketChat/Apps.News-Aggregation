@@ -1,6 +1,7 @@
 import { Block } from '@rocket.chat/ui-kit';
 import { NewsItem } from '../definitions/NewsItem';
 import {
+	getDescriptionBlock,
 	getMarkdownBlock,
 	getOptionalsBlock,
 	getPlainTextBlock,
@@ -15,8 +16,8 @@ export async function buildNewsBlock(news: NewsItem) {
 	const titleBlock = getTitleBlock(news.title);
 	blocks.push(titleBlock);
 
-	const descrptionBlock = getPlainTextBlock(news.description);
-	blocks.push(descrptionBlock);
+	const descriptionBlock = getDescriptionBlock(news.description);
+	blocks.push(descriptionBlock);
 
 	const newsPreviewBlock = getPreviewBlock(news);
 	blocks.push(newsPreviewBlock);

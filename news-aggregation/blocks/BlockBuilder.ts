@@ -13,7 +13,7 @@ export function getTitleBlock(labelText: string, accessory?: any) {
 		type: 'section',
 		text: {
 			type: 'mrkdwn',
-			text: `## ${labelText}`,
+			text: `## Title: ${labelText}`,
 		},
 		accessory: accessory,
 	};
@@ -39,6 +39,18 @@ export function getPlainTextBlock(labelText: string, accessory?: any) {
 			type: 'plain_text',
 			text: labelText,
 			emoji: true,
+		},
+		accessory: accessory,
+	};
+	return block;
+}
+
+export function getDescriptionBlock(labelText: string, accessory?: any) {
+	const block: SectionBlock = {
+		type: 'section',
+		text: {
+			type: 'mrkdwn',
+			text: `*Summary: * ${labelText}`,
 		},
 		accessory: accessory,
 	};
