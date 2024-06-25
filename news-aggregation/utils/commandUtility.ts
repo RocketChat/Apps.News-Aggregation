@@ -91,13 +91,14 @@ export class CommandUtility implements ICommandUtility {
 
 	public async getNewsFromPersistence() {
 		let news: NewsItem[] = [];
+		const appUser = (await this.read.getUserReader().getAppUser()) as IUser;
 
-		const techCrunchAdapter = new TechCrunchAdapter();
-		const techCrunchNewsSource = new NewsSource(
-			this.app,
-			techCrunchAdapter,
-			news
-		);
+		// const techCrunchAdapter = new TechCrunchAdapter();
+		// const techCrunchNewsSource = new NewsSource(
+		// 	this.app,
+		// 	techCrunchAdapter,
+		// 	news
+		// );
 
 		const newsStorage = new NewsItemPersistence(
 			this.app,
@@ -121,8 +122,7 @@ export class CommandUtility implements ICommandUtility {
 			for (const item of news) {
 				const newsBlock = await buildNewsBlock(item);
 				// newsBlocks.push(newsBlock);
-
-				await sendMessage(this.modify, this.room, this.sender, '', newsBlock);
+				await sendMessage(this.modify, this.room, appUser, '', newsBlock);
 			}
 
 			// await sendNewsMessage(
