@@ -6,10 +6,7 @@ import {
 } from '@rocket.chat/apps-engine/definition/accessors';
 import {
 	IJobContext,
-	IOnetimeStartup,
 	IProcessor,
-	IRecurringStartup,
-	StartupType,
 } from '@rocket.chat/apps-engine/definition/scheduler';
 
 export class DeleteNewsProcessor implements IProcessor {

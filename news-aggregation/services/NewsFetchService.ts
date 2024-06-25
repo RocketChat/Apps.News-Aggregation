@@ -42,6 +42,7 @@ export class NewsFetchService {
 			this.persistence
 		);
 
+		// to fetch and store news manually as scheduler not working
 		// await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
 
 		// const newsStorage = new NewsItemPersistence(

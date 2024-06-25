@@ -23,7 +23,6 @@ import { Handler } from '../handlers/Handler';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 import { Block } from '@rocket.chat/ui-kit';
 import { buildNewsBlock } from '../blocks/UtilityBlocks';
-import { sendNewsMessage } from './sendNewsMessage';
 
 export class CommandUtility implements ICommandUtility {
 	sender: IUser;
@@ -37,7 +36,6 @@ export class CommandUtility implements ICommandUtility {
 	persistenceRead: IPersistenceRead;
 	app: NewsAggregationApp;
 	triggerId?: string | undefined;
-	// news: NewsItem[];
 
 	constructor(props: ICommandUtilityParams) {
 		this.sender = props.sender;
@@ -98,7 +96,6 @@ export class CommandUtility implements ICommandUtility {
 		const techCrunchNewsSource = new NewsSource(
 			this.app,
 			techCrunchAdapter,
-			// this.news
 			news
 		);
 
@@ -119,6 +116,7 @@ export class CommandUtility implements ICommandUtility {
 			news = (await newsStorage.getAllNews()) as NewsItem[];
 			console.log('fetched!!', news, 'FETCHED FROM PERSISTENCE!');
 
+			// To implement
 			let newsBlocks: Array<Array<Block>> = [];
 			for (const item of news) {
 				const newsBlock = await buildNewsBlock(item);

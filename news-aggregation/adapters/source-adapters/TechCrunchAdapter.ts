@@ -3,13 +3,10 @@ import {
 	IModify,
 	IHttp,
 	IPersistence,
-	IPersistenceRead,
 } from '@rocket.chat/apps-engine/definition/accessors';
 import { NewsAggregationApp } from '../../NewsAggregationApp';
 import { NewsItem } from '../../definitions/NewsItem';
-import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { INewsSourceAdapter } from '../INewsSourceAdapter';
-import { NewsItemPersistence } from '../../persistence/NewsItemPersistence';
 
 export class TechCrunchAdapter implements INewsSourceAdapter {
 	app: NewsAggregationApp;

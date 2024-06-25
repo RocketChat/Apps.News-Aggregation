@@ -2,9 +2,7 @@ import { Block } from '@rocket.chat/ui-kit';
 import { NewsItem } from '../definitions/NewsItem';
 import {
 	getDescriptionBlock,
-	getMarkdownBlock,
 	getOptionalsBlock,
-	getPlainTextBlock,
 	getPreviewBlock,
 	getSourceBlock,
 	getTitleBlock,

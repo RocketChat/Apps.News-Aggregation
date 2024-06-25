@@ -2,12 +2,9 @@ import {
 	IHttp,
 	IModify,
 	IPersistence,
-	IPersistenceRead,
 	IRead,
 } from '@rocket.chat/apps-engine/definition/accessors';
-
 import { NewsAggregationApp } from '../NewsAggregationApp';
-
 import { NewsItem } from './NewsItem';
 import { INewsSourceAdapter } from '../adapters/INewsSourceAdapter';
 

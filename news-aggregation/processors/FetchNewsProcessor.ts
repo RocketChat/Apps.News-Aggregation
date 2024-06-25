@@ -36,11 +36,6 @@ export class FetchNewsProcessor implements IProcessor {
 		const persisRead = read.getPersistenceReader();
 		console.log('fetch-processor-working1');
 
-		// const persisRead = read.getPersistenceReader();
-		// const newsStorage = new NewsItemPersistence(this.app, persis, persisRead);
-		// const newsFromStorage = await newsStorage.getAllNews();
-		// console.log('newss', newsFromStorage);
-
 		const techCrunchAdapter = new TechCrunchAdapter();
 		const techCrunchNewsSource = new NewsSource(
 			this.app,
