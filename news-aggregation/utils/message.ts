@@ -66,30 +66,6 @@ export async function sendDirectMessageOnInstall(
 	return await sendMessage(modify, directRoom, appUser, text);
 }
 
-// export async function sendNotification(
-//     read: IRead,
-//     modify: IModify,
-//     user: IUser,
-//     room: IRoom,
-//     message: string,
-//     blocks?: Array<Block>
-// ): Promise<void> {
-//     const appUser = (await read.getUserReader().getAppUser()) as IUser;
-
-//     const msg = modify
-//         .getCreator()
-//         .startMessage()
-//         .setSender(appUser)
-//         .setRoom(room)
-//         .setText(message)
-
-//     if (blocks !== undefined) {
-//         msg.setBlocks(blocks);
-//     }
-
-//     return read.getNotifier().notifyUser(user, msg.getMessage());
-// }
-
 export async function sendNotification(
 	read: IRead,
 	modify: IModify,

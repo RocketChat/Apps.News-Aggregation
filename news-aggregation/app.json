@@ -24,6 +24,9 @@
 			"name": "slashcommand"
 		},
 		{
+			"name": "scheduler"
+		},
+		{
 			"name": "server-setting.read"
 		},
 		{
@@ -49,6 +52,12 @@
 		},
 		{
 			"name": "message.read"
+		},
+		{
+			"name": "server-setting.read"
+		},
+		{
+			"name": "server-setting.write"
 		}
 	]
 }
