@@ -10,15 +10,9 @@ import { INewsSourceAdapter } from '../adapters/INewsSourceAdapter';
 
 export class NewsSource {
 	private adapter: INewsSourceAdapter;
-	app: NewsAggregationApp;
 	news: NewsItem[] = [];
 
-	constructor(
-		app: NewsAggregationApp,
-		adapter: INewsSourceAdapter,
-		news: NewsItem[]
-	) {
-		this.app = app;
+	constructor(adapter: INewsSourceAdapter, news: NewsItem[]) {
 		this.adapter = adapter;
 		this.news = news;
 	}

@@ -30,11 +30,7 @@ export class NewsFetchService {
 	async fetchNewsAndStore(read: IRead, modify: IModify, http: IHttp) {
 		let news: NewsItem[] = [];
 		const techCrunchAdapter = new TechCrunchAdapter();
-		const techCrunchNewsSource = new NewsSource(
-			this.app,
-			techCrunchAdapter,
-			news
-		);
+		const techCrunchNewsSource = new NewsSource(techCrunchAdapter, news);
 
 		news = await techCrunchNewsSource.fetchNews(
 			read,
@@ -71,11 +67,7 @@ export class NewsFetchService {
 	) {
 		let news: NewsItem[] = [];
 		const techCrunchAdapter = new TechCrunchAdapter();
-		const techCrunchNewsSource = new NewsSource(
-			this.app,
-			techCrunchAdapter,
-			news
-		);
+		const techCrunchNewsSource = new NewsSource(techCrunchAdapter, news);
 
 		try {
 			// await techCrunchNewsSource.deleteNews(read, modify, room, http, persis);
