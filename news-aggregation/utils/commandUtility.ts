@@ -18,11 +18,11 @@ import { sendHelperMessage, sendMessage } from './message';
 import { TechCrunchAdapter } from '../adapters/source-adapters/TechCrunchAdapter';
 import { NewsItem } from '../definitions/NewsItem';
 import { NewsSource } from '../definitions/NewsSource';
+import { NewsFetchService } from '../services/NewsFetchService';
 import { Handler } from '../handlers/Handler';
-import { BlockBuilder } from '../builders/BlockBuilder';
-import { Block, ImageElement } from '@rocket.chat/ui-kit';
-import { getSectionBlock } from './blocks';
-import { ElementBuilder } from '../builders/ElementBuilder';
+import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
+import { Block } from '@rocket.chat/ui-kit';
+import { buildNewsBlock } from '../blocks/UtilityBlocks';
 
 export class CommandUtility implements ICommandUtility {
 	sender: IUser;
@@ -63,88 +63,76 @@ export class CommandUtility implements ICommandUtility {
 	}
 
 	private async fetchNewsFromSource() {
-		let news: NewsItem[] = [];
-		// const techCrunchSource = new TechCrunchNewsSource(this.app, news);
-		// await techCrunchSource.fetchNews(this.read, this.modify, this.room, this.http, this.persistence);
+		let newsItems: NewsItem[] = [];
+		// const techCrunchAdapter = new TechCrunchAdapter();
+		// const techCrunchNewsSource = new NewsSource(
+		// 	this.app,
+		// 	techCrunchAdapter,
+		// 	// this.news
+		// 	news
+		// );
+		// news = await techCrunchNewsSource.fetchNews(
+		// 	this.read,
+		// 	this.modify,
+		// 	this.room,
+		// 	this.http,
+		// 	this.persistence
+		// );
 
-		const techCrunchAdapter = new TechCrunchAdapter();
-		const techCrunchNewsSource = new NewsSource(
-			this.app,
-			techCrunchAdapter,
-			// this.news
-			news
-		);
-		news = await techCrunchNewsSource.fetchNews(
-			this.read,
-			this.modify,
-			this.room,
-			this.http,
-			this.persistence
-		);
+		// await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
 
-		await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
+		// const fetchService = new NewsFetchService(
+		// 	this.app,
+		// 	this.persistence,
+		// 	this.persistenceRead
+		// );
+		// await fetchService.fetchNewsAndStore(this.read, this.modify, this.http);
 	}
 
-	public async getNewsFromSource() {
+	public async getNewsFromPersistence() {
 		let news: NewsItem[] = [];
-		let blockBuilder = new BlockBuilder(this.app.getID());
-		const elementBuilder = new ElementBuilder(this.app.getID());
+		const appUser = (await this.read.getUserReader().getAppUser()) as IUser;
 
-		const techCrunchAdapter = new TechCrunchAdapter();
-		const techCrunchNewsSource = new NewsSource(
+		// const techCrunchAdapter = new TechCrunchAdapter();
+		// const techCrunchNewsSource = new NewsSource(
+		// 	this.app,
+		// 	techCrunchAdapter,
+		// 	news
+		// );
+
+		const newsStorage = new NewsItemPersistence(
 			this.app,
-			techCrunchAdapter,
-			// this.news
-			news
+			this.persistence,
+			this.persistenceRead
 		);
 
 		try {
-			news = await techCrunchNewsSource.getNews(
-				this.read,
-				this.modify,
-				this.room,
-				this.http,
-				this.persistence
-			);
+			// news = await techCrunchNewsSource.getNews(
+			// 	this.read,
+			// 	this.modify,
+			// 	this.room,
+			// 	this.http,
+			// 	this.persistence
+			// );
+			news = (await newsStorage.getAllNews()) as NewsItem[];
 			console.log('fetched!!', news, 'FETCHED FROM PERSISTENCE!');
 
-			let blocks: Block[] = [];
-			for (const newsItem of news) {
-				const titleBlock = blockBuilder.createSectionBlock({
-					blockId: 'title-block-id',
-					text: newsItem.title,
-				});
-
-				const descriptionBlock = blockBuilder.createSectionBlock({
-					blockId: 'desccription-block-id',
-					text: newsItem.description,
-				});
-
-				let imageElements: ImageElement[] = [];
-				const image = elementBuilder.createImage({
-					imageUrl: newsItem.image,
-					altText: newsItem.title,
-				});
-				imageElements.push(image);
-				const imageBlock = blockBuilder.createContextBlock({
-					contextElements: imageElements,
-					blockId: 'image-block-id',
-				});
-
-				blocks.push(titleBlock);
-				blocks.push(descriptionBlock);
-				blocks.push(imageBlock);
-				// const sectionBlock = getSectionBlock('title-block-id', newsItem.title);
-				// blocks.push(sectionBlock);
+			// To implement
+			let newsBlocks: Array<Array<Block>> = [];
+			for (const item of news) {
+				const newsBlock = await buildNewsBlock(item);
+				// newsBlocks.push(newsBlock);
+				await sendMessage(this.modify, this.room, appUser, '', newsBlock);
 			}
 
-			await sendMessage(
-				this.modify,
-				this.room,
-				this.sender,
-				'News Get From Persistenec',
-				blocks
-			);
+			// await sendNewsMessage(
+			// 	this.modify,
+			// 	this.room,
+			// 	this.sender,
+			// 	'',
+			// 	newsBlocks
+			// );
+			console.log('news displayed!');
 		} catch (err) {
 			this.app.getLogger().error(err);
 			console.error(err);
@@ -152,27 +140,50 @@ export class CommandUtility implements ICommandUtility {
 	}
 
 	public async deleteNewsFromPersistence() {
-		let news: NewsItem[] = [];
-		const techCrunchAdapter = new TechCrunchAdapter();
-		const techCrunchNewsSource = new NewsSource(
+		// let news: NewsItem[] = [];
+		// const techCrunchAdapter = new TechCrunchAdapter();
+		// const techCrunchNewsSource = new NewsSource(
+		// 	this.app,
+		// 	techCrunchAdapter,
+		// 	news
+		// );
+
+		// try {
+		// 	await techCrunchNewsSource.deleteNews(
+		// 		this.read,
+		// 		this.modify,
+		// 		this.room,
+		// 		this.http,
+		// 		this.persistence
+		// 	);
+
+		// 	console.log('all news deleted!');
+		// } catch (err) {
+		// 	console.error(err);
+		// }
+
+		const fetchService = new NewsFetchService(
 			this.app,
-			techCrunchAdapter,
-			news
+			this.persistence,
+			this.persistenceRead
 		);
+		await fetchService.deleteNewsScheduler(
+			this.read,
+			this.modify,
+			this.room,
+			this.http,
+			this.persistence
+		);
+	}
 
-		try {
-			await techCrunchNewsSource.deleteNews(
-				this.read,
-				this.modify,
-				this.room,
-				this.http,
-				this.persistence
-			);
+	public async subscribeNews() {
+		console.log('news subscribe working.');
+		this.app.getLogger().info('news subscribe working.');
+	}
 
-			console.log('all news deleted!');
-		} catch (err) {
-			console.error(err);
-		}
+	public async unsubscribeNews() {
+		console.log('news unsubscribe working.');
+		this.app.getLogger().info('news unsubscribe working.');
 	}
 
 	private async handleSingleParamCommand(handler: Handler) {
@@ -185,7 +196,7 @@ export class CommandUtility implements ICommandUtility {
 				break;
 
 			case CommandEnum.GET:
-				await this.getNewsFromSource();
+				await this.getNewsFromPersistence();
 				break;
 
 			case CommandEnum.DELETE:
@@ -214,6 +225,7 @@ export class CommandUtility implements ICommandUtility {
 
 	public async resolveCommand(): Promise<void> {
 		const handler = new Handler({
+			app: this.app,
 			sender: this.sender,
 			room: this.room,
 			read: this.read,
@@ -221,7 +233,6 @@ export class CommandUtility implements ICommandUtility {
 			http: this.http,
 			persistence: this.persistence,
 			persistenceRead: this.persistenceRead,
-			app: this.app,
 			triggerId: this.triggerId,
 		});
 		switch (this.command.length) {

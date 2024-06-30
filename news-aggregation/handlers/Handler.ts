@@ -8,9 +8,10 @@ import { NewsAggregationApp } from '../NewsAggregationApp';
 import { IHandler, IHandlerParams } from '../definitions/IHandler';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
-import { subscribeNewsModal } from '../modals/subscribeNewsModal';
-import { sendMessage } from '../utils/message';
-import { getSubscribeBlock } from '../utils/blocks';
+// import { subscribeNewsModal } from '../modals/subscribeNewsModal';
+import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence';
+// import { NewsDeliveryService } from '../services/NewsDeliveryService';
+// import { getSubscribeBlock } from '../utils/blocks';
 
 export class Handler implements IHandler {
 	public app: NewsAggregationApp;
@@ -37,6 +38,9 @@ export class Handler implements IHandler {
 		console.log('news subscribe working.');
 		this.app.getLogger().info('news subscribe working.');
 
+		const persisRead = this.read.getPersistenceReader();
+
+		// TO-DO
 		// const modal = await subscribeNewsModal(
 		// 	this.app,
 		// 	this.room,
@@ -67,6 +71,29 @@ export class Handler implements IHandler {
 		// 	'Subscribe Button',
 		// 	subscribeBlock
 		// );
+
+		const subscriptionPersistence = new SubscriptionPersistence(
+			this.app,
+			persisRead,
+			this.persis
+		);
+
+		const subscriptionId = await subscriptionPersistence.createSubscription(
+			'* * * * *',
+			this.sender,
+			this.room
+		);
+		console.log('subId', subscriptionId);
+
+		// const deliveryService = new NewsDeliveryService(
+		// 	this.app,
+		// 	this.persis,
+		// 	persisRead
+		// );
+
+		// await this.modify
+		// 	.getScheduler()
+		// 	.scheduleRecurring(await deliveryService.deliverDailyNews());
 	}
 
 	public async unsubscribeNews(): Promise<void> {

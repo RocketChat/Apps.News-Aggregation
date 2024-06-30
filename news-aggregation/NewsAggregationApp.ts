@@ -2,11 +2,13 @@ import {
 	IAppAccessors,
 	IAppInstallationContext,
 	IConfigurationExtend,
+	IConfigurationModify,
 	IEnvironmentRead,
 	IHttp,
 	ILogger,
 	IModify,
 	IPersistence,
+	IPersistenceRead,
 	IRead,
 } from '@rocket.chat/apps-engine/definition/accessors';
 import { App } from '@rocket.chat/apps-engine/definition/App';
@@ -16,10 +18,12 @@ import { NewsCommand } from './commands/NewsCommand';
 // import { IAppBuilders } from './definitions/IAppBuilders';
 import { BlockBuilder } from './builders/BlockBuilder';
 import { ElementBuilder } from './builders/ElementBuilder';
+import { FetchNewsProcessor } from './processors/FetchNewsProcessor';
 
 export class NewsAggregationApp extends App {
-	// private elementBuilder: ElementBuilder;
-	// private blockBuilder: BlockBuilder;
+	// implements IUIKitInteractionHandler
+	persistence: IPersistence;
+	persistenceRead: IPersistenceRead;
 	constructor(info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
 		super(info, logger, accessors);
 	}
@@ -45,6 +49,19 @@ export class NewsAggregationApp extends App {
 		await sendDirectMessageOnInstall(read, modify, user, persistence);
 	}
 
+	public async onEnable(
+		environment: IEnvironmentRead,
+		configurationModify: IConfigurationModify
+	): Promise<boolean> {
+		await Promise.all([
+			configurationModify.scheduler.scheduleRecurring({
+				id: 'fetch-news',
+				interval: '* * * * *',
+			}),
+		]);
+		return true;
+	}
+
 	public async extendConfiguration(
 		configuration: IConfigurationExtend,
 		environmentRead: IEnvironmentRead
@@ -55,8 +72,15 @@ export class NewsAggregationApp extends App {
 			configuration.slashCommands.provideSlashCommand(newsCommand),
 		]);
 
-		// this.elementBuilder = new ElementBuilder(this.getID());
-		// this.blockBuilder = new BlockBuilder(this.getID());
+		await configuration.scheduler.registerProcessors([
+			new FetchNewsProcessor(this),
+		]);
+	}
+
+	public async onDisable(
+		configurationModify: IConfigurationModify
+	): Promise<void> {
+		await Promise.all([configurationModify.scheduler.cancelJob('fetch-news')]);
 	}
 
 	// public getBuilders(): IAppBuilders {
