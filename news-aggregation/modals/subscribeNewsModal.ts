@@ -55,6 +55,69 @@ export async function subscribeNewsModal(
 	const dividerBlock = blockBuilder.createDividerBlock('divider-block-id');
 	blocks.push(dividerBlock);
 	blocks.push(inputBlock);
+	blocks.push(dividerBlock);
+
+	let scheduleOptions: any = ['daily', 'weekly', 'twice-a-week', 'monthly'];
+	scheduleOptions = scheduleOptions?.map((option) => ({
+		text: option,
+		value: option,
+	}));
+	console.log(scheduleOptions);
+
+	const options1 = elementBuilder.createDropdownOptions(scheduleOptions);
+	const schedulerDropdown = elementBuilder.createDropdown(
+		{
+			options: options1,
+			placeholder: 'Select schedule',
+		},
+		{
+			blockId: 'schedule-dropdown-block-id',
+			actionId: 'schedule-dropdown-action-id',
+		}
+	);
+	const dropDownBlock = blockBuilder.createSectionBlock({
+		text: 'Schedule News',
+		accessory: schedulerDropdown,
+		blockId: 'dropdown-block-id',
+	});
+	blocks.push(dropDownBlock);
+	blocks.push(dividerBlock);
+
+	let categoryOptions: any = [
+		'General News',
+		'Business and Finance',
+		'Technology',
+		'Entertainment and Celebrity News',
+		'Sports',
+		'Science and Environment',
+		'Politics',
+		'Health',
+		'International',
+		'Investigative Journalism',
+	];
+
+	categoryOptions = categoryOptions?.map((option) => ({
+		text: option,
+		value: option,
+	}));
+
+	const options2 = elementBuilder.createDropdownOptions(categoryOptions);
+	const categoryDropdown = elementBuilder.createMultiStaticSelectDropdown(
+		{
+			text: 'Category',
+			options: options2,
+		},
+		{
+			blockId: 'category-dropdown-block-id',
+			actionId: 'category-dropdown-action-id',
+		}
+	);
+	const categoryDropDownBlock = blockBuilder.createSectionBlock({
+		text: 'Select Categories to subscribe',
+		accessory: categoryDropdown,
+		blockId: 'categoryy-dropdown-block-id',
+	});
+	blocks.push(categoryDropDownBlock);
 
 	const submitButton = elementBuilder.createButton(
 		{
