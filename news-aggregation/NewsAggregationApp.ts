@@ -53,12 +53,12 @@ export class NewsAggregationApp extends App {
 		environment: IEnvironmentRead,
 		configurationModify: IConfigurationModify
 	): Promise<boolean> {
-		await Promise.all([
-			configurationModify.scheduler.scheduleRecurring({
-				id: 'fetch-news',
-				interval: '* * * * *',
-			}),
-		]);
+		// await Promise.all([
+		// 	configurationModify.scheduler.scheduleRecurring({
+		// 		id: 'fetch-news',
+		// 		interval: '* * * * *',
+		// 	}),
+		// ]);
 		return true;
 	}
 
@@ -72,9 +72,9 @@ export class NewsAggregationApp extends App {
 			configuration.slashCommands.provideSlashCommand(newsCommand),
 		]);
 
-		await configuration.scheduler.registerProcessors([
-			new FetchNewsProcessor(this),
-		]);
+		// await configuration.scheduler.registerProcessors([
+		// 	new FetchNewsProcessor(this),
+		// ]);
 	}
 
 	public async onDisable(

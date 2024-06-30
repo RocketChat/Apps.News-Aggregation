@@ -69,24 +69,23 @@ export class CommandUtility implements ICommandUtility {
 		// 	this.app,
 		// 	techCrunchAdapter,
 		// 	// this.news
-		// 	news
+		// 	newsItems
 		// );
-		// news = await techCrunchNewsSource.fetchNews(
+		// newsItems = await techCrunchNewsSource.fetchNews(
 		// 	this.read,
 		// 	this.modify,
-		// 	this.room,
 		// 	this.http,
 		// 	this.persistence
 		// );
 
 		// await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
 
-		// const fetchService = new NewsFetchService(
-		// 	this.app,
-		// 	this.persistence,
-		// 	this.persistenceRead
-		// );
-		// await fetchService.fetchNewsAndStore(this.read, this.modify, this.http);
+		const fetchService = new NewsFetchService(
+			this.app,
+			this.persistence,
+			this.persistenceRead
+		);
+		await fetchService.fetchNewsAndStore(this.read, this.modify, this.http);
 	}
 
 	public async getNewsFromPersistence() {
@@ -226,6 +225,7 @@ export class CommandUtility implements ICommandUtility {
 	public async resolveCommand(): Promise<void> {
 		const handler = new Handler({
 			app: this.app,
+			context: this.context,
 			sender: this.sender,
 			room: this.room,
 			read: this.read,
