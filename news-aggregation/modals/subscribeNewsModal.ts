@@ -118,6 +118,27 @@ export async function subscribeNewsModal(
 		blockId: 'categoryy-dropdown-block-id',
 	});
 	blocks.push(categoryDropDownBlock);
+	blocks.push(dividerBlock);
+
+	const channelDropdown = elementBuilder.createChannelSelectDropdown(
+		{
+			appId: app.getID(),
+		},
+		{
+			blockId: 'channel-dropdown-block-id',
+			actionId: 'channel-dropdown-action-id',
+		}
+	);
+
+	const channelDropdownBlock = blockBuilder.createActionBlock({
+		blockId: 'channell-dropdown-block-id',
+		elements: [channelDropdown],
+	});
+	console.log('c', channelDropdownBlock);
+	console.log('app: ', app);
+	console.log('read: ', read);
+
+	blocks.push(channelDropdownBlock);
 
 	const submitButton = elementBuilder.createButton(
 		{

@@ -12,15 +12,29 @@ import {
 	IRead,
 } from '@rocket.chat/apps-engine/definition/accessors';
 import { App } from '@rocket.chat/apps-engine/definition/App';
-import { IAppInfo } from '@rocket.chat/apps-engine/definition/metadata';
+import {
+	AppMethod,
+	IAppInfo,
+} from '@rocket.chat/apps-engine/definition/metadata';
 import { sendDirectMessageOnInstall } from './utils/message';
 import { NewsCommand } from './commands/NewsCommand';
 // import { IAppBuilders } from './definitions/IAppBuilders';
 import { BlockBuilder } from './builders/BlockBuilder';
 import { ElementBuilder } from './builders/ElementBuilder';
 import { FetchNewsProcessor } from './processors/FetchNewsProcessor';
+import {
+	IUIKitInteractionHandler,
+	IUIKitResponse,
+	UIKitBlockInteractionContext,
+	UIKitViewSubmitInteractionContext,
+} from '@rocket.chat/apps-engine/definition/uikit';
+import { ExecuteViewSubmitHandler } from './handlers/ExecuteViewSubmitHandler';
+// import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 
-export class NewsAggregationApp extends App {
+export class NewsAggregationApp
+	extends App
+	implements IUIKitInteractionHandler
+{
 	// implements IUIKitInteractionHandler
 	persistence: IPersistence;
 	persistenceRead: IPersistenceRead;
@@ -84,6 +98,60 @@ export class NewsAggregationApp extends App {
 	): Promise<void> {
 		await Promise.all([configurationModify.scheduler.cancelJob('fetch-news')]);
 	}
+
+	// public async executeViewSubmitHandler(
+	// 	context: UIKitViewSubmitInteractionContext,
+	// 	read: IRead,
+	// 	http: IHttp,
+	// 	persistence: IPersistence,
+	// 	modify: IModify
+	// ): Promise<IUIKitResponse> {
+	// 	const handler = new ExecuteViewSubmitHandler(
+	// 		this,
+	// 		read,
+	// 		modify,
+	// 		http,
+	// 		persistence,
+	// 		context
+	// 	);
+	// 	return await handler.handleActions();
+	// }
+
+	public async [AppMethod.UIKIT_VIEW_SUBMIT](
+		context: UIKitViewSubmitInteractionContext,
+		read: IRead,
+		http: IHttp,
+		persistence: IPersistence,
+		modify: IModify
+	): Promise<IUIKitResponse> {
+		const handler = new ExecuteViewSubmitHandler(
+			this,
+			read,
+			modify,
+			http,
+			persistence,
+			context
+		);
+		return await handler.handleActions();
+	}
+
+	// public async executeBlockActionHandler(
+	// 	context: UIKitBlockInteractionContext,
+	// 	read: IRead,
+	// 	http: IHttp,
+	// 	persistence: IPersistence,
+	// 	modify: IModify
+	// ): Promise<IUIKitResponse> {
+	// 	const handler = new ExecuteBlockActionHandler(
+	// 		this,
+	// 		read,
+	// 		modify,
+	// 		http,
+	// 		persistence,
+	// 		context
+	// 	);
+	// 	return await handler.handleActions();
+	// }
 
 	// public getBuilders(): IAppBuilders {
 	// 	return {
