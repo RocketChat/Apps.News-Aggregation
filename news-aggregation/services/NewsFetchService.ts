@@ -11,6 +11,7 @@ import { TechCrunchAdapter } from '../adapters/source-adapters/TechCrunchAdapter
 import { NewsSource } from '../definitions/NewsSource';
 import { NewsItem } from '../definitions/NewsItem';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
+import { BBCAdapter } from '../adapters/source-adapters/BBCAdapter';
 
 export class NewsFetchService {
 	app: NewsAggregationApp;
@@ -30,14 +31,20 @@ export class NewsFetchService {
 	async fetchNewsAndStore(read: IRead, modify: IModify, http: IHttp) {
 		let news: NewsItem[] = [];
 		const techCrunchAdapter = new TechCrunchAdapter();
+		const bbcAdapter = new BBCAdapter();
 		const techCrunchNewsSource = new NewsSource(techCrunchAdapter, news);
+		const bbcNewsSource = new NewsSource(bbcAdapter, news);
 
-		news = await techCrunchNewsSource.fetchNews(
-			read,
-			modify,
-			http,
-			this.persistence
-		);
+		news = [
+			...(await techCrunchNewsSource.fetchNews(
+				read,
+				modify,
+				http,
+				this.persistence
+			)),
+			...(await bbcNewsSource.fetchNews(read, modify, http, this.persistence)),
+			// add more sources
+		];
 
 		// to fetch and store news manually as scheduler not working
 		// await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
