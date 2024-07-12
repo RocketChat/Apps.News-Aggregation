@@ -45,6 +45,7 @@ export class NewsFetchService {
 			...(await bbcNewsSource.fetchNews(read, modify, http, this.persistence)),
 			// add more sources
 		];
+		console.log('newsafterfetch: ', news);
 
 		// to fetch and store news manually as scheduler not working
 		// await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);

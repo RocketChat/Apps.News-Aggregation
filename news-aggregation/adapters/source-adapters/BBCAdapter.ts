@@ -28,6 +28,8 @@ export class BBCAdapter implements INewsSourceAdapter {
 		(async () => {
 			try {
 				this.newsItems = await this.fetchRssFeed(this.fetchUrl);
+				console.log('bbcnews: ', this.newsItems);
+				console.log('fetched from bbc');
 			} catch (error) {
 				console.error('Error processing RSS feed:', error);
 			}

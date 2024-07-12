@@ -40,6 +40,7 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 			this.app.getLogger().error(err);
 		}
 
+		console.log('fetched from techcrunch');
 		return this.newsItems;
 	}
 }
