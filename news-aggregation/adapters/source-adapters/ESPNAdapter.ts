@@ -93,7 +93,7 @@ export class ESPNAdapter implements INewsSourceAdapter {
 					description: descriptionMatch[1],
 					link: linkMatch[1],
 					image: imageMatch[1],
-					source: 'BBC',
+					source: 'ESPN',
 					publishedAt: new Date(publishDateMatch[1]),
 				});
 				// id++;
