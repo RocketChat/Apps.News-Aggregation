@@ -286,6 +286,31 @@ export class SubscriptionPersistence {
 		}
 	}
 
+	public async deleteSubscriptionByIntervalAndRoom(
+		interval: string,
+		room: IRoom
+	) {
+		const associations: Array<RocketChatAssociationRecord> = [
+			new RocketChatAssociationRecord(
+				RocketChatAssociationModel.MISC,
+				'news-aggregation-subscription'
+			),
+			new RocketChatAssociationRecord(
+				RocketChatAssociationModel.MISC,
+				interval
+			),
+			new RocketChatAssociationRecord(RocketChatAssociationModel.ROOM, room.id),
+		];
+
+		try {
+			await this.persistence.removeByAssociations(associations);
+			console.log('DEL');
+		} catch (err) {
+			console.error('Could not delete subscriptions by room', err);
+			this.app.getLogger().info('Could not delete subscriptions by room', err);
+		}
+	}
+
 	public async isSubscribed(room: IRoom) {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(

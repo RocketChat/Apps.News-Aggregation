@@ -218,9 +218,18 @@ export class CommandUtility implements ICommandUtility {
 		}
 	}
 
-	private async handleDualParamCommand() {
+	private async handleDualParamCommand(handler: Handler) {
 		console.log('dual param executed');
 		this.app.getLogger().info('dual param executed');
+
+		const query = this.command[1];
+		console.log('dual-param: ', query);
+
+		if (query !== '') {
+			handler.unsubscribeNewsByInterval(query);
+		} else {
+			handler.unsubscribeNews();
+		}
 	}
 
 	public async resolveCommand(): Promise<void> {
@@ -243,7 +252,7 @@ export class CommandUtility implements ICommandUtility {
 			}
 
 			case 2: {
-				await this.handleDualParamCommand();
+				await this.handleDualParamCommand(handler);
 				break;
 			}
 
