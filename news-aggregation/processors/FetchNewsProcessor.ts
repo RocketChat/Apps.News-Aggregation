@@ -11,6 +11,7 @@ import {
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 import { NewsAggregationApp } from '../NewsAggregationApp';
 import { TechCrunchAdapter } from '../adapters/source-adapters/TechCrunchAdapter';
+import { BBCAdapter } from '../adapters/source-adapters/BBCAdapter';
 import { NewsSource } from '../definitions/NewsSource';
 import { NewsItem } from '../definitions/NewsItem';
 
@@ -41,19 +42,22 @@ export class FetchNewsProcessor implements IProcessor {
 		const techCrunchAdapter = new TechCrunchAdapter();
 		console.log('hello');
 		console.log(this);
+		const bbcAdapter = new BBCAdapter();
 
 		const techCrunchNewsSource = new NewsSource(
 			techCrunchAdapter,
 			this.newsItems
 		);
 		console.log('fetch-processor-working2');
+		const bbcNewsSource = new NewsSource(bbcAdapter, this.newsItems);
+		console.log('fetch-processor-working2.1');
 
-		this.newsItems = await techCrunchNewsSource.fetchNews(
-			read,
-			modify,
-			http,
-			persis
-		);
+		// Fetch news items from sources
+		this.newsItems = [
+			...(await techCrunchNewsSource.fetchNews(read, modify, http, persis)),
+			...(await bbcNewsSource.fetchNews(read, modify, http, persis)),
+			// add more sources
+		];
 		console.log('fetch-processor-working3');
 
 		const newsStorage = new NewsItemPersistence(this.app, persis, persisRead);
@@ -69,6 +73,6 @@ export class FetchNewsProcessor implements IProcessor {
 		}
 
 		console.log('Data', data);
-		console.log('fetch-processor-working-end');
+		console.log('FetchNewsProcessor completed.');
 	}
 }
