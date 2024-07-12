@@ -26,7 +26,7 @@ export class ExecuteViewSubmitHandler {
 	}
 
 	public async handleActions(): Promise<IUIKitResponse> {
-		const { actionId, user, room } = this.context.getInteractionData();
+		const { actionId, user, room, view } = this.context.getInteractionData();
 		const subscriptionStorage = new SubscriptionPersistence(
 			this.app,
 			this.read.getPersistenceReader(),
@@ -37,16 +37,13 @@ export class ExecuteViewSubmitHandler {
 		console.log('aid', actionId);
 		console.log('uid', user);
 		console.log('rid', room);
+		console.log('vid', view);
 
 		try {
 			switch (actionId) {
 				case ModalEnum.SUBSCRIBE_NEWS_MODAL_SUBMIT_ACTION_ID:
 					if (room) {
-						await subscriptionStorage.createSubscription(
-							'* * * * *',
-							user,
-							room
-						);
+						await subscriptionStorage.createSubscription('daily', user, room);
 					}
 			}
 			return this.context.getInteractionResponder().successResponse();
