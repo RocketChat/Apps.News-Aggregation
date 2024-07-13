@@ -2,10 +2,11 @@ import {
 	ISetting,
 	SettingType,
 } from '@rocket.chat/apps-engine/definition/settings';
+import { SettingEnum } from '../enums/settingEnum';
 
 export const Settings: Array<ISetting> = [
 	{
-		id: 'techcrunch',
+		id: SettingEnum.TECHCRUNCH,
 		type: SettingType.BOOLEAN,
 		packageValue: true,
 		required: true,
@@ -17,7 +18,7 @@ export const Settings: Array<ISetting> = [
 		i18nAlert: 'Toggle to enable or disable this news source',
 	},
 	{
-		id: 'bbc',
+		id: SettingEnum.BBC,
 		type: SettingType.BOOLEAN,
 		packageValue: true,
 		required: true,
@@ -29,7 +30,7 @@ export const Settings: Array<ISetting> = [
 		i18nAlert: 'Toggle to enable or disable this news source',
 	},
 	{
-		id: 'espn',
+		id: SettingEnum.ESPN,
 		type: SettingType.BOOLEAN,
 		packageValue: true,
 		required: true,
