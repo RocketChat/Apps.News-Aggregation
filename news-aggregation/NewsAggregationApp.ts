@@ -29,6 +29,7 @@ import {
 	UIKitViewSubmitInteractionContext,
 } from '@rocket.chat/apps-engine/definition/uikit';
 import { ExecuteViewSubmitHandler } from './handlers/ExecuteViewSubmitHandler';
+import { Settings } from './settings/Settings';
 // import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 
 export class NewsAggregationApp
@@ -90,6 +91,12 @@ export class NewsAggregationApp
 		// To fetch news periodically
 		await configuration.scheduler.registerProcessors([
 			new FetchNewsProcessor(this),
+		]);
+
+		await Promise.all([
+			Settings?.map((setting) => {
+				configuration.settings.provideSetting(setting);
+			}),
 		]);
 	}
 
