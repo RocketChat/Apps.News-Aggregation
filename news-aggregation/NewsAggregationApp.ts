@@ -122,6 +122,12 @@ export class NewsAggregationApp extends App {
 			new FetchNewsProcessor(),
 			new DeliverNewsProcessor(),
 		]);
+
+		await Promise.all([
+			Settings?.map((setting) => {
+				configuration.settings.provideSetting(setting);
+			}),
+		]);
 	}
 
 	public async onDisable(
