@@ -85,18 +85,18 @@ export class NewsAggregationApp
 		const newsCommand: NewsCommand = new NewsCommand(this);
 
 		await Promise.all([
+			Settings.map((setting) => {
+				configuration.settings.provideSetting(setting);
+			}),
+		]);
+
+		await Promise.all([
 			configuration.slashCommands.provideSlashCommand(newsCommand),
 		]);
 
 		// To fetch news periodically
 		await configuration.scheduler.registerProcessors([
 			new FetchNewsProcessor(this),
-		]);
-
-		await Promise.all([
-			Settings?.map((setting) => {
-				configuration.settings.provideSetting(setting);
-			}),
 		]);
 	}
 
