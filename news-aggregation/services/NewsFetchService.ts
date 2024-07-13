@@ -12,6 +12,7 @@ import { NewsSource } from '../definitions/NewsSource';
 import { NewsItem } from '../definitions/NewsItem';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 import { BBCAdapter } from '../adapters/source-adapters/BBCAdapter';
+import { SettingEnum } from '../enums/settingEnum';
 
 export class NewsFetchService {
 	app: NewsAggregationApp;
@@ -30,21 +31,44 @@ export class NewsFetchService {
 
 	async fetchNewsAndStore(read: IRead, modify: IModify, http: IHttp) {
 		let news: NewsItem[] = [];
-		const techCrunchAdapter = new TechCrunchAdapter();
-		const bbcAdapter = new BBCAdapter();
-		const techCrunchNewsSource = new NewsSource(techCrunchAdapter, news);
-		const bbcNewsSource = new NewsSource(bbcAdapter, news);
+		const settingsReader = read.getEnvironmentReader().getSettings();
+		const techCrunchSetting = await settingsReader.getById(
+			SettingEnum.TECHCRUNCH
+		);
+		const bbcSetting = await settingsReader.getById(SettingEnum.BBC);
+		console.log(
+			JSON.stringify(techCrunchSetting, null, 2) +
+				' -- ' +
+				JSON.stringify(bbcSetting, null, 2)
+		);
 
-		news = [
-			...(await techCrunchNewsSource.fetchNews(
-				read,
-				modify,
-				http,
-				this.persistence
-			)),
-			...(await bbcNewsSource.fetchNews(read, modify, http, this.persistence)),
-			// add more sources
-		];
+		if (techCrunchSetting.value) {
+			const techCrunchAdapter = new TechCrunchAdapter();
+			const techCrunchNewsSource = new NewsSource(techCrunchAdapter, news);
+			news = [
+				...news,
+				...(await techCrunchNewsSource.fetchNews(
+					read,
+					modify,
+					http,
+					this.persistence
+				)),
+			];
+		}
+
+		if (bbcSetting.value) {
+			const bbcAdapter = new BBCAdapter();
+			const bbcNewsSource = new NewsSource(bbcAdapter, news);
+			news = [
+				...news,
+				...(await bbcNewsSource.fetchNews(
+					read,
+					modify,
+					http,
+					this.persistence
+				)),
+			];
+		}
 		console.log('newsafterfetch: ', news);
 
 		// to fetch and store news manually as scheduler not working
