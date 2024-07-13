@@ -6,7 +6,8 @@ import { SettingEnum } from '../enums/settingEnum';
 
 export const Settings: Array<ISetting> = [
 	{
-		id: SettingEnum.TECHCRUNCH,
+		// id: SettingEnum.TECHCRUNCH,
+		id: 'techcrunch',
 		type: SettingType.BOOLEAN,
 		packageValue: true,
 		required: true,
@@ -18,7 +19,8 @@ export const Settings: Array<ISetting> = [
 		i18nAlert: 'Toggle to enable or disable this news source',
 	},
 	{
-		id: SettingEnum.BBC,
+		// id: SettingEnum.BBC,
+		id: 'bbc',
 		type: SettingType.BOOLEAN,
 		packageValue: true,
 		required: true,
@@ -30,7 +32,8 @@ export const Settings: Array<ISetting> = [
 		i18nAlert: 'Toggle to enable or disable this news source',
 	},
 	{
-		id: SettingEnum.ESPN,
+		// id: SettingEnum.ESPN,
+		id: 'espn',
 		type: SettingType.BOOLEAN,
 		packageValue: true,
 		required: true,
