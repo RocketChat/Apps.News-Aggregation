@@ -9,6 +9,9 @@ import {
 	IPersistence,
 	IRead,
 } from '@rocket.chat/apps-engine/definition/accessors';
+import { createTextCompletion } from '../../utils/createTextCompletion';
+import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
+import { IUser } from '@rocket.chat/apps-engine/definition/users';
 
 export class ESPNAdapter implements INewsSourceAdapter {
 	app: NewsAggregationApp;
@@ -38,8 +41,21 @@ export class ESPNAdapter implements INewsSourceAdapter {
 
 	public async determineCategory(
 		newsItem: NewsItem,
+		read: IRead,
+		room: IRoom,
+		user: IUser,
+		modify: IModify,
 		http: IHttp
 	): Promise<string[]> {
+		const category = await createTextCompletion(
+			read,
+			room,
+			user,
+			modify,
+			http,
+			newsItem.description
+		);
+
 		return [];
 	}
 

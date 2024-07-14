@@ -9,6 +9,8 @@ import { NewsItem } from '../../definitions/NewsItem';
 import { INewsSourceAdapter } from '../INewsSourceAdapter';
 import * as https from 'https';
 import { randomBytes } from 'crypto';
+import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
+import { IUser } from '@rocket.chat/apps-engine/definition/users';
 
 export class BBCAdapter implements INewsSourceAdapter {
 	app: NewsAggregationApp;
@@ -40,6 +42,10 @@ export class BBCAdapter implements INewsSourceAdapter {
 
 	public async determineCategory(
 		newsItem: NewsItem,
+		read: IRead,
+		room: IRoom,
+		user: IUser,
+		modify: IModify,
 		http: IHttp
 	): Promise<string[]> {
 		return [];
