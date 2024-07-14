@@ -25,7 +25,7 @@ export class BBCAdapter implements INewsSourceAdapter {
 		http: IHttp,
 		persis: IPersistence
 	): Promise<NewsItem[]> {
-		(async () => {
+		await (async () => {
 			try {
 				this.newsItems = await this.fetchRssFeed(this.fetchUrl);
 				console.log('bbcnews: ', this.newsItems);
