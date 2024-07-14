@@ -1,6 +1,7 @@
 import {
 	BlockElementType,
 	ButtonElement,
+	ChannelsSelectElement,
 	ImageElement,
 	MultiStaticSelectElement,
 	Option,
@@ -18,6 +19,7 @@ import {
 import { MultiStaticSelectParam } from '../ui-kit/element/IMultiStaticSelectElement';
 import { ImageParam } from '../ui-kit/element/IImageElement';
 import { PlainTextInputParam } from '../ui-kit/element/IPlainTextInputElement';
+import { ChannelSelectParam } from '../ui-kit/element/IChannelSelectElement';
 
 export class ElementBuilder implements IElementBuilder {
 	constructor(private readonly appId: string) {}
@@ -26,7 +28,7 @@ export class ElementBuilder implements IElementBuilder {
 		param: ButtonParam,
 		interactionParam: ElementInteractionParam
 	): ButtonElement {
-		const { text, url, value, style, secondary } = param;
+		const { text, url, value, style } = param;
 		const { blockId, actionId } = interactionParam;
 
 		const button: ButtonElement = {
@@ -42,7 +44,6 @@ export class ElementBuilder implements IElementBuilder {
 			url,
 			value,
 			style,
-			secondary: secondary,
 		};
 
 		return button;
@@ -190,5 +191,22 @@ export class ElementBuilder implements IElementBuilder {
 		};
 
 		return input;
+	}
+
+	public createChannelSelectDropdown(
+		param: ChannelSelectParam,
+		interactionParam: ElementInteractionParam
+	): ChannelsSelectElement {
+		const { appId } = param;
+		const { blockId, actionId } = interactionParam;
+
+		const dropdown: ChannelsSelectElement = {
+			type: 'channels_select',
+			appId,
+			blockId,
+			actionId,
+		};
+
+		return dropdown;
 	}
 }

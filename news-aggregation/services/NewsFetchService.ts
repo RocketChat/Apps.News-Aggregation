@@ -10,6 +10,7 @@ import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { TechCrunchAdapter } from '../adapters/source-adapters/TechCrunchAdapter';
 import { NewsSource } from '../definitions/NewsSource';
 import { NewsItem } from '../definitions/NewsItem';
+import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 
 export class NewsFetchService {
 	app: NewsAggregationApp;
@@ -29,11 +30,7 @@ export class NewsFetchService {
 	async fetchNewsAndStore(read: IRead, modify: IModify, http: IHttp) {
 		let news: NewsItem[] = [];
 		const techCrunchAdapter = new TechCrunchAdapter();
-		const techCrunchNewsSource = new NewsSource(
-			this.app,
-			techCrunchAdapter,
-			news
-		);
+		const techCrunchNewsSource = new NewsSource(techCrunchAdapter, news);
 
 		news = await techCrunchNewsSource.fetchNews(
 			read,
@@ -45,20 +42,20 @@ export class NewsFetchService {
 		// to fetch and store news manually as scheduler not working
 		// await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
 
-		// const newsStorage = new NewsItemPersistence(
-		// 			this.app,
-		// 			this.persistence,
-		// 			this.persistenceRead
-		// 		);
-		// 		try {
-		// 			for (const item of news) {
-		// 				await newsStorage.saveNews(item, 'TechCrunch');
-		// 			}
-		// 			console.log('all news-items saved!!');
-		// 		} catch (err) {
-		// 			console.error('News Items could not be save', err);
-		// 			this.app.getLogger().error('News Items could not be save', err);
-		// 		}
+		const newsStorage = new NewsItemPersistence(
+			this.app,
+			this.persistence,
+			this.persistenceRead
+		);
+		try {
+			for (const item of news) {
+				await newsStorage.saveNews(item, 'TechCrunch');
+			}
+			console.log('all news-items saved!!');
+		} catch (err) {
+			console.error('News Items could not be save', err);
+			this.app.getLogger().error('News Items could not be save', err);
+		}
 	}
 
 	async deleteNewsScheduler(
@@ -70,11 +67,7 @@ export class NewsFetchService {
 	) {
 		let news: NewsItem[] = [];
 		const techCrunchAdapter = new TechCrunchAdapter();
-		const techCrunchNewsSource = new NewsSource(
-			this.app,
-			techCrunchAdapter,
-			news
-		);
+		const techCrunchNewsSource = new NewsSource(techCrunchAdapter, news);
 
 		try {
 			// await techCrunchNewsSource.deleteNews(read, modify, room, http, persis);

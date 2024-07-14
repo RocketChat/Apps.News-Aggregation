@@ -69,18 +69,18 @@ export class CommandUtility implements ICommandUtility {
 		// 	this.app,
 		// 	techCrunchAdapter,
 		// 	// this.news
-		// 	news
+		// 	newsItems
 		// );
-		// news = await techCrunchNewsSource.fetchNews(
+		// newsItems = await techCrunchNewsSource.fetchNews(
 		// 	this.read,
 		// 	this.modify,
-		// 	this.room,
 		// 	this.http,
 		// 	this.persistence
 		// );
 
 		// await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
 
+		// Manually fetch and store news
 		// const fetchService = new NewsFetchService(
 		// 	this.app,
 		// 	this.persistence,
@@ -134,6 +134,7 @@ export class CommandUtility implements ICommandUtility {
 			// );
 			console.log('news displayed!');
 		} catch (err) {
+			this.app.getLogger().error(err);
 			console.error(err);
 		}
 	}
@@ -187,6 +188,7 @@ export class CommandUtility implements ICommandUtility {
 
 	private async handleSingleParamCommand(handler: Handler) {
 		const singleParamCommand = this.command[0];
+		console.log(this.command);
 
 		switch (singleParamCommand) {
 			case CommandEnum.ALERT:
@@ -224,6 +226,7 @@ export class CommandUtility implements ICommandUtility {
 	public async resolveCommand(): Promise<void> {
 		const handler = new Handler({
 			app: this.app,
+			context: this.context,
 			sender: this.sender,
 			room: this.room,
 			read: this.read,

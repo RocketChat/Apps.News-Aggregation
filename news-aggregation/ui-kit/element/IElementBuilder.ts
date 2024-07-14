@@ -1,5 +1,6 @@
 import {
 	ButtonElement,
+	ChannelsSelectElement,
 	ImageElement,
 	MultiStaticSelectElement,
 	Option,
@@ -15,6 +16,7 @@ import {
 import { MultiStaticSelectParam } from './IMultiStaticSelectElement';
 import { ImageParam } from './IImageElement';
 import { PlainTextInputParam } from './IPlainTextInputElement';
+import { ChannelSelectParam } from './IChannelSelectElement';
 
 export interface IElementBuilder {
 	createButton(
@@ -40,4 +42,9 @@ export interface IElementBuilder {
 		param: PlainTextInputParam,
 		interactionParam: ElementInteractionParam
 	): PlainTextInputElement;
+
+	createChannelSelectDropdown(
+		param: ChannelSelectParam,
+		interactionParam: ElementInteractionParam
+	): ChannelsSelectElement;
 }

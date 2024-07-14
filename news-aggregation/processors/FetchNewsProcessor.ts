@@ -21,6 +21,8 @@ export class FetchNewsProcessor implements IProcessor {
 
 	constructor(app: NewsAggregationApp) {
 		this.app = app;
+		console.log('cons', app);
+		console.log('this', this.app);
 	}
 
 	public async processor(
@@ -37,8 +39,10 @@ export class FetchNewsProcessor implements IProcessor {
 		console.log('fetch-processor-working1');
 
 		const techCrunchAdapter = new TechCrunchAdapter();
+		console.log('hello');
+		console.log(this);
+
 		const techCrunchNewsSource = new NewsSource(
-			this.app,
 			techCrunchAdapter,
 			this.newsItems
 		);

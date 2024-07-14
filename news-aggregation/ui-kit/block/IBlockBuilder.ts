@@ -3,6 +3,7 @@ import {
 	ContextBlock,
 	DividerBlock,
 	InputBlock,
+	Markdown,
 	PreviewBlockBase,
 	PreviewBlockWithThumb,
 	SectionBlock,
@@ -12,6 +13,7 @@ import { ActionBlockParam } from './IActionBlock';
 import { PreviewBlockParam } from './IPreviewBlock';
 import { ContextBlockParam } from './IContextBlock';
 import { InputBlockParam } from './IInputBlock';
+import { MardownBlockParam } from './IMarkdownBlock';
 
 export interface IBlockBuilder {
 	createSectionBlock(param: SectionBlockParam): SectionBlock;
@@ -27,4 +29,6 @@ export interface IBlockBuilder {
 	createInputBlock(param: InputBlockParam): InputBlock;
 
 	createDividerBlock(blockId?: string): DividerBlock;
+
+	createMarkdownBlock(param: MardownBlockParam): Markdown;
 }
