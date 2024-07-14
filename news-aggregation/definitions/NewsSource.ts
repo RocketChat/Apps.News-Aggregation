@@ -25,4 +25,11 @@ export class NewsSource {
 	): Promise<NewsItem[]> {
 		return this.adapter.fetchNews(read, modify, http, persis);
 	}
+
+	public async determineCategory(
+		newsItem: NewsItem,
+		http: IHttp
+	): Promise<string[]> {
+		return this.adapter.determineCategory(newsItem, http);
+	}
 }

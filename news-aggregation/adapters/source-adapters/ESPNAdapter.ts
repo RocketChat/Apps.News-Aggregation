@@ -36,6 +36,13 @@ export class ESPNAdapter implements INewsSourceAdapter {
 		return this.newsItems;
 	}
 
+	public async determineCategory(
+		newsItem: NewsItem,
+		http: IHttp
+	): Promise<string[]> {
+		return [];
+	}
+
 	async fetchRssFeed(url: string): Promise<NewsItem[]> {
 		try {
 			const response = await new Promise<string>((resolve, reject) => {

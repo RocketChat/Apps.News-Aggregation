@@ -13,4 +13,6 @@ export interface INewsSourceAdapter {
 		http: IHttp,
 		persis: IPersistence
 	): Promise<NewsItem[]>;
+
+	determineCategory(newsItem: NewsItem, http: IHttp): Promise<string[]>;
 }
