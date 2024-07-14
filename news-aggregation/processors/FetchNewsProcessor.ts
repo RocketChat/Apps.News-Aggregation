@@ -80,7 +80,11 @@ export class FetchNewsProcessor implements IProcessor {
 
 		console.log('fetch-processor-working3');
 
-		const newsStorage = new NewsItemPersistence(this.app, persis, persisRead);
+		const newsStorage = new NewsItemPersistence({
+			read: read,
+			modify: modify,
+			persistence: persis,
+		});
 		try {
 			const saveNews = this.newsItems.map((newsItem) =>
 				newsStorage.saveNews(newsItem, 'TechCrunch')
