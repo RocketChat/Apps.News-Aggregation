@@ -129,6 +129,7 @@ export class BBCAdapter implements INewsSourceAdapter {
 					link: linkMatch[1],
 					image: imageMatch[1],
 					source: 'BBC',
+					author: 'NA',
 					publishedAt: new Date(publishDateMatch[1]),
 				});
 				// id++;
