@@ -85,7 +85,7 @@ export class NewsAggregationApp extends App {
 		const newsCommand: NewsCommand = new NewsCommand(this);
 
 		await Promise.all([
-			Settings.map((setting) => {
+			...Settings.map((setting) => {
 				configuration.settings.provideSetting(setting);
 			}),
 		]);
