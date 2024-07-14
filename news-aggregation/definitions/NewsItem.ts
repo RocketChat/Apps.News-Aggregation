@@ -5,6 +5,7 @@ export class NewsItem {
 	link: string;
 	image: string;
 	source: string;
+	category?: string;
 	author?: string;
 	publishedAt?: Date;
 
@@ -15,6 +16,7 @@ export class NewsItem {
 		link: string,
 		image: string,
 		source: string,
+		category: string,
 		author: string,
 		publishedAt: Date
 	) {
@@ -24,6 +26,7 @@ export class NewsItem {
 		this.link = link;
 		this.image = image;
 		this.source = source;
+		this.category = category;
 		this.author = author;
 		this.publishedAt = publishedAt;
 	}

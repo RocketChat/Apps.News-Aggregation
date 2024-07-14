@@ -54,6 +54,15 @@ export class NewsFetchService {
 					this.persistence
 				)),
 			];
+
+			for (const newsItem of news) {
+				const res = await techCrunchNewsSource.determineCategory(
+					newsItem,
+					http
+				);
+				this.app.getLogger().info('catsfs: ', res);
+				console.log('catsfs: ', res);
+			}
 		}
 
 		if (bbcSetting.value) {
