@@ -114,6 +114,19 @@ export class NewsFetchService {
 			];
 		}
 
+		if (espnSetting.value) {
+			const espnAdapter = new ESPNAdapter();
+			const espnNewsSource = new NewsSource(espnAdapter);
+			news = [
+				...news,
+				...(await espnNewsSource.fetchNews(
+					read,
+					modify,
+					http,
+					this.config.persistence
+				)),
+			];
+		}
 		console.log('newsafterfetch: ', news);
 
 		// to fetch and store news manually as scheduler not working
