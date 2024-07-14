@@ -1,4 +1,4 @@
-const NEWS_CATEGORY_PROMPT = `Categorize the following news descriptions into one of the following categories:
+const NEWS_CATEGORY_PROMPT = `Categorize the following news descriptions by only giving one category word into one of the following categories:
 
 1. General News
 2. Business and Finance

@@ -23,6 +23,7 @@ import { Handler } from '../handlers/Handler';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 import { Block } from '@rocket.chat/ui-kit';
 import { buildNewsBlock } from '../blocks/UtilityBlocks';
+import { createTextCompletion } from './createTextCompletion';
 
 export class CommandUtility implements ICommandUtility {
 	sender: IUser;
@@ -87,6 +88,14 @@ export class CommandUtility implements ICommandUtility {
 		// 	this.persistenceRead
 		// );
 		// await fetchService.fetchNewsAndStore(this.read, this.modify, this.http);
+		await createTextCompletion(
+			this.read,
+			this.room,
+			this.sender,
+			this.modify,
+			this.http,
+			''
+		);
 	}
 
 	public async getNewsFromPersistence() {
