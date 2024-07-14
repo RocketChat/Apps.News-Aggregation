@@ -56,12 +56,13 @@ export class NewsFetchService {
 			];
 
 			for (const newsItem of news) {
-				const res = await techCrunchNewsSource.determineCategory(
-					newsItem,
-					http
-				);
-				this.app.getLogger().info('catsfs: ', res);
-				console.log('catsfs: ', res);
+				// const res = await techCrunchNewsSource.determineCategory(
+				// 	newsItem,
+				//     read,
+				// 	http
+				// );
+				// this.app.getLogger().info('catsfs: ', res);
+				// console.log('catsfs: ', res);
 			}
 		}
 

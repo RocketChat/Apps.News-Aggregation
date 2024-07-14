@@ -7,6 +7,8 @@ import {
 import { NewsAggregationApp } from '../../NewsAggregationApp';
 import { NewsItem } from '../../definitions/NewsItem';
 import { INewsSourceAdapter } from '../INewsSourceAdapter';
+import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
+import { IUser } from '@rocket.chat/apps-engine/definition/users';
 
 export class TechCrunchAdapter implements INewsSourceAdapter {
 	app: NewsAggregationApp;
@@ -47,6 +49,10 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 
 	public async determineCategory(
 		newsItem: NewsItem,
+		read: IRead,
+		room: IRoom,
+		user: IUser,
+		modify: IModify,
 		http: IHttp
 	): Promise<string[]> {
 		try {

@@ -7,6 +7,8 @@ import {
 import { NewsAggregationApp } from '../NewsAggregationApp';
 import { NewsItem } from './NewsItem';
 import { INewsSourceAdapter } from '../adapters/INewsSourceAdapter';
+import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
+import { IUser } from '@rocket.chat/apps-engine/definition/users';
 
 export class NewsSource {
 	private adapter: INewsSourceAdapter;
@@ -28,8 +30,19 @@ export class NewsSource {
 
 	public async determineCategory(
 		newsItem: NewsItem,
+		read: IRead,
+		room: IRoom,
+		user: IUser,
+		modify: IModify,
 		http: IHttp
 	): Promise<string[]> {
-		return this.adapter.determineCategory(newsItem, http);
+		return this.adapter.determineCategory(
+			newsItem,
+			read,
+			room,
+			user,
+			modify,
+			http
+		);
 	}
 }
