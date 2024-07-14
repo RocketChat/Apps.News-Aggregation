@@ -15,6 +15,7 @@ import { BBCAdapter } from '../adapters/source-adapters/BBCAdapter';
 import { SettingEnum } from '../enums/settingEnum';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { IConfig } from '../definitions/IConfig';
+import { ESPNAdapter } from '../adapters/source-adapters/ESPNAdapter';
 
 export class NewsFetchService {
 	// app: NewsAggregationApp;
@@ -44,6 +45,7 @@ export class NewsFetchService {
 			SettingEnum.TECHCRUNCH
 		);
 		const bbcSetting = await settingsReader.getById(SettingEnum.BBC);
+		const espnSetting = await settingsReader.getById(SettingEnum.ESPN);
 		console.log(
 			JSON.stringify(techCrunchSetting, null, 2) +
 				' -- ' +
@@ -98,6 +100,19 @@ export class NewsFetchService {
 			console.log('fnsCat: ', categories);
 		}
 
+		if (espnSetting.value) {
+			const espnAdapter = new ESPNAdapter();
+			const espnNewsSource = new NewsSource(espnAdapter, news);
+			news = [
+				...news,
+				...(await espnNewsSource.fetchNews(
+					read,
+					modify,
+					http,
+					this.config.persistence
+				)),
+			];
+		}
 		console.log('newsafterfetch: ', news);
 
 		// to fetch and store news manually as scheduler not working
