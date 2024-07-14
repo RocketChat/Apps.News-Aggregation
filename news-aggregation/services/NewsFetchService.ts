@@ -13,20 +13,21 @@ import { NewsItem } from '../definitions/NewsItem';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 import { BBCAdapter } from '../adapters/source-adapters/BBCAdapter';
 import { SettingEnum } from '../enums/settingEnum';
+import { IConfig } from '../definitions/IConfig';
 
 export class NewsFetchService {
-	app: NewsAggregationApp;
-	persistence: IPersistence;
-	persistenceRead: IPersistenceRead;
+	// app: NewsAggregationApp;
+	// persistence: IPersistence;
+	// persistenceRead: IPersistenceRead;
+	config: IConfig;
 
 	constructor(
-		app: NewsAggregationApp,
-		persistence: IPersistence,
-		persistenceRead: IPersistenceRead
+		config: IConfig
+		// app: NewsAggregationApp,
+		// persistence: IPersistence,
+		// persistenceRead: IPersistenceRead
 	) {
-		this.app = app;
-		this.persistence = persistence;
-		this.persistenceRead = persistenceRead;
+		this.config = config;
 	}
 
 	async fetchNewsAndStore(read: IRead, modify: IModify, http: IHttp) {
@@ -51,7 +52,7 @@ export class NewsFetchService {
 					read,
 					modify,
 					http,
-					this.persistence
+					this.config.persistence
 				)),
 			];
 		}
@@ -65,7 +66,7 @@ export class NewsFetchService {
 					read,
 					modify,
 					http,
-					this.persistence
+					this.config.persistence
 				)),
 			];
 		}
@@ -74,11 +75,7 @@ export class NewsFetchService {
 		// to fetch and store news manually as scheduler not working
 		// await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
 
-		const newsStorage = new NewsItemPersistence(
-			this.app,
-			this.persistence,
-			this.persistenceRead
-		);
+		const newsStorage = new NewsItemPersistence(this.config);
 		try {
 			for (const item of news) {
 				await newsStorage.saveNews(item, 'TechCrunch');
@@ -86,7 +83,7 @@ export class NewsFetchService {
 			console.log('all news-items saved!!');
 		} catch (err) {
 			console.error('News Items could not be save', err);
-			this.app.getLogger().error('News Items could not be save', err);
+			// this.app.getLogger().error('News Items could not be save', err);
 		}
 	}
 
