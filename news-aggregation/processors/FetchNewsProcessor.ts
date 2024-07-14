@@ -15,6 +15,7 @@ import { BBCAdapter } from '../adapters/source-adapters/BBCAdapter';
 import { NewsSource } from '../definitions/NewsSource';
 import { NewsItem } from '../definitions/NewsItem';
 import { SettingEnum } from '../enums/settingEnum';
+import { ESPNAdapter } from '../adapters/source-adapters/ESPNAdapter';
 
 export class FetchNewsProcessor implements IProcessor {
 	id: string = 'fetch-news';
@@ -45,6 +46,7 @@ export class FetchNewsProcessor implements IProcessor {
 			SettingEnum.TECHCRUNCH
 		);
 		const bbcSetting = await settingsReader.getById(SettingEnum.BBC);
+		const espnSetting = await settingsReader.getById(SettingEnum.ESPN);
 		console.log(
 			JSON.stringify(techCrunchSetting, null, 2) +
 				' -- ' +
@@ -74,6 +76,15 @@ export class FetchNewsProcessor implements IProcessor {
 			this.newsItems = [
 				...this.newsItems,
 				...(await bbcNewsSource.fetchNews(read, modify, http, persis)),
+			];
+		}
+
+		if (espnSetting.value) {
+			const espnAdapter = new ESPNAdapter();
+			const espnNewsSource = new NewsSource(espnAdapter, this.newsItems);
+			this.newsItems = [
+				...this.newsItems,
+				...(await espnNewsSource.fetchNews(read, modify, http, persis)),
 			];
 		}
 
