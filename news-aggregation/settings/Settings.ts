@@ -66,7 +66,7 @@ export const Settings: Array<ISetting> = [
 		packageValue: '',
 		public: false,
 		hidden: false,
-		required: true,
+		required: false,
 	},
 	{
 		id: 'llm-model',
