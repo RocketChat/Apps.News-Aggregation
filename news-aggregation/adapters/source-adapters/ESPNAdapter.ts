@@ -25,7 +25,7 @@ export class ESPNAdapter implements INewsSourceAdapter {
 		http: IHttp,
 		persis: IPersistence
 	): Promise<NewsItem[]> {
-		(async () => {
+		await (async () => {
 			try {
 				this.newsItems = await this.fetchRssFeed(this.fetchUrl);
 			} catch (error) {

@@ -14,6 +14,7 @@ import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 import { BBCAdapter } from '../adapters/source-adapters/BBCAdapter';
 import { SettingEnum } from '../enums/settingEnum';
 import { IConfig } from '../definitions/IConfig';
+import { ESPNAdapter } from '../adapters/source-adapters/ESPNAdapter';
 
 export class NewsFetchService {
 	// app: NewsAggregationApp;
@@ -37,6 +38,7 @@ export class NewsFetchService {
 			SettingEnum.TECHCRUNCH
 		);
 		const bbcSetting = await settingsReader.getById(SettingEnum.BBC);
+		const espnSetting = await settingsReader.getById(SettingEnum.ESPN);
 		console.log(
 			JSON.stringify(techCrunchSetting, null, 2) +
 				' -- ' +
@@ -63,6 +65,20 @@ export class NewsFetchService {
 			news = [
 				...news,
 				...(await bbcNewsSource.fetchNews(
+					read,
+					modify,
+					http,
+					this.config.persistence
+				)),
+			];
+		}
+
+		if (espnSetting.value) {
+			const espnAdapter = new ESPNAdapter();
+			const espnNewsSource = new NewsSource(espnAdapter, news);
+			news = [
+				...news,
+				...(await espnNewsSource.fetchNews(
 					read,
 					modify,
 					http,
