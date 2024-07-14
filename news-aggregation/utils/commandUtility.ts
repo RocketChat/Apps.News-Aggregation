@@ -107,11 +107,11 @@ export class CommandUtility implements ICommandUtility {
 		// 	news
 		// );
 
-		const newsStorage = new NewsItemPersistence(
-			this.app,
-			this.persistence,
-			this.persistenceRead
-		);
+		const newsStorage = new NewsItemPersistence({
+			read: this.read,
+			modify: this.modify,
+			persistence: this.persistence,
+		});
 
 		const subscriptionStorage = new SubscriptionPersistence(
 			this.app,
@@ -194,11 +194,11 @@ export class CommandUtility implements ICommandUtility {
 		// 	console.error(err);
 		// }
 
-		const fetchService = new NewsFetchService(
-			this.app,
-			this.persistence,
-			this.persistenceRead
-		);
+		const fetchService = new NewsFetchService({
+			read: this.read,
+			modify: this.modify,
+			persistence: this.persistence,
+		});
 		await fetchService.deleteNewsScheduler(
 			this.read,
 			this.modify,

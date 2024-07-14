@@ -8,20 +8,19 @@ import {
 	RocketChatAssociationRecord,
 } from '@rocket.chat/apps-engine/definition/metadata';
 import { NewsAggregationApp } from '../NewsAggregationApp';
+import { IConfig } from '../definitions/IConfig';
 
 export class NewsItemPersistence {
-	app: NewsAggregationApp;
-	persistenceRead: IPersistenceRead;
-	persistence: IPersistence;
+	config: IConfig;
+	// app: NewsAggregationApp;
+	// persistenceRead: IPersistenceRead;
+	// persistence: IPersistence;
 
-	constructor(
-		app: NewsAggregationApp,
-		persistence: IPersistence,
-		persistenceRead: IPersistenceRead
-	) {
-		this.app = app;
-		this.persistence = persistence;
-		this.persistenceRead = persistenceRead;
+	constructor(config: IConfig) {
+		this.config = config;
+		// this.app = app;
+		// this.persistence = persistence;
+		// this.persistenceRead = persistenceRead;
 	}
 
 	public async newsExists(newsId: string, category: string): Promise<boolean> {
@@ -39,12 +38,13 @@ export class NewsItemPersistence {
 
 		let news: object[] = [];
 		try {
-			news = await this.persistenceRead.readByAssociations(associations);
+			const persisRead = this.config.read.getPersistenceReader();
+			news = await persisRead.readByAssociations(associations);
 			if (news.length !== 0) {
 				return true;
 			}
 		} catch (err) {
-			this.app.getLogger().error(err);
+			// this.app.getLogger().error(err);
 			console.error(err);
 		}
 
@@ -70,14 +70,14 @@ export class NewsItemPersistence {
 			return;
 		} else {
 			try {
-				recordId = await this.persistence.createWithAssociations(
+				recordId = await this.config.persistence.createWithAssociations(
 					news,
 					associations
 				);
 				console.log('News saved in Persistence!!', recordId);
 			} catch (err) {
 				console.error('Could not save news in persistence.', err);
-				this.app.getLogger().error('Could not save news in persistence.', err);
+				// this.app.getLogger().error('Could not save news in persistence.', err);
 			}
 		}
 	}
@@ -119,19 +119,20 @@ export class NewsItemPersistence {
 
 		let allNewsObjectArray: NewsItem[];
 		try {
-			allNewsObjectArray = (await this.persistenceRead.readByAssociations(
+			const persisRead = this.config.read.getPersistenceReader();
+			allNewsObjectArray = (await persisRead.readByAssociations(
 				associations
 			)) as NewsItem[];
 
 			if (allNewsObjectArray.length === 0) {
 				console.error("News doesn't exist");
-				this.app.getLogger().error("News doesn't exist");
+				// this.app.getLogger().error("News doesn't exist");
 				return allNewsObjectArray;
 			}
 		} catch (err) {
 			allNewsObjectArray = [];
 			console.error('Could not get the all news by id', err);
-			this.app.getLogger().error('Could not get the all news by id', err);
+			// this.app.getLogger().error('Could not get the all news by id', err);
 		}
 
 		return allNewsObjectArray;
@@ -147,20 +148,21 @@ export class NewsItemPersistence {
 
 		let allNewsObjectArray: object[];
 		try {
-			allNewsObjectArray = (await this.persistenceRead.readByAssociations(
+			const persisRead = this.config.read.getPersistenceReader();
+			allNewsObjectArray = (await persisRead.readByAssociations(
 				associations
 			)) as NewsItem[];
 
 			if (allNewsObjectArray.length === 0) {
 				console.error("News doesn't exist");
-				this.app.getLogger().error("News doesn't exist");
+				// this.app.getLogger().error("News doesn't exist");
 				return allNewsObjectArray;
 			}
 			// console.log('news exist in persistence', allNewsObjectArray);
 		} catch (err) {
 			allNewsObjectArray = [];
 			console.error('Could not get the all news by id', err);
-			this.app.getLogger().error('Could not get the all news by id', err);
+			// this.app.getLogger().error('Could not get the all news by id', err);
 		}
 
 		console.log('allnews', allNewsObjectArray);
@@ -218,13 +220,13 @@ export class NewsItemPersistence {
 
 		let newsObject: object = {};
 		try {
+			const persisRead = this.config.read.getPersistenceReader();
 			let newsObjectArray: object[];
-			newsObjectArray =
-				await this.persistenceRead.readByAssociations(associations);
+			newsObjectArray = await persisRead.readByAssociations(associations);
 
 			if (newsObjectArray.length === 0) {
 				console.error("News with the given id doesn't exist");
-				this.app.getLogger().error("News with the given id doesn't exist");
+				// this.app.getLogger().error("News with the given id doesn't exist");
 				return {};
 			}
 
@@ -234,7 +236,7 @@ export class NewsItemPersistence {
 		} catch (err) {
 			newsObject = {};
 			console.error('Could not get the desired news by id', err);
-			this.app.getLogger().error('Could not get the desired news by id', err);
+			// this.app.getLogger().error('Could not get the desired news by id', err);
 		}
 
 		console.log('fefw', newsObject);
@@ -255,13 +257,14 @@ export class NewsItemPersistence {
 
 		let removedNews: object[];
 		try {
-			removedNews = await this.persistence.removeByAssociations(associations);
+			removedNews =
+				await this.config.persistence.removeByAssociations(associations);
 		} catch (err) {
 			removedNews = [];
 			console.error('Could not remove desired news from persistence.', err);
-			this.app
-				.getLogger()
-				.error('Could not remove desired news from persistence.', err);
+			// this.app
+			// 	.getLogger()
+			// 	.error('Could not remove desired news from persistence.', err);
 		}
 	}
 
@@ -274,13 +277,13 @@ export class NewsItemPersistence {
 		];
 
 		try {
-			await this.persistence.removeByAssociations(associations);
+			await this.config.persistence.removeByAssociations(associations);
 			console.log('removed!');
 		} catch (err) {
 			console.error('Could not remove all news from persistence.', err);
-			this.app
-				.getLogger()
-				.error('Could not remove all news from persistence.', err);
+			// this.app
+			// 	.getLogger()
+			// 	.error('Could not remove all news from persistence.', err);
 		}
 	}
 }
