@@ -12,6 +12,7 @@ import {
 import { createTextCompletion } from '../../utils/createTextCompletion';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
+import { newsCategoryPrompt } from '../../utils/prompts';
 
 export class ESPNAdapter implements INewsSourceAdapter {
 	app: NewsAggregationApp;
@@ -28,7 +29,7 @@ export class ESPNAdapter implements INewsSourceAdapter {
 		http: IHttp,
 		persis: IPersistence
 	): Promise<NewsItem[]> {
-		(async () => {
+		await (async () => {
 			try {
 				this.newsItems = await this.fetchRssFeed(this.fetchUrl);
 			} catch (error) {
@@ -47,14 +48,16 @@ export class ESPNAdapter implements INewsSourceAdapter {
 		modify: IModify,
 		http: IHttp
 	): Promise<string[]> {
+		const prompt = newsCategoryPrompt(newsItem.description);
 		const category = await createTextCompletion(
 			read,
 			room,
 			user,
 			modify,
 			http,
-			newsItem.description
+			prompt
 		);
+		console.log('llm-response: ', category);
 
 		return [];
 	}

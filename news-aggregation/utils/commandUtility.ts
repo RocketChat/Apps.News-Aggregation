@@ -87,15 +87,12 @@ export class CommandUtility implements ICommandUtility {
 		// 	this.persistence,
 		// 	this.persistenceRead
 		// );
-		// await fetchService.fetchNewsAndStore(this.read, this.modify, this.http);
-		await createTextCompletion(
-			this.read,
-			this.room,
-			this.sender,
-			this.modify,
-			this.http,
-			''
-		);
+		// await fetchService.fetchNewsAndStore(
+		// 	this.read,
+		// 	this.modify,
+		// 	this.http,
+		// 	this.room
+		// );
 	}
 
 	public async getNewsFromPersistence() {

@@ -11,7 +11,7 @@ import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 
 export class NewsSource {
-	private adapter: INewsSourceAdapter;
+	adapter: INewsSourceAdapter;
 	news: NewsItem[] = [];
 
 	constructor(adapter: INewsSourceAdapter, news: NewsItem[]) {
