@@ -54,7 +54,7 @@ export class NewsFetchService {
 
 		if (techCrunchSetting.value) {
 			const techCrunchAdapter = new TechCrunchAdapter();
-			const techCrunchNewsSource = new NewsSource(techCrunchAdapter, news);
+			const techCrunchNewsSource = new NewsSource(techCrunchAdapter);
 			news = [
 				...news,
 				...(await techCrunchNewsSource.fetchNews(
@@ -78,7 +78,7 @@ export class NewsFetchService {
 
 		if (bbcSetting.value) {
 			const bbcAdapter = new BBCAdapter();
-			const bbcNewsSource = new NewsSource(bbcAdapter, news);
+			const bbcNewsSource = new NewsSource(bbcAdapter);
 			news = [
 				...news,
 				...(await bbcNewsSource.fetchNews(
@@ -102,7 +102,7 @@ export class NewsFetchService {
 
 		if (espnSetting.value) {
 			const espnAdapter = new ESPNAdapter();
-			const espnNewsSource = new NewsSource(espnAdapter, news);
+			const espnNewsSource = new NewsSource(espnAdapter);
 			news = [
 				...news,
 				...(await espnNewsSource.fetchNews(
@@ -139,7 +139,7 @@ export class NewsFetchService {
 	) {
 		let news: NewsItem[] = [];
 		const techCrunchAdapter = new TechCrunchAdapter();
-		const techCrunchNewsSource = new NewsSource(techCrunchAdapter, news);
+		const techCrunchNewsSource = new NewsSource(techCrunchAdapter);
 
 		try {
 			// await techCrunchNewsSource.deleteNews(read, modify, room, http, persis);

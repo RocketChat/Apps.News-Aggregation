@@ -12,11 +12,9 @@ import { IUser } from '@rocket.chat/apps-engine/definition/users';
 
 export class NewsSource {
 	adapter: INewsSourceAdapter;
-	news: NewsItem[] = [];
 
-	constructor(adapter: INewsSourceAdapter, news: NewsItem[]) {
+	constructor(adapter: INewsSourceAdapter) {
 		this.adapter = adapter;
-		this.news = news;
 	}
 
 	public async fetchNews(
