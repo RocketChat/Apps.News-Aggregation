@@ -6,7 +6,10 @@ import {
 } from '@rocket.chat/apps-engine/definition/accessors';
 import {
 	IJobContext,
+	IOnetimeStartup,
 	IProcessor,
+	IRecurringStartup,
+	StartupType,
 } from '@rocket.chat/apps-engine/definition/scheduler';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 import { NewsAggregationApp } from '../NewsAggregationApp';
@@ -16,16 +19,17 @@ import { NewsSource } from '../definitions/NewsSource';
 import { NewsItem } from '../definitions/NewsItem';
 import { SettingEnum } from '../enums/settingEnum';
 import { ESPNAdapter } from '../adapters/source-adapters/ESPNAdapter';
+import { IConfig } from '../definitions/IConfig';
 
 export class FetchNewsProcessor implements IProcessor {
 	id: string = 'fetch-news';
-	app: NewsAggregationApp;
+	config: IConfig;
+	// app: NewsAggregationApp;
 	newsItems: NewsItem[] = [];
 
-	constructor(app: NewsAggregationApp) {
-		this.app = app;
-		console.log('cons', app);
-		console.log('this', this.app);
+	constructor(config: IConfig) {
+		this.config = config;
+		console.log('proc: ', this);
 	}
 
 	public async processor(
@@ -35,11 +39,14 @@ export class FetchNewsProcessor implements IProcessor {
 		http: IHttp,
 		persis: IPersistence
 	): Promise<void> {
-		console.log('fetch-processor-working');
+		console.log('proc1: ', this);
 
 		const data = jobContext;
+		console.log('jc: ', data);
+		console.log('proc2: ', this);
+
 		const persisRead = read.getPersistenceReader();
-		console.log('fetch-processor-working1');
+		console.log('proc3: ', this);
 
 		const settingsReader = read.getEnvironmentReader().getSettings();
 		const techCrunchSetting = await settingsReader.getById(
@@ -52,7 +59,7 @@ export class FetchNewsProcessor implements IProcessor {
 				' -- ' +
 				JSON.stringify(bbcSetting, null, 2)
 		);
-		console.log('fetch-processor-working1.1');
+		console.log('proc4: ', this);
 		// Fetch news items from sources
 		if (techCrunchSetting.value) {
 			const techCrunchAdapter = new TechCrunchAdapter();
@@ -97,14 +104,14 @@ export class FetchNewsProcessor implements IProcessor {
 			persistence: persis,
 		});
 		try {
-			const saveNews = this.newsItems.map((newsItem) =>
-				newsStorage.saveNews(newsItem, 'TechCrunch')
+			const saveNews = this.newsItems.map(
+				(newsItem) => newsStorage.saveNews(newsItem, 'TechCrunch') // source needs to change from where it is fetched.
 			);
 			await Promise.all(saveNews);
 			console.log('all news-items saved!!');
 		} catch (err) {
 			console.error('News Items could not be save', err);
-			this.app.getLogger().error('News Items could not be save', err);
+			// this.app.getLogger().error('News Items could not be save', err);
 		}
 
 		console.log('Data', data);

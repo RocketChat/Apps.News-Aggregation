@@ -31,6 +31,7 @@ import {
 } from '@rocket.chat/apps-engine/definition/uikit';
 import { ExecuteViewSubmitHandler } from './handlers/ExecuteViewSubmitHandler';
 import { Settings } from './settings/Settings';
+import { IConfig } from './definitions/IConfig';
 import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 import { ExecuteViewClosedHandler } from './handlers/ExecuteViewClosedHandler';
 import { DailyNewsProcessor } from './processors/DailyNewsProcessor';
@@ -38,6 +39,7 @@ import { DailyNewsProcessor } from './processors/DailyNewsProcessor';
 
 export class NewsAggregationApp extends App {
 	// implements IUIKitInteractionHandler
+	config: IConfig;
 	persistence: IPersistence;
 	persistenceRead: IPersistenceRead;
 	constructor(info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
@@ -74,6 +76,14 @@ export class NewsAggregationApp extends App {
 			configurationModify.scheduler.scheduleRecurring({
 				id: 'fetch-news',
 				interval: '*/10 * * * * *',
+				data: {
+					interval: 'daily',
+				},
+			}),
+
+			configurationModify.scheduler.scheduleRecurring({
+				id: 'daily-news',
+				interval: '*/10 * * * * *',
 			}),
 
 			configurationModify.scheduler.scheduleRecurring({
@@ -102,7 +112,7 @@ export class NewsAggregationApp extends App {
 
 		// To fetch news periodically
 		await configuration.scheduler.registerProcessors([
-			new FetchNewsProcessor(this),
+			new FetchNewsProcessor(this.config),
 			new DailyNewsProcessor(this),
 		]);
 	}
