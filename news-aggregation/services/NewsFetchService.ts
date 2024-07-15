@@ -113,6 +113,7 @@ export class NewsFetchService {
 				)),
 			];
 		}
+
 		console.log('newsafterfetch: ', news);
 
 		// to fetch and store news manually as scheduler not working
