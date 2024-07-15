@@ -40,6 +40,7 @@ import { UserPersistence } from './persistence/UserPersistence';
 
 export class NewsAggregationApp extends App {
 	// implements IUIKitInteractionHandler
+	config: IConfig;
 	persistence: IPersistence;
 	persistenceRead: IPersistenceRead;
 	constructor(info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
