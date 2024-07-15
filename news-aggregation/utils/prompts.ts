@@ -97,6 +97,6 @@ News: ###
 
 Category: `;
 
-export function categoriseNewsPrompt(news: string) {
+export function newsCategoryPrompt(news: string) {
 	return NEWS_CATEGORY_PROMPT.replace(`{news}`, news);
 }

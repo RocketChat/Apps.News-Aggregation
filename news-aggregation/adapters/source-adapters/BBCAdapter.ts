@@ -11,6 +11,8 @@ import * as https from 'https';
 import { randomBytes } from 'crypto';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
+import { createTextCompletion } from '../../utils/createTextCompletion';
+import { newsCategoryPrompt } from '../../utils/prompts';
 
 export class BBCAdapter implements INewsSourceAdapter {
 	app: NewsAggregationApp;
@@ -27,7 +29,7 @@ export class BBCAdapter implements INewsSourceAdapter {
 		http: IHttp,
 		persis: IPersistence
 	): Promise<NewsItem[]> {
-		(async () => {
+		await (async () => {
 			try {
 				this.newsItems = await this.fetchRssFeed(this.fetchUrl);
 				console.log('bbcnews: ', this.newsItems);
@@ -48,6 +50,21 @@ export class BBCAdapter implements INewsSourceAdapter {
 		modify: IModify,
 		http: IHttp
 	): Promise<string[]> {
+		const prompt = newsCategoryPrompt(newsItem.description);
+		console.log('prmot', prompt);
+
+		console.log('lol');
+
+		const category = await createTextCompletion(
+			read,
+			room,
+			user,
+			modify,
+			http,
+			prompt
+		);
+		console.log('llm-response: ', category);
+
 		return [];
 	}
 

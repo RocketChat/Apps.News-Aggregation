@@ -20,6 +20,8 @@ export async function createTextCompletion(
 		.getSettings()
 		.getValueById('llm-model');
 
+	console.log('model: ', model);
+
 	let endpoint = ``;
 	if (model === 'mistral-small-latest') {
 		endpoint = `https://api.mistral.ai/v1`;
@@ -28,6 +30,7 @@ export async function createTextCompletion(
 	} else {
 		throw new Error(`Model settings doesn't exist.`);
 	}
+	console.log('testing1: ', model);
 
 	const body = {
 		model,
@@ -44,13 +47,16 @@ export async function createTextCompletion(
 		safe_prompt: false,
 		random_seed: 1337,
 	};
+	console.log('testing2: ', model);
 
 	const response = await http.post(endpoint + `/chat/completions`, {
 		headers: {
 			'Content-Type': 'application/json',
+			Authorization: `Bearer uWUtKlbXTgvFt9tGXUlnMiZiFkkKCd4n`, // Add the API key here
 		},
 		content: JSON.stringify(body),
 	});
+	console.log('testing3: ', model);
 
 	if (!response?.content) {
 		await sendNotification(
@@ -64,5 +70,9 @@ export async function createTextCompletion(
 			'Something is wrong with the AI to classify news. Please try again.'
 		);
 	}
+	console.log('testing4: ', model);
+
+	console.log('modelRes: ', response);
+
 	return JSON.parse(response?.content).choices[0].message.content;
 }

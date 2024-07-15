@@ -13,6 +13,7 @@ import { NewsItem } from '../definitions/NewsItem';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 import { BBCAdapter } from '../adapters/source-adapters/BBCAdapter';
 import { SettingEnum } from '../enums/settingEnum';
+import { IUser } from '@rocket.chat/apps-engine/definition/users';
 
 export class NewsFetchService {
 	app: NewsAggregationApp;
@@ -29,7 +30,13 @@ export class NewsFetchService {
 		this.persistenceRead = persistenceRead;
 	}
 
-	async fetchNewsAndStore(read: IRead, modify: IModify, http: IHttp) {
+	async fetchNewsAndStore(
+		read: IRead,
+		modify: IModify,
+		http: IHttp,
+		room: IRoom
+	) {
+		const appUser = (await read.getUserReader().getAppUser()) as IUser;
 		let news: NewsItem[] = [];
 		const settingsReader = read.getEnvironmentReader().getSettings();
 		const techCrunchSetting = await settingsReader.getById(
@@ -78,7 +85,20 @@ export class NewsFetchService {
 					this.persistence
 				)),
 			];
+
+			for (const newsItem of news) {
+				const res = await bbcNewsSource.determineCategory(
+					newsItem,
+					read,
+					room,
+					appUser,
+					modify,
+					http
+				);
+				console.log(res);
+			}
 		}
+
 		console.log('newsafterfetch: ', news);
 
 		// to fetch and store news manually as scheduler not working
