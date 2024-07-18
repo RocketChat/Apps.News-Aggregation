@@ -35,7 +35,7 @@ export class NewsSource {
 		user: IUser,
 		modify: IModify,
 		http: IHttp
-	): Promise<string[]> {
+	): Promise<string> {
 		return this.adapter.determineCategory(
 			newsItem,
 			read,

@@ -54,7 +54,7 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 		user: IUser,
 		modify: IModify,
 		http: IHttp
-	): Promise<string[]> {
+	): Promise<string> {
 		try {
 			const response = await http.get(this.fetchUrl);
 			const categoryNames: string[] = [];
@@ -81,11 +81,12 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 
 			// Remove duplicates by converting to a Set and then back to an array
 			console.log('catss', categoryNames);
-			return Array.from(new Set(categoryNames));
+			// return Array.from(new Set(categoryNames));
+			return '';
 		} catch (err) {
 			console.error(err); // for development purposes
 			this.app.getLogger().error(err);
-			return [];
+			return '';
 		}
 	}
 }

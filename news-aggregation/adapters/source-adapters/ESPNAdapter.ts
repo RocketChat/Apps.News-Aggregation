@@ -47,7 +47,7 @@ export class ESPNAdapter implements INewsSourceAdapter {
 		user: IUser,
 		modify: IModify,
 		http: IHttp
-	): Promise<string[]> {
+	): Promise<string> {
 		const prompt = newsCategoryPrompt(newsItem.description);
 		const category = await createTextCompletion(
 			read,
@@ -59,7 +59,7 @@ export class ESPNAdapter implements INewsSourceAdapter {
 		);
 		console.log('llm-response: ', category);
 
-		return [];
+		return '';
 	}
 
 	async fetchRssFeed(url: string): Promise<NewsItem[]> {
