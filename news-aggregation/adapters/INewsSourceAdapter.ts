@@ -23,5 +23,5 @@ export interface INewsSourceAdapter {
 		user: IUser,
 		modify: IModify,
 		http: IHttp
-	): Promise<string[]>;
+	): Promise<string>;
 }

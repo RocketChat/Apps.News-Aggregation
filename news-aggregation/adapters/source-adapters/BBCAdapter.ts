@@ -49,7 +49,7 @@ export class BBCAdapter implements INewsSourceAdapter {
 		user: IUser,
 		modify: IModify,
 		http: IHttp
-	): Promise<string[]> {
+	): Promise<string> {
 		const prompt = newsCategoryPrompt(newsItem.description);
 		console.log('prmot', prompt);
 
@@ -65,7 +65,7 @@ export class BBCAdapter implements INewsSourceAdapter {
 		);
 		console.log('llm-response: ', category);
 
-		return [];
+		return category;
 	}
 
 	async fetchRssFeed(url: string): Promise<NewsItem[]> {

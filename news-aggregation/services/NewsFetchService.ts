@@ -87,7 +87,7 @@ export class NewsFetchService {
 			];
 
 			for (const newsItem of news) {
-				const res = await bbcNewsSource.determineCategory(
+				const newsCategory = await bbcNewsSource.determineCategory(
 					newsItem,
 					read,
 					room,
@@ -95,7 +95,9 @@ export class NewsFetchService {
 					modify,
 					http
 				);
-				console.log(res);
+
+				newsItem.category = newsCategory;
+				console.log('fnsCat: ', newsCategory);
 			}
 		}
 
