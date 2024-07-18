@@ -31,31 +31,31 @@ export async function subscribeNewsModal(
 	const blockBuilder: BlockBuilder = new BlockBuilder(app.getID());
 
 	const blocks: Block[] = [];
-	let text = 'hello';
+	// let text = 'hello';
 
-	const inputElement = elementBuilder.createPlainTextInput(
-		{
-			text,
-			initialValue: 'This is for testing',
-			multiline: true,
-		},
-		{
-			blockId: 'input-element-block-id',
-			actionId: 'input-element-action-id',
-		}
-	);
+	// const inputElement = elementBuilder.createPlainTextInput(
+	// 	{
+	// 		text,
+	// 		initialValue: 'This is for testing',
+	// 		multiline: true,
+	// 	},
+	// 	{
+	// 		blockId: 'input-element-block-id',
+	// 		actionId: 'input-element-action-id',
+	// 	}
+	// );
 
-	const inputBlock = blockBuilder.createInputBlock({
-		text,
-		element: inputElement,
-		optional: true,
-	});
-	blocks.push(inputBlock);
+	// const inputBlock = blockBuilder.createInputBlock({
+	// 	text,
+	// 	element: inputElement,
+	// 	optional: true,
+	// });
+	// blocks.push(inputBlock);
 
 	const dividerBlock = blockBuilder.createDividerBlock('divider-block-id');
 	blocks.push(dividerBlock);
-	blocks.push(inputBlock);
-	blocks.push(dividerBlock);
+	// blocks.push(inputBlock);
+	// blocks.push(dividerBlock);
 
 	let scheduleOptions: any = ['daily', 'weekly', 'twice-a-week', 'monthly'];
 	scheduleOptions = scheduleOptions?.map((option) => ({
