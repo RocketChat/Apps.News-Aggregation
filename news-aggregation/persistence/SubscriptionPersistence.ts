@@ -26,7 +26,12 @@ export class SubscriptionPersistence {
 		this.persistence = persistence;
 	}
 
-	public async createSubscription(interval: string, user: IUser, room: IRoom) {
+	public async createSubscription(
+		interval: string,
+		categories: string[],
+		user: IUser,
+		room: IRoom
+	) {
 		console.log('started saving subs');
 
 		const associations: Array<RocketChatAssociationRecord> = [
@@ -53,6 +58,7 @@ export class SubscriptionPersistence {
 			userId: user.id,
 			roomId: room.id,
 			interval: interval,
+			categories: categories,
 			createdOn: new Date(),
 		};
 
@@ -172,6 +178,28 @@ export class SubscriptionPersistence {
 		}
 
 		return subscriptions;
+	}
+
+	public async getSubscriptionByRoom(room: IRoom): Promise<ISubscription> {
+		const associations: Array<RocketChatAssociationRecord> = [
+			new RocketChatAssociationRecord(
+				RocketChatAssociationModel.MISC,
+				'news-aggregation-subscription'
+			),
+			new RocketChatAssociationRecord(RocketChatAssociationModel.ROOM, room.id),
+		];
+
+		let subscription: ISubscription;
+		try {
+			let result = await this.persistenceRead.readByAssociations(associations);
+			subscription = result[0] as ISubscription;
+		} catch (err) {
+			subscription = { userId: '', roomId: '', interval: '' };
+			console.error('Could not get subscription', err);
+			this.app.getLogger().info('Could not get subscription', err);
+		}
+
+		return subscription;
 	}
 
 	public async getSubscription(

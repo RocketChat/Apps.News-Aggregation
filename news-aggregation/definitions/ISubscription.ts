@@ -5,5 +5,6 @@ export interface ISubscription {
 	userId: string;
 	roomId: string;
 	interval: string;
-	createdOn: Date;
+	categories?: string[];
+	createdOn?: Date;
 }
