@@ -24,6 +24,7 @@ import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 import { Block } from '@rocket.chat/ui-kit';
 import { buildNewsBlock } from '../blocks/UtilityBlocks';
 import { createTextCompletion } from './createTextCompletion';
+import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence';
 
 export class CommandUtility implements ICommandUtility {
 	sender: IUser;
@@ -112,6 +113,15 @@ export class CommandUtility implements ICommandUtility {
 			this.persistenceRead
 		);
 
+		const subscriptionStorage = new SubscriptionPersistence(
+			this.app,
+			this.persistenceRead,
+			this.persistence
+		);
+		const subscription = await subscriptionStorage.getSubscriptionByRoom(
+			this.room
+		);
+
 		try {
 			// news = await techCrunchNewsSource.getNews(
 			// 	this.read,
@@ -120,16 +130,32 @@ export class CommandUtility implements ICommandUtility {
 			// 	this.http,
 			// 	this.persistence
 			// );
-			news = (await newsStorage.getAllNews()) as NewsItem[];
+			// news = (await newsStorage.getAllNews()) as NewsItem[];
+			// news = (await newsStorage.getAllSubscribedNews(subscription.categories))
+
+			// get only the news of subscribed categories
+			if (subscription?.categories) {
+				for (const category of subscription?.categories) {
+					news = (await newsStorage.getAllSubscribedNews(
+						category
+					)) as NewsItem[];
+
+					for (const item of news) {
+						const newsBlock = await buildNewsBlock(item);
+						// newsBlocks.push(newsBlock);
+						await sendMessage(this.modify, this.room, appUser, '', newsBlock);
+					}
+				}
+			}
 			console.log('fetched!!', news, 'FETCHED FROM PERSISTENCE!');
 
 			// To implement
 			let newsBlocks: Array<Array<Block>> = [];
-			for (const item of news) {
-				const newsBlock = await buildNewsBlock(item);
-				// newsBlocks.push(newsBlock);
-				await sendMessage(this.modify, this.room, appUser, '', newsBlock);
-			}
+			// for (const item of news) {
+			// 	const newsBlock = await buildNewsBlock(item);
+			// 	// newsBlocks.push(newsBlock);
+			// 	await sendMessage(this.modify, this.room, appUser, '', newsBlock);
+			// }
 
 			// await sendNewsMessage(
 			// 	this.modify,

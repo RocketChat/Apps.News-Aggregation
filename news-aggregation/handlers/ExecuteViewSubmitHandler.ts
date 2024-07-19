@@ -43,7 +43,13 @@ export class ExecuteViewSubmitHandler {
 			switch (actionId) {
 				case ModalEnum.SUBSCRIBE_NEWS_MODAL_SUBMIT_ACTION_ID:
 					if (room) {
-						await subscriptionStorage.createSubscription('daily', user, room);
+						// add temp default values as params - TO CHANGE
+						await subscriptionStorage.createSubscription(
+							'daily',
+							[],
+							user,
+							room
+						);
 					}
 			}
 			return this.context.getInteractionResponder().successResponse();

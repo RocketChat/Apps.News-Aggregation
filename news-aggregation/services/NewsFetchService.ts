@@ -109,7 +109,7 @@ export class NewsFetchService {
 		);
 		try {
 			for (const item of news) {
-				await newsStorage.saveNews(item, 'TechCrunch');
+				await newsStorage.saveNews(item, 'news-category');
 			}
 			console.log('all news-items saved!!');
 		} catch (err) {
