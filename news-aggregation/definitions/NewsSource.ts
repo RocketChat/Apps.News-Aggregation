@@ -29,15 +29,15 @@ export class NewsSource {
 	}
 
 	public async determineCategory(
-		newsItem: NewsItem,
+		newsItems: NewsItem[],
 		read: IRead,
 		room: IRoom,
 		user: IUser,
 		modify: IModify,
 		http: IHttp
-	): Promise<string> {
+	): Promise<{ [key: string]: string }> {
 		return this.adapter.determineCategory(
-			newsItem,
+			newsItems,
 			read,
 			room,
 			user,

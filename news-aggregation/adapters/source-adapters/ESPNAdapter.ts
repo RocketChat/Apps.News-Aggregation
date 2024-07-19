@@ -41,25 +41,32 @@ export class ESPNAdapter implements INewsSourceAdapter {
 	}
 
 	public async determineCategory(
-		newsItem: NewsItem,
+		newsItems: NewsItem[],
 		read: IRead,
 		room: IRoom,
 		user: IUser,
 		modify: IModify,
 		http: IHttp
-	): Promise<string> {
-		const prompt = newsCategoryPrompt(newsItem.description);
-		const category = await createTextCompletion(
+	): Promise<{ [key: string]: string }> {
+		const prompts = newsItems.map((newsItem) => ({
+			id: newsItem?.id,
+			prompt: newsItem?.description,
+		}));
+		console.log('prmot', prompts);
+
+		console.log('lol');
+
+		const categories = await createTextCompletion(
 			read,
 			room,
 			user,
 			modify,
 			http,
-			prompt
+			prompts
 		);
-		console.log('llm-response: ', category);
+		console.log('llm-response: ', categories);
 
-		return '';
+		return categories;
 	}
 
 	async fetchRssFeed(url: string): Promise<NewsItem[]> {

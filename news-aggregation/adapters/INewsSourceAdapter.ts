@@ -17,11 +17,11 @@ export interface INewsSourceAdapter {
 	): Promise<NewsItem[]>;
 
 	determineCategory(
-		newsItem: NewsItem,
+		newsItems: NewsItem[],
 		read: IRead,
 		room: IRoom,
 		user: IUser,
 		modify: IModify,
 		http: IHttp
-	): Promise<string>;
+	): Promise<{ [key: string]: string }>;
 }
