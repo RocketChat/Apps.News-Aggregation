@@ -75,7 +75,7 @@ export async function createTextCompletion(
 	console.log('modelRes: ', response.data);
 	console.log('resllm: ', response);
 
-	const parsedResponse = JSON.parse(response?.data);
+	const parsedResponse = JSON.parse(response?.content);
 	console.log('parsed: ', parsedResponse);
 	console.log('pparsed: ', parsedResponse);
 
