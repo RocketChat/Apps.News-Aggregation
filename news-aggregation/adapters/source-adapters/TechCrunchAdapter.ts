@@ -64,25 +64,25 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 			const response = await http.get(this.fetchUrl);
 			const categoryNames: string[] = [];
 
-			if (response?.data) {
-				for (const newsItem of response.data) {
-					const categoriesId = newsItem.categories;
-					const categoryPromises = categoriesId?.map(async (categoryId) => {
-						const categoryResponse = await http.get(
-							`${this.categoryUrl}/${categoryId}`
-						);
-						return categoryResponse?.data?.name;
-					});
-					console.log('cProm: ', categoryPromises);
+			// 	if (response?.data) {
+			// 		for (const newsItem of response.data) {
+			// 			const categoriesId = newsItem.categories;
+			// 			const categoryPromises = categoriesId?.map(async (categoryId) => {
+			// 				const categoryResponse = await http.get(
+			// 					`${this.categoryUrl}/${categoryId}`
+			// 				);
+			// 				return categoryResponse?.data?.name;
+			// 			});
+			// 			console.log('cProm: ', categoryPromises);
 
-					if (categoryPromises) {
-						const categories = await Promise.all(categoryPromises);
-						console.log('cPromAll: ', categories);
+			// 			if (categoryPromises) {
+			// 				const categories = await Promise.all(categoryPromises);
+			// 				console.log('cPromAll: ', categories);
 
-						categoryNames.push(...categories.filter(Boolean)); // Add the category names to the array
-					}
-				}
-			}
+			// 				categoryNames.push(...categories.filter(Boolean)); // Add the category names to the array
+			// 			}
+			// 		}
+			// 	}
 
 			// Remove duplicates by converting to a Set and then back to an array
 			console.log('tcCATS', categoryNames);

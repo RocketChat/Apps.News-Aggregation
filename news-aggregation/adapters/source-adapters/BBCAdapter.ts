@@ -66,7 +66,7 @@ export class BBCAdapter implements INewsSourceAdapter {
 			http,
 			prompts
 		);
-		console.log('llm-responsebbc: ', categories);
+		console.log('llm-response: ', categories);
 
 		return categories;
 	}

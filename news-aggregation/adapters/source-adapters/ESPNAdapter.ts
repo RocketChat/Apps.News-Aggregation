@@ -64,7 +64,7 @@ export class ESPNAdapter implements INewsSourceAdapter {
 			http,
 			prompts
 		);
-		console.log('llm-responseespn: ', categories);
+		console.log('llm-response: ', categories);
 
 		return categories;
 	}
