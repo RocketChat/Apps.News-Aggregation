@@ -86,19 +86,15 @@ export class NewsFetchService {
 				)),
 			];
 
-			for (const newsItem of news) {
-				const newsCategory = await bbcNewsSource.determineCategory(
-					newsItem,
-					read,
-					room,
-					appUser,
-					modify,
-					http
-				);
-
-				newsItem.category = newsCategory;
-				console.log('fnsCat: ', newsCategory);
-			}
+			const categories = await bbcNewsSource.determineCategory(
+				news,
+				read,
+				room,
+				appUser,
+				modify,
+				http
+			);
+			console.log('fnsCat: ', categories);
 		}
 
 		console.log('newsafterfetch: ', news);

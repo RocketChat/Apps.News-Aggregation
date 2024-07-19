@@ -48,45 +48,46 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 	}
 
 	public async determineCategory(
-		newsItem: NewsItem,
+		newsItems: NewsItem[],
 		read: IRead,
 		room: IRoom,
 		user: IUser,
 		modify: IModify,
 		http: IHttp
-	): Promise<string> {
-		try {
-			const response = await http.get(this.fetchUrl);
-			const categoryNames: string[] = [];
+	): Promise<{ [key: string]: string }> {
+		// try {
+		// 	const response = await http.get(this.fetchUrl);
+		// 	const categoryNames: string[] = [];
 
-			if (response?.data) {
-				for (const newsItem of response.data) {
-					const categoriesId = newsItem.categories;
-					const categoryPromises = categoriesId?.map(async (categoryId) => {
-						const categoryResponse = await http.get(
-							`${this.categoryUrl}/${categoryId}`
-						);
-						return categoryResponse?.data?.name;
-					});
-					console.log('cProm: ', categoryPromises);
+		// 	if (response?.data) {
+		// 		for (const newsItem of response.data) {
+		// 			const categoriesId = newsItem.categories;
+		// 			const categoryPromises = categoriesId?.map(async (categoryId) => {
+		// 				const categoryResponse = await http.get(
+		// 					`${this.categoryUrl}/${categoryId}`
+		// 				);
+		// 				return categoryResponse?.data?.name;
+		// 			});
+		// 			console.log('cProm: ', categoryPromises);
 
-					if (categoryPromises) {
-						const categories = await Promise.all(categoryPromises);
-						console.log('cPromAll: ', categories);
+		// 			if (categoryPromises) {
+		// 				const categories = await Promise.all(categoryPromises);
+		// 				console.log('cPromAll: ', categories);
 
-						categoryNames.push(...categories.filter(Boolean)); // Add the category names to the array
-					}
-				}
-			}
+		// 				categoryNames.push(...categories.filter(Boolean)); // Add the category names to the array
+		// 			}
+		// 		}
+		// 	}
 
-			// Remove duplicates by converting to a Set and then back to an array
-			console.log('catss', categoryNames);
-			// return Array.from(new Set(categoryNames));
-			return '';
-		} catch (err) {
-			console.error(err); // for development purposes
-			this.app.getLogger().error(err);
-			return '';
-		}
+		// 	// Remove duplicates by converting to a Set and then back to an array
+		// 	console.log('catss', categoryNames);
+		// 	// return Array.from(new Set(categoryNames));
+		// 	return '';
+		// } catch (err) {
+		// 	console.error(err); // for development purposes
+		// 	this.app.getLogger().error(err);
+		// 	return '';
+		// }
+		return {};
 	}
 }
