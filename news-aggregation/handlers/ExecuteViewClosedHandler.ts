@@ -38,7 +38,7 @@ export class ExecuteViewClosedHandler {
 		try {
 			switch (view.id) {
 				case ModalEnum.SUBSCRIBE_VIEW_ID:
-					await roomStorage.clearInteractionRoomId();
+					await roomStorage.clearSubscriptionRoomId();
 			}
 			return this.context.getInteractionResponder().successResponse();
 		} catch (err) {
