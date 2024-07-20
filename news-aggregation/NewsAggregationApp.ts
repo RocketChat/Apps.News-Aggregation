@@ -33,6 +33,7 @@ import { ExecuteViewSubmitHandler } from './handlers/ExecuteViewSubmitHandler';
 import { Settings } from './settings/Settings';
 import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 import { ExecuteViewClosedHandler } from './handlers/ExecuteViewClosedHandler';
+import { DailyNewsProcessor } from './processors/DailyNewsProcessor';
 // import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 
 export class NewsAggregationApp extends App {
@@ -74,6 +75,11 @@ export class NewsAggregationApp extends App {
 				id: 'fetch-news',
 				interval: '*/10 * * * * *',
 			}),
+
+			configurationModify.scheduler.scheduleRecurring({
+				id: 'daily-news',
+				interval: '*/10 * * * * *',
+			}),
 		]);
 		return true;
 	}
@@ -97,6 +103,7 @@ export class NewsAggregationApp extends App {
 		// To fetch news periodically
 		await configuration.scheduler.registerProcessors([
 			new FetchNewsProcessor(this),
+			new DailyNewsProcessor(this),
 		]);
 	}
 
