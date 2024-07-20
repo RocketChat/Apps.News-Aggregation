@@ -36,6 +36,7 @@ import { ExecuteViewClosedHandler } from './handlers/ExecuteViewClosedHandler';
 import { IConfig } from './definitions/IConfig';
 import { DeliverNewsProcessor } from './processors/DeliverNewsProcessor';
 import { UserPersistence } from './persistence/UserPersistence';
+import { DailyNewsProcessor } from './processors/DailyNewsProcessor';
 // import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 
 export class NewsAggregationApp extends App {
@@ -95,6 +96,11 @@ export class NewsAggregationApp extends App {
 				data: {
 					interval: 'daily',
 				},
+			}),
+
+			configurationModify.scheduler.scheduleRecurring({
+				id: 'daily-news',
+				interval: '*/10 * * * * *',
 			}),
 		]);
 		return true;
