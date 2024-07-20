@@ -26,16 +26,16 @@ import {
 	IUIKitInteractionHandler,
 	IUIKitResponse,
 	UIKitBlockInteractionContext,
+	UIKitViewCloseInteractionContext,
 	UIKitViewSubmitInteractionContext,
 } from '@rocket.chat/apps-engine/definition/uikit';
 import { ExecuteViewSubmitHandler } from './handlers/ExecuteViewSubmitHandler';
 import { Settings } from './settings/Settings';
+import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
+import { ExecuteViewClosedHandler } from './handlers/ExecuteViewClosedHandler';
 // import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 
-export class NewsAggregationApp
-	extends App
-	implements IUIKitInteractionHandler
-{
+export class NewsAggregationApp extends App {
 	// implements IUIKitInteractionHandler
 	persistence: IPersistence;
 	persistenceRead: IPersistenceRead;
@@ -106,25 +106,7 @@ export class NewsAggregationApp
 		await Promise.all([configurationModify.scheduler.cancelJob('fetch-news')]);
 	}
 
-	// public async executeViewSubmitHandler(
-	// 	context: UIKitViewSubmitInteractionContext,
-	// 	read: IRead,
-	// 	http: IHttp,
-	// 	persistence: IPersistence,
-	// 	modify: IModify
-	// ): Promise<IUIKitResponse> {
-	// 	const handler = new ExecuteViewSubmitHandler(
-	// 		this,
-	// 		read,
-	// 		modify,
-	// 		http,
-	// 		persistence,
-	// 		context
-	// 	);
-	// 	return await handler.handleActions();
-	// }
-
-	public async [AppMethod.UIKIT_VIEW_SUBMIT](
+	public async executeViewSubmitHandler(
 		context: UIKitViewSubmitInteractionContext,
 		read: IRead,
 		http: IHttp,
@@ -142,14 +124,32 @@ export class NewsAggregationApp
 		return await handler.handleActions();
 	}
 
-	// public async executeBlockActionHandler(
-	// 	context: UIKitBlockInteractionContext,
+	public async executeViewClosedHandler(
+		context: UIKitViewCloseInteractionContext,
+		read: IRead,
+		http: IHttp,
+		persistence: IPersistence,
+		modify: IModify
+	): Promise<IUIKitResponse> {
+		const handler = new ExecuteViewClosedHandler(
+			this,
+			read,
+			modify,
+			http,
+			persistence,
+			context
+		);
+		return await handler.handleActions();
+	}
+
+	// public async [AppMethod.UIKIT_VIEW_SUBMIT](
+	// 	context: UIKitViewSubmitInteractionContext,
 	// 	read: IRead,
 	// 	http: IHttp,
 	// 	persistence: IPersistence,
 	// 	modify: IModify
 	// ): Promise<IUIKitResponse> {
-	// 	const handler = new ExecuteBlockActionHandler(
+	// 	const handler = new ExecuteViewSubmitHandler(
 	// 		this,
 	// 		read,
 	// 		modify,
@@ -159,6 +159,24 @@ export class NewsAggregationApp
 	// 	);
 	// 	return await handler.handleActions();
 	// }
+
+	public async executeBlockActionHandler(
+		context: UIKitBlockInteractionContext,
+		read: IRead,
+		http: IHttp,
+		persistence: IPersistence,
+		modify: IModify
+	): Promise<IUIKitResponse> {
+		const handler = new ExecuteBlockActionHandler(
+			this,
+			read,
+			modify,
+			http,
+			persistence,
+			context
+		);
+		return await handler.handleActions();
+	}
 
 	// public getBuilders(): IAppBuilders {
 	// 	return {

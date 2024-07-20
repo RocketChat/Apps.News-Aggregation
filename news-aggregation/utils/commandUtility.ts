@@ -25,6 +25,7 @@ import { Block } from '@rocket.chat/ui-kit';
 import { buildNewsBlock } from '../blocks/UtilityBlocks';
 import { createTextCompletion } from './createTextCompletion';
 import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence';
+import { RoomPersistence } from '../persistence/RoomPersistence';
 
 export class CommandUtility implements ICommandUtility {
 	sender: IUser;
@@ -121,6 +122,7 @@ export class CommandUtility implements ICommandUtility {
 		const subscription = await subscriptionStorage.getSubscriptionByRoom(
 			this.room
 		);
+		console.log('subs: ', subscription);
 
 		try {
 			// news = await techCrunchNewsSource.getNews(
@@ -137,7 +139,7 @@ export class CommandUtility implements ICommandUtility {
 			if (subscription?.categories) {
 				for (const category of subscription?.categories) {
 					news = (await newsStorage.getAllSubscribedNews(
-						category
+						'news-category'
 					)) as NewsItem[];
 
 					for (const item of news) {
@@ -277,6 +279,13 @@ export class CommandUtility implements ICommandUtility {
 			persistenceRead: this.persistenceRead,
 			triggerId: this.triggerId,
 		});
+
+		const roomStorage = new RoomPersistence(
+			this.sender.id,
+			this.persistence,
+			this.persistenceRead
+		);
+		await roomStorage.storeSubscriptionRoomId(this.room.id);
 		switch (this.command.length) {
 			case 1: {
 				await this.handleSingleParamCommand(handler);
