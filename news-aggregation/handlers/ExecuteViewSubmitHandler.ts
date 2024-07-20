@@ -11,6 +11,8 @@ import {
 } from '@rocket.chat/apps-engine/definition/accessors';
 import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence';
 import { ModalEnum } from '../enums/modalEnum';
+import { RoomPersistence } from '../persistence/RoomPersistence';
+import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 
 export class ExecuteViewSubmitHandler {
 	private context: UIKitViewSubmitInteractionContext;
@@ -26,22 +28,36 @@ export class ExecuteViewSubmitHandler {
 	}
 
 	public async handleActions(): Promise<IUIKitResponse> {
-		const { actionId, user, room, view } = this.context.getInteractionData();
+		const { actionId, user, view } = this.context.getInteractionData();
+		console.log('contextView: ', this.context.getInteractionData());
+
 		const subscriptionStorage = new SubscriptionPersistence(
 			this.app,
 			this.read.getPersistenceReader(),
 			this.persistence
 		);
 
+		const roomStorage = new RoomPersistence(
+			user?.id,
+			this.persistence,
+			this.read.getPersistenceReader()
+		);
+		const roomId = await roomStorage.getInteractionRoomId();
+		const room = (await this.read.getRoomReader().getById(roomId)) as IRoom;
+
 		console.log('viewsubmit');
 		console.log('aid', actionId);
 		console.log('uid', user);
-		console.log('rid', room);
+		console.log('ridView', room);
 		console.log('vid', view);
 
 		try {
-			switch (actionId) {
-				case ModalEnum.SUBSCRIBE_NEWS_MODAL_SUBMIT_ACTION_ID:
+			console.log('try working');
+			switch (view?.id) {
+				// View Submit not working.
+				case ModalEnum.SUBSCRIBE_VIEW_ID:
+					console.log('switch working');
+
 					if (room) {
 						// add temp default values as params - TO CHANGE
 						await subscriptionStorage.createSubscription(
