@@ -44,12 +44,48 @@ export class ExecuteViewSubmitHandler {
 		);
 		const roomId = await roomStorage.getSubscriptionRoomId();
 		const room = (await this.read.getRoomReader().getById(roomId)) as IRoom;
+		let schedule =
+			view.state?.['schedule-dropdown-block-id']?.[
+				'schedule-dropdown-action-id'
+			];
+
+		let categories =
+			view.state?.['category-dropdown-block-id']?.[
+				'category-dropdown-action-id'
+			];
+
+		// Applying these two below functions to store array in a proper format because of Ui-Kit bug.
+		function flattenArray(arr: []) {
+			return arr.reduce(
+				(acc, val) =>
+					Array.isArray(val) ? acc.concat(flattenArray(val)) : acc.concat(val),
+				[]
+			);
+		}
+		function getUniqueCategories(arr: []) {
+			return [...new Set(arr)];
+		}
+		categories = flattenArray(categories);
+		categories = getUniqueCategories(categories);
 
 		console.log('viewsubmit');
 		console.log('aid', actionId);
 		console.log('uid', user);
 		console.log('ridView', room);
-		console.log('vid', view);
+		console.log('vid', view.state);
+		console.log(
+			'scheduleView: ',
+			view.state?.['schedule-dropdown-block-id']?.[
+				'schedule-dropdown-action-id'
+			]
+		);
+		console.log(
+			'categoriesView: ',
+			view.state?.['category-dropdown-block-id']?.[
+				'category-dropdown-action-id'
+			]
+		);
+		console.log('flatArr: ', categories);
 
 		try {
 			console.log('try working');
@@ -59,10 +95,12 @@ export class ExecuteViewSubmitHandler {
 					console.log('switch working');
 
 					if (room) {
+						console.log('room present hai');
+
 						// add temp default values as params - TO CHANGE
 						await subscriptionStorage.createSubscription(
-							'daily',
-							[],
+							schedule,
+							categories,
 							user,
 							room
 						);
