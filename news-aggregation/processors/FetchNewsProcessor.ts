@@ -50,6 +50,7 @@ export class FetchNewsProcessor implements IProcessor {
 				' -- ' +
 				JSON.stringify(bbcSetting, null, 2)
 		);
+		console.log('fetch-processor-working1.1');
 		// Fetch news items from sources
 		if (techCrunchSetting.value) {
 			const techCrunchAdapter = new TechCrunchAdapter();
