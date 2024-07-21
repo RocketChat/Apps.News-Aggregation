@@ -25,6 +25,7 @@ import { Block } from '@rocket.chat/ui-kit';
 import { buildNewsBlock } from '../blocks/UtilityBlocks';
 import { createTextCompletion } from './createTextCompletion';
 import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence';
+import { RoomPersistence } from '../persistence/RoomPersistence';
 
 export class CommandUtility implements ICommandUtility {
 	sender: IUser;
@@ -272,6 +273,13 @@ export class CommandUtility implements ICommandUtility {
 			persistenceRead: this.persistenceRead,
 			triggerId: this.triggerId,
 		});
+
+		const roomStorage = new RoomPersistence(
+			this.sender.id,
+			this.persistence,
+			this.persistenceRead
+		);
+		await roomStorage.storeSubscriptionRoomId(this.room.id);
 		switch (this.command.length) {
 			case 1: {
 				await this.handleSingleParamCommand(handler);
