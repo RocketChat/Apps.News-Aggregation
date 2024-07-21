@@ -29,6 +29,8 @@ import {
 	UIKitViewSubmitInteractionContext,
 } from '@rocket.chat/apps-engine/definition/uikit';
 import { ExecuteViewSubmitHandler } from './handlers/ExecuteViewSubmitHandler';
+import { Settings } from './settings/Settings';
+import { IConfig } from './definitions/IConfig';
 // import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 
 export class NewsAggregationApp
@@ -36,6 +38,7 @@ export class NewsAggregationApp
 	implements IUIKitInteractionHandler
 {
 	// implements IUIKitInteractionHandler
+	config: IConfig;
 	persistence: IPersistence;
 	persistenceRead: IPersistenceRead;
 	constructor(info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
@@ -72,6 +75,9 @@ export class NewsAggregationApp
 			configurationModify.scheduler.scheduleRecurring({
 				id: 'fetch-news',
 				interval: '*/10 * * * * *',
+				data: {
+					interval: 'daily',
+				},
 			}),
 		]);
 		return true;
@@ -84,12 +90,18 @@ export class NewsAggregationApp
 		const newsCommand: NewsCommand = new NewsCommand(this);
 
 		await Promise.all([
+			...Settings.map((setting) => {
+				configuration.settings.provideSetting(setting);
+			}),
+		]);
+
+		await Promise.all([
 			configuration.slashCommands.provideSlashCommand(newsCommand),
 		]);
 
 		// To fetch news periodically
 		await configuration.scheduler.registerProcessors([
-			new FetchNewsProcessor(this),
+			new FetchNewsProcessor(this.config),
 		]);
 	}
 

@@ -81,11 +81,11 @@ export class CommandUtility implements ICommandUtility {
 		// await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
 
 		// Manually fetch and store news
-		// const fetchService = new NewsFetchService(
-		// 	this.app,
-		// 	this.persistence,
-		// 	this.persistenceRead
-		// );
+		// const fetchService = new NewsFetchService({
+		// 	read: this.read,
+		// 	modify: this.modify,
+		// 	persistence: this.persistence,
+		// });
 		// await fetchService.fetchNewsAndStore(this.read, this.modify, this.http);
 	}
 
@@ -100,11 +100,11 @@ export class CommandUtility implements ICommandUtility {
 		// 	news
 		// );
 
-		const newsStorage = new NewsItemPersistence(
-			this.app,
-			this.persistence,
-			this.persistenceRead
-		);
+		const newsStorage = new NewsItemPersistence({
+			read: this.read,
+			modify: this.modify,
+			persistence: this.persistence,
+		});
 
 		try {
 			// news = await techCrunchNewsSource.getNews(
@@ -162,11 +162,11 @@ export class CommandUtility implements ICommandUtility {
 		// 	console.error(err);
 		// }
 
-		const fetchService = new NewsFetchService(
-			this.app,
-			this.persistence,
-			this.persistenceRead
-		);
+		const fetchService = new NewsFetchService({
+			read: this.read,
+			modify: this.modify,
+			persistence: this.persistence,
+		});
 		await fetchService.deleteNewsScheduler(
 			this.read,
 			this.modify,
@@ -218,9 +218,18 @@ export class CommandUtility implements ICommandUtility {
 		}
 	}
 
-	private async handleDualParamCommand() {
+	private async handleDualParamCommand(handler: Handler) {
 		console.log('dual param executed');
 		this.app.getLogger().info('dual param executed');
+
+		const query = this.command[1];
+		console.log('dual-param: ', query);
+
+		if (query !== '') {
+			handler.unsubscribeNewsByInterval(query);
+		} else {
+			handler.unsubscribeNews();
+		}
 	}
 
 	public async resolveCommand(): Promise<void> {
@@ -243,7 +252,7 @@ export class CommandUtility implements ICommandUtility {
 			}
 
 			case 2: {
-				await this.handleDualParamCommand();
+				await this.handleDualParamCommand(handler);
 				break;
 			}
 

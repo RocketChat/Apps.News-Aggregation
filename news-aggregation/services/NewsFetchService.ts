@@ -11,42 +11,87 @@ import { TechCrunchAdapter } from '../adapters/source-adapters/TechCrunchAdapter
 import { NewsSource } from '../definitions/NewsSource';
 import { NewsItem } from '../definitions/NewsItem';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
+import { BBCAdapter } from '../adapters/source-adapters/BBCAdapter';
+import { SettingEnum } from '../enums/settingEnum';
+import { IConfig } from '../definitions/IConfig';
+import { ESPNAdapter } from '../adapters/source-adapters/ESPNAdapter';
 
 export class NewsFetchService {
-	app: NewsAggregationApp;
-	persistence: IPersistence;
-	persistenceRead: IPersistenceRead;
+	// app: NewsAggregationApp;
+	// persistence: IPersistence;
+	// persistenceRead: IPersistenceRead;
+	config: IConfig;
 
 	constructor(
-		app: NewsAggregationApp,
-		persistence: IPersistence,
-		persistenceRead: IPersistenceRead
+		config: IConfig
+		// app: NewsAggregationApp,
+		// persistence: IPersistence,
+		// persistenceRead: IPersistenceRead
 	) {
-		this.app = app;
-		this.persistence = persistence;
-		this.persistenceRead = persistenceRead;
+		this.config = config;
 	}
 
 	async fetchNewsAndStore(read: IRead, modify: IModify, http: IHttp) {
 		let news: NewsItem[] = [];
-		const techCrunchAdapter = new TechCrunchAdapter();
-		const techCrunchNewsSource = new NewsSource(techCrunchAdapter, news);
-
-		news = await techCrunchNewsSource.fetchNews(
-			read,
-			modify,
-			http,
-			this.persistence
+		const settingsReader = read.getEnvironmentReader().getSettings();
+		const techCrunchSetting = await settingsReader.getById(
+			SettingEnum.TECHCRUNCH
 		);
+		const bbcSetting = await settingsReader.getById(SettingEnum.BBC);
+		const espnSetting = await settingsReader.getById(SettingEnum.ESPN);
+		console.log(
+			JSON.stringify(techCrunchSetting, null, 2) +
+				' -- ' +
+				JSON.stringify(bbcSetting, null, 2)
+		);
+
+		if (techCrunchSetting.value) {
+			const techCrunchAdapter = new TechCrunchAdapter();
+			const techCrunchNewsSource = new NewsSource(techCrunchAdapter, news);
+			news = [
+				...news,
+				...(await techCrunchNewsSource.fetchNews(
+					read,
+					modify,
+					http,
+					this.config.persistence
+				)),
+			];
+		}
+
+		if (bbcSetting.value) {
+			const bbcAdapter = new BBCAdapter();
+			const bbcNewsSource = new NewsSource(bbcAdapter, news);
+			news = [
+				...news,
+				...(await bbcNewsSource.fetchNews(
+					read,
+					modify,
+					http,
+					this.config.persistence
+				)),
+			];
+		}
+
+		if (espnSetting.value) {
+			const espnAdapter = new ESPNAdapter();
+			const espnNewsSource = new NewsSource(espnAdapter, news);
+			news = [
+				...news,
+				...(await espnNewsSource.fetchNews(
+					read,
+					modify,
+					http,
+					this.config.persistence
+				)),
+			];
+		}
+		console.log('newsafterfetch: ', news);
 
 		// to fetch and store news manually as scheduler not working
 		// await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
 
-		const newsStorage = new NewsItemPersistence(
-			this.app,
-			this.persistence,
-			this.persistenceRead
-		);
+		const newsStorage = new NewsItemPersistence(this.config);
 		try {
 			for (const item of news) {
 				await newsStorage.saveNews(item, 'TechCrunch');
@@ -54,7 +99,7 @@ export class NewsFetchService {
 			console.log('all news-items saved!!');
 		} catch (err) {
 			console.error('News Items could not be save', err);
-			this.app.getLogger().error('News Items could not be save', err);
+			// this.app.getLogger().error('News Items could not be save', err);
 		}
 	}
 

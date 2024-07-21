@@ -61,7 +61,7 @@ export class Handler implements IHandler {
 		// 	return;
 		// }
 		this.triggerId = this.context.getTriggerId();
-		console.log('triggId:', this.triggerId);
+		console.log('substriggId:', this.triggerId);
 
 		if (this.triggerId) {
 			await this.modify
@@ -105,5 +105,48 @@ export class Handler implements IHandler {
 	public async unsubscribeNews(): Promise<void> {
 		console.log('news unsubscribe working.');
 		this.app.getLogger().info('news unsubscribe working.');
+
+		const user = this.context.getSender();
+		const room = this.context.getRoom();
+
+		this.triggerId = this.context.getTriggerId();
+		console.log('triggId:', this.triggerId);
+
+		const subscriptionStorage = new SubscriptionPersistence(
+			this.app,
+			this.read.getPersistenceReader(),
+			this.persis
+		);
+		if (this.triggerId) {
+			// await subscriptionStorage.deleteSubscription(this.sender, this.room);
+			await subscriptionStorage.deleteSubscriptionsByRoom(this.room);
+			// const id = await subscriptionStorage.createSubscription(
+			// 	'daily',
+			// 	user,
+			// 	room
+			// );
+			// console.log('unsubId:', id);
+		}
+	}
+
+	public async unsubscribeNewsByInterval(interval: string): Promise<void> {
+		console.log('news unsubscribe working by interval.');
+		this.app.getLogger().info('news unsubscribe working.');
+
+		this.triggerId = this.context.getTriggerId();
+		console.log('triggId:', this.triggerId);
+
+		const subscriptionStorage = new SubscriptionPersistence(
+			this.app,
+			this.read.getPersistenceReader(),
+			this.persis
+		);
+		if (this.triggerId) {
+			await subscriptionStorage.deleteSubscriptionByIntervalAndRoom(
+				interval,
+				this.room
+			);
+		}
+		console.log('deleted by interval');
 	}
 }

@@ -9,7 +9,7 @@ import { NewsItem } from './NewsItem';
 import { INewsSourceAdapter } from '../adapters/INewsSourceAdapter';
 
 export class NewsSource {
-	private adapter: INewsSourceAdapter;
+	adapter: INewsSourceAdapter;
 	news: NewsItem[] = [];
 
 	constructor(adapter: INewsSourceAdapter, news: NewsItem[]) {
