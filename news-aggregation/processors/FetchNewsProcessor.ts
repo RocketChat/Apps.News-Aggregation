@@ -52,6 +52,8 @@ export class FetchNewsProcessor implements IProcessor {
 			persis,
 			read.getPersistenceReader()
 		);
+		const roomId = await roomStorage.getSubscriptionRoomId();
+		const room = (await read.getRoomReader().getById(roomId)) as IRoom;
 
 		const userStorage = new UserPersistence(
 			persis,
