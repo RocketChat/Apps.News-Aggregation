@@ -9,6 +9,7 @@ import { NewsItem } from '../../definitions/NewsItem';
 import { INewsSourceAdapter } from '../INewsSourceAdapter';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
+import { generateRandomId } from '../../utils/generateRandomId';
 
 export class TechCrunchAdapter implements INewsSourceAdapter {
 	app: NewsAggregationApp;
@@ -28,8 +29,11 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 			console.log('Res:', response.data, 'Done');
 
 			this.newsItems = response?.data?.map((newsItem) => ({
-				id: newsItem.id.toString(),
-				title: newsItem.yoast_head_json.title,
+				id: generateRandomId({
+					source: 'TechCrunch',
+					title: newsItem.yoast_head_json.title.replace(' | TechCrunch', ''),
+				}),
+				title: newsItem.yoast_head_json.title.replace(' | TechCrunch', ''),
 				description: newsItem.yoast_head_json.description,
 				link: newsItem.link,
 				image: newsItem.jetpack_featured_media_url,

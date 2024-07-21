@@ -13,6 +13,7 @@ import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { createTextCompletion } from '../../utils/createTextCompletion';
 import { newsCategoryPrompt } from '../../utils/prompts';
+import { generateRandomId } from '../../utils/generateRandomId';
 
 export class BBCAdapter implements INewsSourceAdapter {
 	app: NewsAggregationApp;
@@ -123,7 +124,10 @@ export class BBCAdapter implements INewsSourceAdapter {
 				imageMatch
 			) {
 				items.push({
-					id: this.generateRandomId(),
+					id: generateRandomId({
+						source: 'BBC',
+						title: titleMatch[1],
+					}),
 					title: titleMatch[1],
 					description: descriptionMatch[1],
 					link: linkMatch[1],
@@ -135,6 +139,6 @@ export class BBCAdapter implements INewsSourceAdapter {
 				// id++;
 			}
 		}
-		return items;
+		return items.slice(0, 10);
 	}
 }

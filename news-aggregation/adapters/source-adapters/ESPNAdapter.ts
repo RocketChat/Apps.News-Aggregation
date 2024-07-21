@@ -13,15 +13,12 @@ import { createTextCompletion } from '../../utils/createTextCompletion';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { newsCategoryPrompt } from '../../utils/prompts';
+import { generateRandomId } from '../../utils/generateRandomId';
 
 export class ESPNAdapter implements INewsSourceAdapter {
 	app: NewsAggregationApp;
 	newsItems: NewsItem[] = [];
 	fetchUrl: string = `https://www.espn.com/espn/rss/news`;
-
-	private generateRandomId(length: number = 16): string {
-		return randomBytes(length).toString('hex');
-	}
 
 	public async fetchNews(
 		read: IRead,

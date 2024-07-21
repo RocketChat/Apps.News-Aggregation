@@ -75,6 +75,9 @@ export class NewsAggregationApp
 			configurationModify.scheduler.scheduleRecurring({
 				id: 'fetch-news',
 				interval: '* * * * *',
+				data: {
+					interval: 'daily',
+				},
 			}),
 		]);
 		return true;
@@ -98,7 +101,7 @@ export class NewsAggregationApp
 
 		// To fetch news periodically
 		await configuration.scheduler.registerProcessors([
-			new FetchNewsProcessor(this.config),
+			new FetchNewsProcessor(),
 		]);
 	}
 
