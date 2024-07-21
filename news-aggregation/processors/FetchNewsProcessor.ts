@@ -23,12 +23,11 @@ import { IConfig } from '../definitions/IConfig';
 
 export class FetchNewsProcessor implements IProcessor {
 	id: string = 'fetch-news';
-	config: IConfig;
+	// config: IConfig;
 	// app: NewsAggregationApp;
-	newsItems: NewsItem[] = [];
 
-	constructor(config: IConfig) {
-		this.config = config;
+	constructor() {
+		// this.config = config;
 		console.log('proc: ', this);
 	}
 
@@ -39,6 +38,10 @@ export class FetchNewsProcessor implements IProcessor {
 		http: IHttp,
 		persis: IPersistence
 	): Promise<void> {
+		let techCrunchNews: NewsItem[] = [];
+		let bbcNews: NewsItem[] = [];
+		let espnNews: NewsItem[] = [];
+
 		console.log('proc1: ', this);
 
 		const data = jobContext;
@@ -54,46 +57,45 @@ export class FetchNewsProcessor implements IProcessor {
 		);
 		const bbcSetting = await settingsReader.getById(SettingEnum.BBC);
 		const espnSetting = await settingsReader.getById(SettingEnum.ESPN);
-		console.log(
-			JSON.stringify(techCrunchSetting, null, 2) +
-				' -- ' +
-				JSON.stringify(bbcSetting, null, 2)
-		);
-		console.log('proc4: ', this);
+		console.log('techCrunchSet: ', JSON.stringify(techCrunchSetting));
+		console.log('bbcSet: ', JSON.stringify(bbcSetting));
+		console.log('espnSet: ', JSON.stringify(espnSetting));
+
 		// Fetch news items from sources
 		if (techCrunchSetting.value) {
 			const techCrunchAdapter = new TechCrunchAdapter();
 			console.log('hello');
 			console.log(this);
-			const techCrunchNewsSource = new NewsSource(
-				techCrunchAdapter,
-				this.newsItems
-			);
-			this.newsItems = [
-				...this.newsItems,
+			const techCrunchNewsSource = new NewsSource(techCrunchAdapter);
+			techCrunchNews = [
+				...techCrunchNews,
 				...(await techCrunchNewsSource.fetchNews(read, modify, http, persis)),
 			];
 			console.log('fetch-processor-working2');
 		}
 
 		if (bbcSetting.value) {
+			console.log('bbc enabled');
+
 			const bbcAdapter = new BBCAdapter();
 
-			const bbcNewsSource = new NewsSource(bbcAdapter, this.newsItems);
+			const bbcNewsSource = new NewsSource(bbcAdapter);
 			console.log('fetch-processor-working2.1');
-			this.newsItems = [
-				...this.newsItems,
+			techCrunchNews = [
+				...techCrunchNews,
 				...(await bbcNewsSource.fetchNews(read, modify, http, persis)),
 			];
 		}
 
-		if (espnSetting.value) {
+		if (espnSetting.packageValue) {
+			console.log('espn enabled');
 			const espnAdapter = new ESPNAdapter();
-			const espnNewsSource = new NewsSource(espnAdapter, this.newsItems);
-			this.newsItems = [
-				...this.newsItems,
+			const espnNewsSource = new NewsSource(espnAdapter);
+			espnNews = [
+				...espnNews,
 				...(await espnNewsSource.fetchNews(read, modify, http, persis)),
 			];
+			console.log('espn fetched');
 		}
 
 		console.log('fetch-processor-working3');
@@ -104,10 +106,16 @@ export class FetchNewsProcessor implements IProcessor {
 			persistence: persis,
 		});
 		try {
-			const saveNews = this.newsItems.map(
+			const saveTechCrunchNews = techCrunchNews.map(
 				(newsItem) => newsStorage.saveNews(newsItem, 'news-category') // source needs to change from where it is fetched.
 			);
-			await Promise.all(saveNews);
+			const saveBBCNews = bbcNews.map(
+				(newsItem) => newsStorage.saveNews(newsItem, 'news-category') // source needs to change from where it is fetched.
+			);
+			const saveESPNNews = espnNews.map(
+				(newsItem) => newsStorage.saveNews(newsItem, 'news-category') // source needs to change from where it is fetched.
+			);
+			await Promise.all([saveTechCrunchNews, saveBBCNews, saveESPNNews]);
 			console.log('all news-items saved!!');
 		} catch (err) {
 			console.error('News Items could not be save', err);

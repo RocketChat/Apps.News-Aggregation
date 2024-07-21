@@ -75,15 +75,15 @@ export class NewsAggregationApp extends App {
 		await Promise.all([
 			configurationModify.scheduler.scheduleRecurring({
 				id: 'fetch-news',
-				interval: '*/10 * * * * *',
-				data: {
-					interval: 'daily',
-				},
+				interval: '* * * * *',
 			}),
 
 			configurationModify.scheduler.scheduleRecurring({
 				id: 'daily-news',
 				interval: '*/10 * * * * *',
+				data: {
+					interval: 'daily',
+				},
 			}),
 		]);
 		return true;
@@ -107,8 +107,8 @@ export class NewsAggregationApp extends App {
 
 		// To fetch news periodically
 		await configuration.scheduler.registerProcessors([
-			new FetchNewsProcessor(this.config),
-			new DailyNewsProcessor(this),
+			new FetchNewsProcessor(),
+			// new DailyNewsProcessor(this),
 		]);
 	}
 
