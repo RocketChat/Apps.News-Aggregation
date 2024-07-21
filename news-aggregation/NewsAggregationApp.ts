@@ -102,6 +102,9 @@ export class NewsAggregationApp extends App {
 			configurationModify.scheduler.scheduleRecurring({
 				id: 'daily-news',
 				interval: '*/10 * * * * *',
+				data: {
+					interval: 'daily',
+				},
 			}),
 		]);
 		return true;
