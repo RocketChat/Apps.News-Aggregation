@@ -80,9 +80,6 @@ export class FetchNewsProcessor implements IProcessor {
 		);
 		const bbcSetting = await settingsReader.getById(SettingEnum.BBC);
 		const espnSetting = await settingsReader.getById(SettingEnum.ESPN);
-		console.log('techCrunchSet: ', JSON.stringify(techCrunchSetting));
-		console.log('bbcSet: ', JSON.stringify(bbcSetting));
-		console.log('espnSet: ', JSON.stringify(espnSetting));
 
 		// Fetch news items from sources
 		if (techCrunchSetting.value) {
@@ -104,8 +101,8 @@ export class FetchNewsProcessor implements IProcessor {
 
 			const bbcNewsSource = new NewsSource(bbcAdapter);
 			console.log('fetch-processor-working2.1');
-			techCrunchNews = [
-				...techCrunchNews,
+			bbcNews = [
+				...bbcNews,
 				...(await bbcNewsSource.fetchNews(read, modify, http, persis)),
 			];
 		}
