@@ -8,20 +8,19 @@ import { NewsAggregationApp } from '../../NewsAggregationApp';
 import { NewsItem } from '../../definitions/NewsItem';
 import { INewsSourceAdapter } from '../INewsSourceAdapter';
 import * as https from 'https';
-import { randomBytes } from 'crypto';
+import { randomBytes, createHash } from 'crypto';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { createTextCompletion } from '../../utils/createTextCompletion';
 import { newsCategoryPrompt } from '../../utils/prompts';
+import { generateRandomId } from '../../utils/generateRandomId';
+
+// type AtLeast<T, K extends keyof T> = Partial<T> & { [P in K]: T[P] };
 
 export class BBCAdapter implements INewsSourceAdapter {
 	app: NewsAggregationApp;
 	newsItems: NewsItem[] = [];
 	fetchUrl: string = `https://feeds.bbci.co.uk/news/rss.xml`;
-
-	private generateRandomId(length: number = 16): string {
-		return randomBytes(length).toString('hex');
-	}
 
 	public async fetchNews(
 		read: IRead,
@@ -39,6 +38,8 @@ export class BBCAdapter implements INewsSourceAdapter {
 			}
 		})();
 
+		console.log('bbcc fetch working');
+
 		return this.newsItems;
 	}
 
@@ -55,6 +56,8 @@ export class BBCAdapter implements INewsSourceAdapter {
 			prompt: newsItem?.description,
 		}));
 		console.log('prmot', prompts);
+		// this.app.getLogger().info(prompts);
+		// modify.
 
 		console.log('lol');
 
@@ -123,7 +126,10 @@ export class BBCAdapter implements INewsSourceAdapter {
 				imageMatch
 			) {
 				items.push({
-					id: this.generateRandomId(),
+					id: generateRandomId({
+						source: 'BBC',
+						title: titleMatch[1],
+					}),
 					title: titleMatch[1],
 					description: descriptionMatch[1],
 					link: linkMatch[1],
@@ -135,6 +141,6 @@ export class BBCAdapter implements INewsSourceAdapter {
 				// id++;
 			}
 		}
-		return items;
+		return items.slice(0, 10);
 	}
 }
