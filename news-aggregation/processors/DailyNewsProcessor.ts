@@ -58,11 +58,11 @@ export class DailyNewsProcessor implements IProcessor {
 		// 	news
 		// );
 
-		const newsStorage = new NewsItemPersistence(
-			this.app,
-			persis,
-			read.getPersistenceReader()
-		);
+		const newsStorage = new NewsItemPersistence({
+			read,
+			modify,
+			persistence: persis,
+		});
 
 		const subscriptionStorage = new SubscriptionPersistence(
 			this.app,
