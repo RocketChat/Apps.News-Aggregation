@@ -54,12 +54,7 @@ export class FetchNewsProcessor implements IProcessor {
 		);
 		const bbcSetting = await settingsReader.getById(SettingEnum.BBC);
 		const espnSetting = await settingsReader.getById(SettingEnum.ESPN);
-		console.log(
-			JSON.stringify(techCrunchSetting, null, 2) +
-				' -- ' +
-				JSON.stringify(bbcSetting, null, 2)
-		);
-		console.log('proc4: ', this);
+
 		// Fetch news items from sources
 		if (techCrunchSetting.value) {
 			const techCrunchAdapter = new TechCrunchAdapter();
@@ -84,7 +79,7 @@ export class FetchNewsProcessor implements IProcessor {
 			];
 		}
 
-		if (espnSetting.value) {
+		if (espnSetting.packageValue) {
 			const espnAdapter = new ESPNAdapter();
 			const espnNewsSource = new NewsSource(espnAdapter);
 			espnNews = [
@@ -102,13 +97,13 @@ export class FetchNewsProcessor implements IProcessor {
 		});
 		try {
 			const saveTechCrunchNews = techCrunchNews.map(
-				(newsItem) => newsStorage.saveNews(newsItem, 'TechCrunch') // source needs to change from where it is fetched.
+				(newsItem) => newsStorage.saveNews(newsItem, 'news-category') // source needs to change from where it is fetched.
 			);
 			const saveBBCNews = bbcNews.map(
-				(newsItem) => newsStorage.saveNews(newsItem, 'TechCrunch') // source needs to change from where it is fetched.
+				(newsItem) => newsStorage.saveNews(newsItem, 'news-category') // source needs to change from where it is fetched.
 			);
 			const saveESPNNews = espnNews.map(
-				(newsItem) => newsStorage.saveNews(newsItem, 'TechCrunch') // source needs to change from where it is fetched.
+				(newsItem) => newsStorage.saveNews(newsItem, 'news-category') // source needs to change from where it is fetched.
 			);
 			await Promise.all([saveTechCrunchNews, saveBBCNews, saveESPNNews]);
 			console.log('all news-items saved!!');

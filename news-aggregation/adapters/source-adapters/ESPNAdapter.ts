@@ -32,10 +32,14 @@ export class ESPNAdapter implements INewsSourceAdapter {
 		await (async () => {
 			try {
 				this.newsItems = await this.fetchRssFeed(this.fetchUrl);
+				console.log('espn news: ', this.newsItems);
+				console.log('fetched from espn');
 			} catch (error) {
 				console.error('Error processing RSS feed:', error);
 			}
 		})();
+
+		console.log('espn fetch working');
 
 		return this.newsItems;
 	}
@@ -72,21 +76,31 @@ export class ESPNAdapter implements INewsSourceAdapter {
 	async fetchRssFeed(url: string): Promise<NewsItem[]> {
 		try {
 			const response = await new Promise<string>((resolve, reject) => {
-				https.get(url, (res) => {
-					let data = '';
+				https
+					.get(url, (res) => {
+						let data = '';
 
-					res.on('data', (chunk) => {
-						data += chunk;
-					});
+						res.on('data', (chunk) => {
+							data += chunk;
+						});
 
-					res.on('end', () => {
-						resolve(data);
-					});
+						res.on('end', () => {
+							if (res.statusCode === 200) {
+								resolve(data);
+							} else {
+								reject(
+									new Error(`Failed to fetch RSS feed: ${res.statusCode}`)
+								);
+							}
+						});
 
-					res.on('error', (err) => {
+						res.on('error', (err) => {
+							reject(err);
+						});
+					})
+					.on('error', (err) => {
 						reject(err);
 					});
-				});
 			});
 
 			const items = this.parseRssItems(response);
@@ -101,7 +115,6 @@ export class ESPNAdapter implements INewsSourceAdapter {
 		const items: NewsItem[] = [];
 		const itemRegex = /<item>([\s\S]*?)<\/item>/g;
 		let match: RegExpExecArray | null;
-		// let id = 1;
 
 		while ((match = itemRegex.exec(xml)) !== null) {
 			const item = match[1];
@@ -109,29 +122,45 @@ export class ESPNAdapter implements INewsSourceAdapter {
 			const descriptionMatch = item.match(
 				/<description><!\[CDATA\[(.*?)\]\]><\/description>/
 			);
-			const linkMatch = item.match(/<link>(.*?)<\/link>/);
+			const creatorMatch = item.match(
+				/<dc:creator><!\[CDATA\[(.*?)\]\]><\/dc:creator>/
+			);
+			const enclosureMatch = item.match(/<enclosure[^>]*url="(.*?)"/);
+			const linkMatch = item.match(/<link><!\[CDATA\[(.*?)\]\]><\/link>/);
 			const publishDateMatch = item.match(/<pubDate>(.*?)<\/pubDate>/);
-			const imageMatch = item.match(/<media:thumbnail[^>]*url="(.*?)"/);
 
 			if (
 				titleMatch &&
 				linkMatch &&
 				descriptionMatch &&
 				publishDateMatch &&
-				imageMatch
+				enclosureMatch &&
+				creatorMatch
 			) {
 				items.push({
-					id: this.generateRandomId(),
+					id: generateRandomId({
+						source: 'ESPN',
+						title: titleMatch[1],
+					}),
 					title: titleMatch[1],
 					description: descriptionMatch[1],
 					link: linkMatch[1],
-					image: imageMatch[1],
+					image: enclosureMatch[1],
 					source: 'ESPN',
+					author: creatorMatch[1],
 					publishedAt: new Date(publishDateMatch[1]),
 				});
-				// id++;
+			} else {
+				console.warn('Incomplete RSS item found:', {
+					titleMatch,
+					descriptionMatch,
+					linkMatch,
+					publishDateMatch,
+					enclosureMatch,
+					creatorMatch,
+				});
 			}
 		}
-		return items;
+		return items.slice(0, 10);
 	}
 }
