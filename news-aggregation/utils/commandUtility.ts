@@ -130,6 +130,8 @@ export class CommandUtility implements ICommandUtility {
 			// news = (await newsStorage.getAllSubscribedNews(subscription.categories))
 
 			// get only the news of subscribed categories
+			console.log('subsFetch: ', subscription);
+
 			if (subscription?.categories) {
 				for (const category of subscription?.categories) {
 					news = (await newsStorage.getAllSubscribedNews(
