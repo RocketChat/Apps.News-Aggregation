@@ -73,6 +73,9 @@ export class NewsAggregationApp extends App {
 			configurationModify.scheduler.scheduleRecurring({
 				id: 'fetch-news',
 				interval: '* * * * *',
+				data: {
+					interval: 'daily',
+				},
 			}),
 		]);
 		return true;

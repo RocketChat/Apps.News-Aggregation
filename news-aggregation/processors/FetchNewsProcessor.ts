@@ -23,7 +23,6 @@ import { IConfig } from '../definitions/IConfig';
 
 export class FetchNewsProcessor implements IProcessor {
 	id: string = 'fetch-news';
-	config: IConfig;
 	// app: NewsAggregationApp;
 
 	constructor() {}
