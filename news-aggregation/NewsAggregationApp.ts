@@ -74,10 +74,7 @@ export class NewsAggregationApp
 		await Promise.all([
 			configurationModify.scheduler.scheduleRecurring({
 				id: 'fetch-news',
-				interval: '*/10 * * * * *',
-				data: {
-					interval: 'daily',
-				},
+				interval: '* * * * *',
 			}),
 		]);
 		return true;
