@@ -12,6 +12,7 @@ import {
 import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence';
 import { ModalEnum } from '../enums/modalEnum';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
+import { RoomPersistence } from '../persistence/RoomPersistence';
 
 export class ExecuteViewSubmitHandler {
 	private context: UIKitViewSubmitInteractionContext;
