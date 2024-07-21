@@ -157,7 +157,7 @@ export class NewsFetchService {
 			];
 		}
 
-		console.log('newsafterfetch: ', news);
+		console.log('newsafterfetch: ');
 
 		// to fetch and store news manually as scheduler not working
 		// await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
