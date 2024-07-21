@@ -20,6 +20,9 @@ import { NewsItem } from '../definitions/NewsItem';
 import { SettingEnum } from '../enums/settingEnum';
 import { ESPNAdapter } from '../adapters/source-adapters/ESPNAdapter';
 import { IConfig } from '../definitions/IConfig';
+import { RoomPersistence } from '../persistence/RoomPersistence';
+import { IUser } from '@rocket.chat/apps-engine/definition/users';
+import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 
 export class FetchNewsProcessor implements IProcessor {
 	id: string = 'fetch-news';
@@ -46,6 +49,16 @@ export class FetchNewsProcessor implements IProcessor {
 
 		const persisRead = read.getPersistenceReader();
 		console.log('proc3: ', this);
+
+		const appUser = (await read.getUserReader().getAppUser()) as IUser;
+
+		const roomStorage = new RoomPersistence(
+			appUser?.id,
+			persis,
+			read.getPersistenceReader()
+		);
+		const roomId = await roomStorage.getSubscriptionRoomId();
+		const room = (await read.getRoomReader().getById(roomId)) as IRoom;
 
 		const settingsReader = read.getEnvironmentReader().getSettings();
 		const techCrunchSetting = await settingsReader.getById(
@@ -76,6 +89,16 @@ export class FetchNewsProcessor implements IProcessor {
 				...bbcNews,
 				...(await bbcNewsSource.fetchNews(read, modify, http, persis)),
 			];
+
+			const categories = await bbcNewsSource.determineCategory(
+				bbcNews,
+				read,
+				room,
+				appUser,
+				modify,
+				http
+			);
+			console.log('bbcCat: ', categories);
 		}
 
 		if (espnSetting.packageValue) {
