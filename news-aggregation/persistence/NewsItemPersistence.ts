@@ -184,23 +184,23 @@ export class NewsItemPersistence {
 
 		let newsObjectArray: object[];
 		try {
-			newsObjectArray = (await this.persistenceRead.readByAssociations(
-				associations
-			)) as NewsItem[];
+			newsObjectArray = (await this.config.read
+				.getPersistenceReader()
+				.readByAssociations(associations)) as NewsItem[];
 
 			if (newsObjectArray.length === 0) {
 				console.error("News with the given category doesn't exist");
-				this.app
-					.getLogger()
-					.error("News with the given category doesn't exist");
+				// this.app
+				// 	.getLogger()
+				// 	.error("News with the given category doesn't exist");
 				return [];
 			}
 		} catch (err) {
 			newsObjectArray = [];
 			console.error('Could not get the desired news by category', err);
-			this.app
-				.getLogger()
-				.error('Could not get the desired news by category', err);
+			// this.app
+			// 	.getLogger()
+			// 	.error('Could not get the desired news by category', err);
 		}
 
 		console.log('catNews: ', newsObjectArray);
