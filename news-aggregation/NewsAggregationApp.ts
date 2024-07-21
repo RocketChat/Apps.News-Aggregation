@@ -111,25 +111,7 @@ export class NewsAggregationApp
 		await Promise.all([configurationModify.scheduler.cancelJob('fetch-news')]);
 	}
 
-	// public async executeViewSubmitHandler(
-	// 	context: UIKitViewSubmitInteractionContext,
-	// 	read: IRead,
-	// 	http: IHttp,
-	// 	persistence: IPersistence,
-	// 	modify: IModify
-	// ): Promise<IUIKitResponse> {
-	// 	const handler = new ExecuteViewSubmitHandler(
-	// 		this,
-	// 		read,
-	// 		modify,
-	// 		http,
-	// 		persistence,
-	// 		context
-	// 	);
-	// 	return await handler.handleActions();
-	// }
-
-	public async [AppMethod.UIKIT_VIEW_SUBMIT](
+	public async executeViewSubmitHandler(
 		context: UIKitViewSubmitInteractionContext,
 		read: IRead,
 		http: IHttp,
@@ -146,6 +128,24 @@ export class NewsAggregationApp
 		);
 		return await handler.handleActions();
 	}
+
+	// public async [AppMethod.UIKIT_VIEW_SUBMIT](
+	// 	context: UIKitViewSubmitInteractionContext,
+	// 	read: IRead,
+	// 	http: IHttp,
+	// 	persistence: IPersistence,
+	// 	modify: IModify
+	// ): Promise<IUIKitResponse> {
+	// 	const handler = new ExecuteViewSubmitHandler(
+	// 		this,
+	// 		read,
+	// 		modify,
+	// 		http,
+	// 		persistence,
+	// 		context
+	// 	);
+	// 	return await handler.handleActions();
+	// }
 
 	// public async executeBlockActionHandler(
 	// 	context: UIKitBlockInteractionContext,
