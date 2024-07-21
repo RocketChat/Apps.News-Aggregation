@@ -27,13 +27,9 @@ import { UserPersistence } from '../persistence/UserPersistence';
 
 export class FetchNewsProcessor implements IProcessor {
 	id: string = 'fetch-news';
-	// config: IConfig;
 	// app: NewsAggregationApp;
 
-	constructor() {
-		// this.config = config;
-		console.log('proc: ', this);
-	}
+	constructor() {}
 
 	public async processor(
 		jobContext: IJobContext,
