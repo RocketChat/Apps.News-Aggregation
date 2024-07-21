@@ -105,7 +105,7 @@ export class FetchNewsProcessor implements IProcessor {
 		});
 		try {
 			const saveNews = this.newsItems.map(
-				(newsItem) => newsStorage.saveNews(newsItem, 'TechCrunch') // source needs to change from where it is fetched.
+				(newsItem) => newsStorage.saveNews(newsItem, 'news-category') // source needs to change from where it is fetched.
 			);
 			await Promise.all(saveNews);
 			console.log('all news-items saved!!');
