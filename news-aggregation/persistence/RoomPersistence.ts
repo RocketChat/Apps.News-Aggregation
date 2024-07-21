@@ -34,7 +34,7 @@ export class RoomPersistence {
 		);
 	}
 
-	public async getInteractionRoomId(): Promise<string> {
+	public async getSubscriptionRoomId(): Promise<string> {
 		const association = new RocketChatAssociationRecord(
 			RocketChatAssociationModel.USER,
 			`${this.userId}#RoomId`
@@ -45,7 +45,7 @@ export class RoomPersistence {
 		return result.roomId;
 	}
 
-	public async clearInteractionRoomId(): Promise<void> {
+	public async clearSubscriptionRoomId(): Promise<void> {
 		const association = new RocketChatAssociationRecord(
 			RocketChatAssociationModel.USER,
 			`${this.userId}#RoomId`

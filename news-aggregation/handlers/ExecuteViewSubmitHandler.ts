@@ -42,7 +42,7 @@ export class ExecuteViewSubmitHandler {
 			this.persistence,
 			this.read.getPersistenceReader()
 		);
-		const roomId = await roomStorage.getInteractionRoomId();
+		const roomId = await roomStorage.getSubscriptionRoomId();
 		const room = (await this.read.getRoomReader().getById(roomId)) as IRoom;
 		let schedule =
 			view.state?.['schedule-dropdown-block-id']?.[
