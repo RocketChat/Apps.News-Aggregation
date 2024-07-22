@@ -40,7 +40,6 @@ import { UserPersistence } from './persistence/UserPersistence';
 
 export class NewsAggregationApp extends App {
 	// implements IUIKitInteractionHandler
-	config: IConfig;
 	persistence: IPersistence;
 	persistenceRead: IPersistenceRead;
 	constructor(info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
@@ -68,6 +67,7 @@ export class NewsAggregationApp extends App {
 	): Promise<void> {
 		console.log('news app installed');
 
+		this.persistence = persistence;
 		const user = context.user;
 		const userStorage = new UserPersistence(
 			persistence,

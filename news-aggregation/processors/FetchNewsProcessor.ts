@@ -42,19 +42,6 @@ export class FetchNewsProcessor implements IProcessor {
 		let bbcNews: NewsItem[] = [];
 		let espnNews: NewsItem[] = [];
 
-		const persisRead = read.getPersistenceReader();
-		console.log('proc3: ', this);
-
-		const appUser = (await read.getUserReader().getAppUser()) as IUser;
-
-		const roomStorage = new RoomPersistence(
-			appUser?.id,
-			persis,
-			read.getPersistenceReader()
-		);
-		const roomId = await roomStorage.getSubscriptionRoomId();
-		const room = (await read.getRoomReader().getById(roomId)) as IRoom;
-
 		const userStorage = new UserPersistence(
 			persis,
 			read.getPersistenceReader()
