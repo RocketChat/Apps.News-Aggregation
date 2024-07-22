@@ -23,6 +23,7 @@ import { IConfig } from '../definitions/IConfig';
 import { RoomPersistence } from '../persistence/RoomPersistence';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
+import { UserPersistence } from '../persistence/UserPersistence';
 
 export class FetchNewsProcessor implements IProcessor {
 	id: string = 'fetch-news';
@@ -41,24 +42,38 @@ export class FetchNewsProcessor implements IProcessor {
 		let bbcNews: NewsItem[] = [];
 		let espnNews: NewsItem[] = [];
 
-		console.log('proc1: ', this);
-
-		const data = jobContext;
-		console.log('jc: ', data);
-		console.log('proc2: ', this);
-
-		const persisRead = read.getPersistenceReader();
-		console.log('proc3: ', this);
-
-		const appUser = (await read.getUserReader().getAppUser()) as IUser;
-
-		const roomStorage = new RoomPersistence(
-			appUser?.id,
+		const userStorage = new UserPersistence(
 			persis,
 			read.getPersistenceReader()
 		);
-		const roomId = await roomStorage.getSubscriptionRoomId();
-		const room = (await read.getRoomReader().getById(roomId)) as IRoom;
+		const userId = await userStorage.getUserId();
+		console.log('userFId: ', userId);
+
+		const data = jobContext;
+		console.log('jc-fN: ', data);
+
+		if (!userId) {
+			console.error('No user ID found in job context');
+			return;
+		}
+
+		// const roomStorage = new RoomPersistence(
+		// 	userId,
+		// 	persis,
+		// 	read.getPersistenceReader()
+		// );
+		// const roomId = await roomStorage.getSubscriptionRoomId();
+		// console.log('roomId found', roomId);
+
+		// const room = (await read.getRoomReader().getById(roomId)) as IRoom;
+		const currentUser = (await read.getUserReader().getById(userId)) as IUser;
+		const dm = await read
+			.getRoomReader()
+			.getDirectByUsernames([currentUser.username]);
+		if (!currentUser) {
+			console.error('User not found');
+			return;
+		}
 
 		const settingsReader = read.getEnvironmentReader().getSettings();
 		const techCrunchSetting = await settingsReader.getById(
@@ -93,8 +108,8 @@ export class FetchNewsProcessor implements IProcessor {
 			const categories = await bbcNewsSource.determineCategory(
 				bbcNews,
 				read,
-				room,
-				appUser,
+				dm,
+				currentUser,
 				modify,
 				http
 			);
@@ -109,8 +124,6 @@ export class FetchNewsProcessor implements IProcessor {
 				...(await espnNewsSource.fetchNews(read, modify, http, persis)),
 			];
 		}
-
-		console.log('fetch-processor-working3');
 
 		const newsStorage = new NewsItemPersistence({
 			read: read,
@@ -134,7 +147,6 @@ export class FetchNewsProcessor implements IProcessor {
 			// this.app.getLogger().error('News Items could not be save', err);
 		}
 
-		console.log('Data', data);
 		console.log('FetchNewsProcessor completed.');
 	}
 }

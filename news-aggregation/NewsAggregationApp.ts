@@ -33,6 +33,7 @@ import { ExecuteViewSubmitHandler } from './handlers/ExecuteViewSubmitHandler';
 import { Settings } from './settings/Settings';
 import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 import { ExecuteViewClosedHandler } from './handlers/ExecuteViewClosedHandler';
+import { UserPersistence } from './persistence/UserPersistence';
 // import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 
 export class NewsAggregationApp extends App {
@@ -49,6 +50,10 @@ export class NewsAggregationApp extends App {
 	// ): Promise<void> {
 	// 	// this.elementBuilder = new ElementBuilder(this.getID());
 	// 	// this.blockBuilder = new BlockBuilder(this.getID());
+
+	// 	// how to initialize persistence
+	// 	// this.persistence
+	// 	this.persistenceRead = this.getAccessors().reader.getPersistenceReader();
 	// }
 
 	public async onInstall(
@@ -60,7 +65,15 @@ export class NewsAggregationApp extends App {
 	): Promise<void> {
 		console.log('news app installed');
 
+		this.persistence = persistence;
 		const user = context.user;
+		const userStorage = new UserPersistence(
+			persistence,
+			read.getPersistenceReader()
+		);
+		await userStorage.storeUserId(user?.id);
+		console.log('userid stored');
+
 		await sendDirectMessageOnInstall(read, modify, user, persistence);
 	}
 
