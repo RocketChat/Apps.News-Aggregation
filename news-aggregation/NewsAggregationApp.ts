@@ -31,6 +31,7 @@ import {
 import { ExecuteViewSubmitHandler } from './handlers/ExecuteViewSubmitHandler';
 import { Settings } from './settings/Settings';
 import { IConfig } from './definitions/IConfig';
+import { UserPersistence } from './persistence/UserPersistence';
 // import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 
 export class NewsAggregationApp
@@ -38,7 +39,6 @@ export class NewsAggregationApp
 	implements IUIKitInteractionHandler
 {
 	// implements IUIKitInteractionHandler
-	config: IConfig;
 	persistence: IPersistence;
 	persistenceRead: IPersistenceRead;
 	constructor(info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
@@ -51,6 +51,10 @@ export class NewsAggregationApp
 	// ): Promise<void> {
 	// 	// this.elementBuilder = new ElementBuilder(this.getID());
 	// 	// this.blockBuilder = new BlockBuilder(this.getID());
+
+	// 	// how to initialize persistence
+	// 	// this.persistence
+	// 	this.persistenceRead = this.getAccessors().reader.getPersistenceReader();
 	// }
 
 	public async onInstall(
@@ -62,7 +66,15 @@ export class NewsAggregationApp
 	): Promise<void> {
 		console.log('news app installed');
 
+		this.persistence = persistence;
 		const user = context.user;
+		const userStorage = new UserPersistence(
+			persistence,
+			read.getPersistenceReader()
+		);
+		await userStorage.storeUserId(user?.id);
+		console.log('userid stored');
+
 		await sendDirectMessageOnInstall(read, modify, user, persistence);
 	}
 
