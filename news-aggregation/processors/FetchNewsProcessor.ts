@@ -46,12 +46,6 @@ export class FetchNewsProcessor implements IProcessor {
 		let bbcNews: NewsItem[] = [];
 		let espnNews: NewsItem[] = [];
 
-		console.log('proc1: ', this);
-
-		const data = jobContext;
-		console.log('jc: ', data);
-		console.log('proc2: ', this);
-
 		const persisRead = read.getPersistenceReader();
 		console.log('proc3: ', this);
 
@@ -62,8 +56,6 @@ export class FetchNewsProcessor implements IProcessor {
 			persis,
 			read.getPersistenceReader()
 		);
-		const roomId = await roomStorage.getSubscriptionRoomId();
-		const room = (await read.getRoomReader().getById(roomId)) as IRoom;
 
 		const userStorage = new UserPersistence(
 			persis,
@@ -121,8 +113,8 @@ export class FetchNewsProcessor implements IProcessor {
 			const categories = await bbcNewsSource.determineCategory(
 				bbcNews,
 				read,
-				room,
-				appUser,
+				dm,
+				currentUser,
 				modify,
 				http
 			);
@@ -139,8 +131,6 @@ export class FetchNewsProcessor implements IProcessor {
 			];
 			console.log('espn fetched');
 		}
-
-		console.log('fetch-processor-working3');
 
 		const newsStorage = new NewsItemPersistence({
 			read: read,
@@ -164,7 +154,6 @@ export class FetchNewsProcessor implements IProcessor {
 			// this.app.getLogger().error('News Items could not be save', err);
 		}
 
-		console.log('Data', data);
 		console.log('FetchNewsProcessor completed.');
 	}
 }
