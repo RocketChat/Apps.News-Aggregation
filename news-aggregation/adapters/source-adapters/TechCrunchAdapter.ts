@@ -58,7 +58,7 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 		user: IUser,
 		modify: IModify,
 		http: IHttp
-	): Promise<{ [key: string]: string }> {
+	) {
 		// try {
 		// 	const response = await http.get(this.fetchUrl);
 		// 	const categoryNames: string[] = [];
@@ -92,6 +92,6 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 		// 	this.app.getLogger().error(err);
 		// 	return '';
 		// }
-		return {};
+		return [];
 	}
 }
