@@ -6,6 +6,7 @@ import {
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { sendNotification } from './message';
+import { convertToStringifiedFormat, systemPrompt } from './prompts';
 
 export async function createTextCompletion(
 	read: IRead,
@@ -14,7 +15,7 @@ export async function createTextCompletion(
 	modify: IModify,
 	http: IHttp,
 	prompts: { id: string; prompt: string }[]
-): Promise<{ [key: string]: string }> {
+): Promise<{ [key: string]: string }[]> {
 	const model = await read
 		.getEnvironmentReader()
 		.getSettings()
@@ -31,14 +32,31 @@ export async function createTextCompletion(
 		throw new Error(`Model settings doesn't exist.`);
 	}
 	console.log('testing1: ', model);
-	console.log('promptss: ', prompts);
+	// console.log('promptss: ', prompts);
+
+	// prompts.map((item) => {
+	// 		const categoryPrompt = newsCategoryPrompt(item.prompt);
+	// 		return {
+	// 			role: 'user',
+	// 			content: categoryPrompt,
+	// 		};
+	// 	})
+
+	const stringifiedPrompt = convertToStringifiedFormat(prompts);
+	console.log('strifiedPrompt: ', stringifiedPrompt);
 
 	const body = {
 		model,
-		messages: prompts.map((item) => ({
-			role: 'system',
-			content: item.prompt,
-		})),
+		messages: [
+			{
+				role: 'system',
+				content: systemPrompt(),
+			},
+			{
+				role: 'user',
+				content: stringifiedPrompt,
+			},
+		],
 		temperature: 0.7,
 		top_p: 1,
 		max_tokens: 1000,
@@ -77,13 +95,26 @@ export async function createTextCompletion(
 
 	const parsedResponse = JSON.parse(response?.content);
 	console.log('parsed: ', parsedResponse);
-	console.log('pparsed: ', parsedResponse);
 
-	const result: { [key: string]: string } = {};
-	parsedResponse.choices.forEach((choice, index) => {
-		result[prompts[index].id] = choice.message.content;
-	});
-	console.log('resans: ', result);
+	// const resultObject: { [key: string]: string } = parsedResponse?.choices.map(
+	// 	(choice: any, index: number) => {
+	// 		return choice.message.content.trim();
+	// 	}
+	// );
+	const resultObject = parsedResponse?.choices[0].message.content.trim();
+	console.log('resansss: ', resultObject);
 
-	return result;
+	// const result = Object.entries(resultObject).map(([key, value]) => ({
+	// 	[key]: value,
+	// }));
+	// console.log('obj:', Object.entries(resultObject));
+
+	// type KeyValuePair = { [key: string]: string };
+
+	// const result: KeyValuePair[] = Object.entries(resultObject).map(
+	// 	([key, value]) => ({ [key]: value })
+	// );
+
+	// return result;
+	return resultObject;
 }

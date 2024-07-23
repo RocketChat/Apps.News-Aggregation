@@ -12,7 +12,6 @@ import {
 import { createTextCompletion } from '../../utils/createTextCompletion';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
-import { newsCategoryPrompt } from '../../utils/prompts';
 import { generateRandomId } from '../../utils/generateRandomId';
 
 export class ESPNAdapter implements INewsSourceAdapter {
@@ -48,7 +47,7 @@ export class ESPNAdapter implements INewsSourceAdapter {
 		user: IUser,
 		modify: IModify,
 		http: IHttp
-	): Promise<{ [key: string]: string }> {
+	) {
 		const prompts = newsItems.map((newsItem) => ({
 			id: newsItem?.id,
 			prompt: newsItem?.description,
@@ -65,7 +64,7 @@ export class ESPNAdapter implements INewsSourceAdapter {
 			http,
 			prompts
 		);
-		console.log('llm-response: ', categories);
+		console.log('llm-responseespn: ', categories);
 
 		return categories;
 	}
@@ -126,14 +125,7 @@ export class ESPNAdapter implements INewsSourceAdapter {
 			const linkMatch = item.match(/<link><!\[CDATA\[(.*?)\]\]><\/link>/);
 			const publishDateMatch = item.match(/<pubDate>(.*?)<\/pubDate>/);
 
-			if (
-				titleMatch &&
-				linkMatch &&
-				descriptionMatch &&
-				publishDateMatch &&
-				enclosureMatch &&
-				creatorMatch
-			) {
+			if (titleMatch && linkMatch && descriptionMatch && publishDateMatch) {
 				items.push({
 					id: generateRandomId({
 						source: 'ESPN',
@@ -142,9 +134,9 @@ export class ESPNAdapter implements INewsSourceAdapter {
 					title: titleMatch[1],
 					description: descriptionMatch[1],
 					link: linkMatch[1],
-					image: enclosureMatch[1],
+					image: enclosureMatch ? enclosureMatch[1] : '',
 					source: 'ESPN',
-					author: creatorMatch[1],
+					author: creatorMatch ? creatorMatch[1] : 'NA',
 					publishedAt: new Date(publishDateMatch[1]),
 				});
 			} else {

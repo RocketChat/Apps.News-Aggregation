@@ -96,6 +96,27 @@ export class FetchNewsProcessor implements IProcessor {
 				...(await techCrunchNewsSource.fetchNews(read, modify, http, persis)),
 			];
 			console.log('fetch-processor-working2');
+
+			// const categoryMapping = await techCrunchNewsSource.determineCategory(
+			// 	bbcNews,
+			// 	read,
+			// 	dm,
+			// 	currentUser,
+			// 	modify,
+			// 	http
+			// );
+
+			// const parsedMapping = JSON.parse(categoryMapping);
+
+			// for (const news of techCrunchNews) {
+			// 	for (const mapping of parsedMapping) {
+			// 		if (news.id == Object.keys(mapping)[0]) {
+			// 			const key = Object.keys(mapping)[0];
+			// 			news.category = mapping[key];
+			// 			console.log('category assigned');
+			// 		}
+			// 	}
+			// }
 		}
 
 		if (bbcSetting.value) {
@@ -109,8 +130,9 @@ export class FetchNewsProcessor implements IProcessor {
 				...bbcNews,
 				...(await bbcNewsSource.fetchNews(read, modify, http, persis)),
 			];
+			console.log('bcbcNEws', bbcNews);
 
-			const categories = await bbcNewsSource.determineCategory(
+			const categoryMapping = await bbcNewsSource.determineCategory(
 				bbcNews,
 				read,
 				dm,
@@ -118,7 +140,18 @@ export class FetchNewsProcessor implements IProcessor {
 				modify,
 				http
 			);
-			console.log('bbcCat: ', categories);
+
+			const parsedMapping = JSON.parse(categoryMapping);
+
+			for (const news of bbcNews) {
+				for (const mapping of parsedMapping) {
+					if (news.id == Object.keys(mapping)[0]) {
+						const key = Object.keys(mapping)[0];
+						news.category = mapping[key];
+						console.log('category assigned');
+					}
+				}
+			}
 		}
 
 		if (espnSetting.packageValue) {
@@ -129,7 +162,27 @@ export class FetchNewsProcessor implements IProcessor {
 				...espnNews,
 				...(await espnNewsSource.fetchNews(read, modify, http, persis)),
 			];
-			console.log('espn fetched');
+
+			// const categoryMapping = await espnNewsSource.determineCategory(
+			// 	bbcNews,
+			// 	read,
+			// 	dm,
+			// 	currentUser,
+			// 	modify,
+			// 	http
+			// );
+
+			// const parsedMapping = JSON.parse(categoryMapping);
+
+			// for (const news of espnNews) {
+			// 	for (const mapping of parsedMapping) {
+			// 		if (news.id == Object.keys(mapping)[0]) {
+			// 			const key = Object.keys(mapping)[0];
+			// 			news.category = mapping[key];
+			// 			console.log('category assigned');
+			// 		}
+			// 	}
+			// }
 		}
 
 		const newsStorage = new NewsItemPersistence({
@@ -138,14 +191,18 @@ export class FetchNewsProcessor implements IProcessor {
 			persistence: persis,
 		});
 		try {
-			const saveTechCrunchNews = techCrunchNews.map(
-				(newsItem) => newsStorage.saveNews(newsItem, 'news-category') // source needs to change from where it is fetched.
-			);
-			const saveBBCNews = bbcNews.map(
-				(newsItem) => newsStorage.saveNews(newsItem, 'news-category') // source needs to change from where it is fetched.
-			);
-			const saveESPNNews = espnNews.map(
-				(newsItem) => newsStorage.saveNews(newsItem, 'news-category') // source needs to change from where it is fetched.
+			const saveTechCrunchNews = techCrunchNews.map((newsItem) => {
+				if (newsItem.category) {
+					newsStorage.saveNews(newsItem, newsItem.category);
+				}
+			});
+			const saveBBCNews = bbcNews.map((newsItem) => {
+				if (newsItem.category) {
+					newsStorage.saveNews(newsItem, newsItem.category);
+				}
+			});
+			const saveESPNNews = espnNews.map((newsItem) =>
+				newsStorage.saveNews(newsItem, 'Sports')
 			);
 			await Promise.all([saveTechCrunchNews, saveBBCNews, saveESPNNews]);
 			console.log('all news-items saved!!');

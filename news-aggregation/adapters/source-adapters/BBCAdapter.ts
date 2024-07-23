@@ -12,7 +12,6 @@ import { randomBytes, createHash } from 'crypto';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { createTextCompletion } from '../../utils/createTextCompletion';
-import { newsCategoryPrompt } from '../../utils/prompts';
 import { generateRandomId } from '../../utils/generateRandomId';
 
 // type AtLeast<T, K extends keyof T> = Partial<T> & { [P in K]: T[P] };
@@ -50,7 +49,7 @@ export class BBCAdapter implements INewsSourceAdapter {
 		user: IUser,
 		modify: IModify,
 		http: IHttp
-	): Promise<{ [key: string]: string }> {
+	) {
 		const prompts = newsItems.map((newsItem) => ({
 			id: newsItem?.id,
 			prompt: newsItem?.description,
