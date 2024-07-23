@@ -177,14 +177,18 @@ export class FetchNewsProcessor implements IProcessor {
 			persistence: persis,
 		});
 		try {
-			const saveTechCrunchNews = techCrunchNews.map(
-				(newsItem) => newsStorage.saveNews(newsItem, 'news-category') // source needs to change from where it is fetched.
-			);
-			const saveBBCNews = bbcNews.map(
-				(newsItem) => newsStorage.saveNews(newsItem, 'news-category') // source needs to change from where it is fetched.
-			);
-			const saveESPNNews = espnNews.map(
-				(newsItem) => newsStorage.saveNews(newsItem, 'news-category') // source needs to change from where it is fetched.
+			const saveTechCrunchNews = techCrunchNews.map((newsItem) => {
+				if (newsItem.category) {
+					newsStorage.saveNews(newsItem, newsItem.category);
+				}
+			});
+			const saveBBCNews = bbcNews.map((newsItem) => {
+				if (newsItem.category) {
+					newsStorage.saveNews(newsItem, newsItem.category);
+				}
+			});
+			const saveESPNNews = espnNews.map((newsItem) =>
+				newsStorage.saveNews(newsItem, 'Sports')
 			);
 			await Promise.all([saveTechCrunchNews, saveBBCNews, saveESPNNews]);
 			console.log('all news-items saved!!');
