@@ -27,7 +27,6 @@ import { UserPersistence } from '../persistence/UserPersistence';
 
 export class FetchNewsProcessor implements IProcessor {
 	id: string = 'fetch-news';
-	// app: NewsAggregationApp;
 
 	constructor() {}
 
