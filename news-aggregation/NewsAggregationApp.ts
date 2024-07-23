@@ -65,7 +65,6 @@ export class NewsAggregationApp extends App {
 	): Promise<void> {
 		console.log('news app installed');
 
-		this.persistence = persistence;
 		const user = context.user;
 		const userStorage = new UserPersistence(
 			persistence,
