@@ -108,7 +108,7 @@ export class NewsAggregationApp extends App {
 		// To fetch news periodically
 		await configuration.scheduler.registerProcessors([
 			new FetchNewsProcessor(),
-			// new DailyNewsProcessor(this),
+			new DailyNewsProcessor(this),
 		]);
 	}
 
