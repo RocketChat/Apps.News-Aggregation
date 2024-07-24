@@ -97,14 +97,16 @@ export class FetchNewsProcessor implements IProcessor {
 			];
 			console.log('fetch-processor-working2');
 
-			// const categoryMapping = await techCrunchNewsSource.determineCategory(
-			// 	bbcNews,
-			// 	read,
-			// 	dm,
-			// 	currentUser,
-			// 	modify,
-			// 	http
-			// );
+			// To implement in next PR
+			const categoryMapping = await techCrunchNewsSource.determineCategory(
+				bbcNews,
+				read,
+				dm,
+				currentUser,
+				modify,
+				http
+			);
+			// console.log('tcCATS:', categoryMapping);
 
 			// const parsedMapping = JSON.parse(categoryMapping);
 
