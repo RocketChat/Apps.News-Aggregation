@@ -35,6 +35,7 @@ import { IConfig } from './definitions/IConfig';
 import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 import { ExecuteViewClosedHandler } from './handlers/ExecuteViewClosedHandler';
 import { DailyNewsProcessor } from './processors/DailyNewsProcessor';
+import { UserPersistence } from './persistence/UserPersistence';
 // import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 
 export class NewsAggregationApp extends App {
@@ -64,6 +65,13 @@ export class NewsAggregationApp extends App {
 		console.log('news app installed');
 
 		const user = context.user;
+		const userStorage = new UserPersistence(
+			persistence,
+			read.getPersistenceReader()
+		);
+		await userStorage.storeUserId(user?.id);
+		console.log('userid stored');
+
 		await sendDirectMessageOnInstall(read, modify, user, persistence);
 	}
 
@@ -79,8 +87,8 @@ export class NewsAggregationApp extends App {
 			}),
 
 			configurationModify.scheduler.scheduleRecurring({
-				id: 'daily-news',
-				interval: '*/10 * * * * *',
+				id: 'deliver-news',
+				interval: '0 8 * * *',
 				data: {
 					interval: 'daily',
 				},
@@ -108,7 +116,7 @@ export class NewsAggregationApp extends App {
 		// To fetch news periodically
 		await configuration.scheduler.registerProcessors([
 			new FetchNewsProcessor(),
-			new DailyNewsProcessor(this),
+			new DailyNewsProcessor(),
 		]);
 	}
 

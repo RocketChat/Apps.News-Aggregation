@@ -115,7 +115,6 @@ export class CommandUtility implements ICommandUtility {
 		});
 
 		const subscriptionStorage = new SubscriptionPersistence(
-			this.app,
 			this.persistenceRead,
 			this.persistence
 		);

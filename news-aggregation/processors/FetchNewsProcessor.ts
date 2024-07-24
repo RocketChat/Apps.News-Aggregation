@@ -20,6 +20,8 @@ import { NewsItem } from '../definitions/NewsItem';
 import { SettingEnum } from '../enums/settingEnum';
 import { ESPNAdapter } from '../adapters/source-adapters/ESPNAdapter';
 import { IConfig } from '../definitions/IConfig';
+import { UserPersistence } from '../persistence/UserPersistence';
+import { IUser } from '@rocket.chat/apps-engine/definition/users';
 
 export class FetchNewsProcessor implements IProcessor {
 	id: string = 'fetch-news';
@@ -50,6 +52,27 @@ export class FetchNewsProcessor implements IProcessor {
 
 		const persisRead = read.getPersistenceReader();
 		console.log('proc3: ', this);
+
+		const userStorage = new UserPersistence(
+			persis,
+			read.getPersistenceReader()
+		);
+		const userId = await userStorage.getUserId();
+		console.log('userFId: ', userId);
+
+		if (!userId) {
+			console.error('No user ID found in job context');
+			return;
+		}
+
+		const currentUser = (await read.getUserReader().getById(userId)) as IUser;
+		if (!currentUser) {
+			console.error('User not found');
+			return;
+		}
+		const dm = await read
+			.getRoomReader()
+			.getDirectByUsernames([currentUser.username]);
 
 		const settingsReader = read.getEnvironmentReader().getSettings();
 		const techCrunchSetting = await settingsReader.getById(
