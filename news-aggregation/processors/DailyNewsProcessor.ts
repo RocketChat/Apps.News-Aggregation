@@ -19,14 +19,13 @@ import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence'
 import { RoomPersistence } from '../persistence/RoomPersistence';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { ISubscription } from '../definitions/ISubscription';
+import { UserPersistence } from '../persistence/UserPersistence';
 
 export class DailyNewsProcessor implements IProcessor {
-	id: string = 'daily-news';
-	app: NewsAggregationApp;
+	id: string = 'deliver-news';
+	// app: NewsAggregationApp;
 
-	constructor(app: NewsAggregationApp) {
-		this.app = app;
-	}
+	constructor() {}
 
 	public async processor(
 		jobContext: IJobContext,
@@ -38,16 +37,21 @@ export class DailyNewsProcessor implements IProcessor {
 		console.log('dailynewsdeliverstarted');
 
 		let news: NewsItem[] = [];
+		const userStorage = new UserPersistence(
+			persis,
+			read.getPersistenceReader()
+		);
+		const userId = await userStorage.getUserId();
 		const appUser = (await read.getUserReader().getAppUser()) as IUser;
 		const roomStorage = new RoomPersistence(
-			appUser.id,
+			userId,
 			persis,
 			read.getPersistenceReader()
 		);
 		console.log('dailynewsdeliverstarted2');
 
 		const roomId = await roomStorage.getSubscriptionRoomId();
-		console.log('ROOMIDD:', roomId);
+		console.log('ROOMIDDss:', roomId);
 
 		const room = (await read.getRoomReader().getById(roomId)) as IRoom;
 
@@ -65,7 +69,6 @@ export class DailyNewsProcessor implements IProcessor {
 		});
 
 		const subscriptionStorage = new SubscriptionPersistence(
-			this.app,
 			read.getPersistenceReader(),
 			persis
 		);
@@ -126,7 +129,7 @@ export class DailyNewsProcessor implements IProcessor {
 			// );
 			console.log('news displayed!');
 		} catch (err) {
-			this.app.getLogger().error(err);
+			// this.app.getLogger().error(err);
 			console.error(err);
 		}
 	}
