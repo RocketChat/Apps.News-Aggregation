@@ -249,6 +249,36 @@ export class SubscriptionPersistence {
 		return subscriptions;
 	}
 
+	public async getSubscription(
+		interval: string,
+		room: IRoom
+	): Promise<Array<ISubscription>> {
+		const associations: Array<RocketChatAssociationRecord> = [
+			new RocketChatAssociationRecord(
+				RocketChatAssociationModel.MISC,
+				'news-aggregation-subscription'
+			),
+			new RocketChatAssociationRecord(
+				RocketChatAssociationModel.MISC,
+				interval
+			),
+			new RocketChatAssociationRecord(RocketChatAssociationModel.ROOM, room.id),
+		];
+
+		let subscriptions: Array<ISubscription>;
+		try {
+			subscriptions = (await this.persistenceRead.readByAssociations(
+				associations
+			)) as Array<ISubscription>;
+		} catch (err) {
+			subscriptions = [];
+			console.error('Could not get subscriptions', err);
+			this.app.getLogger().info('Could not get subscriptions', err);
+		}
+
+		return subscriptions;
+	}
+
 	public async deleteSubscriptionsByRoom(room: IRoom) {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
@@ -353,6 +383,53 @@ export class SubscriptionPersistence {
 		} catch (err) {
 			console.error('Could not delete subscriptions by room', err);
 			// this.app.getLogger().info('Could not delete subscriptions by room', err);
+		}
+	}
+
+	public async deleteSubscription(user: IUser, room: IRoom) {
+		const associations: Array<RocketChatAssociationRecord> = [
+			new RocketChatAssociationRecord(
+				RocketChatAssociationModel.MISC,
+				'news-aggregation-subscription'
+			),
+			// new RocketChatAssociationRecord(
+			// 	RocketChatAssociationModel.USER,
+			// 	interval
+			// ),
+			new RocketChatAssociationRecord(RocketChatAssociationModel.USER, user.id),
+			new RocketChatAssociationRecord(RocketChatAssociationModel.USER, room.id),
+		];
+
+		try {
+			await this.persistence.removeByAssociations(associations);
+		} catch (err) {
+			console.error('Could not delete subscriptions by room', err);
+			this.app.getLogger().info('Could not delete subscriptions by room', err);
+		}
+	}
+
+	public async deleteSubscriptionByIntervalAndRoom(
+		interval: string,
+		room: IRoom
+	) {
+		const associations: Array<RocketChatAssociationRecord> = [
+			new RocketChatAssociationRecord(
+				RocketChatAssociationModel.MISC,
+				'news-aggregation-subscription'
+			),
+			new RocketChatAssociationRecord(
+				RocketChatAssociationModel.MISC,
+				interval
+			),
+			new RocketChatAssociationRecord(RocketChatAssociationModel.ROOM, room.id),
+		];
+
+		try {
+			await this.persistence.removeByAssociations(associations);
+			console.log('DEL');
+		} catch (err) {
+			console.error('Could not delete subscriptions by room', err);
+			this.app.getLogger().info('Could not delete subscriptions by room', err);
 		}
 	}
 

@@ -51,6 +51,56 @@ export class NewsFetchService {
 				' -- ' +
 				JSON.stringify(bbcSetting, null, 2)
 		);
+		const bbcSetting = await settingsReader.getById(SettingEnum.BBC);
+		const espnSetting = await settingsReader.getById(SettingEnum.ESPN);
+		console.log(
+			JSON.stringify(techCrunchSetting, null, 2) +
+				' -- ' +
+				JSON.stringify(bbcSetting, null, 2)
+		);
+
+		if (techCrunchSetting.value) {
+			const techCrunchAdapter = new TechCrunchAdapter();
+			const techCrunchNewsSource = new NewsSource(techCrunchAdapter, news);
+			news = [
+				...news,
+				...(await techCrunchNewsSource.fetchNews(
+					read,
+					modify,
+					http,
+					this.config.persistence
+				)),
+			];
+		}
+
+		if (bbcSetting.value) {
+			const bbcAdapter = new BBCAdapter();
+			const bbcNewsSource = new NewsSource(bbcAdapter, news);
+			news = [
+				...news,
+				...(await bbcNewsSource.fetchNews(
+					read,
+					modify,
+					http,
+					this.config.persistence
+				)),
+			];
+		}
+
+		if (espnSetting.value) {
+			const espnAdapter = new ESPNAdapter();
+			const espnNewsSource = new NewsSource(espnAdapter, news);
+			news = [
+				...news,
+				...(await espnNewsSource.fetchNews(
+					read,
+					modify,
+					http,
+					this.config.persistence
+				)),
+			];
+		}
+		console.log('newsafterfetch: ', news);
 
 		if (techCrunchSetting.value) {
 			const techCrunchAdapter = new TechCrunchAdapter();

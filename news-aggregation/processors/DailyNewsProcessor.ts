@@ -128,3 +128,4 @@ export class DailyNewsProcessor implements IProcessor {
 		}
 	}
 }
+
