@@ -70,39 +70,40 @@ export class DailyNewsProcessor implements IProcessor {
 			persis
 		);
 		const allSubscriptions = await subscriptionStorage.getSubscriptions();
-		// const subscription = await subscriptionStorage.getSubscriptionByRoom(room);
-		// console.log('subs: ', subscription);
 		console.log('allSubs: ', allSubscriptions);
-
 		console.log('deliver news working');
 
 		const deliverNews = async (subscription: ISubscription) => {
+			let allSubscribedNews: NewsItem[] = [];
 			if (subscription?.categories) {
 				for (const category of subscription?.categories) {
 					news = (await newsStorage.getAllSubscribedNews(
 						category
 					)) as NewsItem[];
 
-					for (const item of news) {
-						const newsBlock = await buildNewsBlock(item);
-						// newsBlocks.push(newsBlock);
-						await sendMessage(modify, room, appUser, '', newsBlock);
-					}
+					news = news.slice(0, 10);
+					allSubscribedNews = [...allSubscribedNews, ...news];
 				}
+			}
+
+			function shuffleArray<T>(array: T[]): T[] {
+				for (let i = array.length - 1; i > 0; i--) {
+					const j = Math.floor(Math.random() * (i + 1));
+					[array[i], array[j]] = [array[j], array[i]]; // Swap elements
+				}
+				return array;
+			}
+
+			allSubscribedNews = shuffleArray(allSubscribedNews);
+
+			for (const item of allSubscribedNews.slice(0, 10)) {
+				const newsBlock = await buildNewsBlock(item);
+				// newsBlocks.push(newsBlock);
+				await sendMessage(modify, room, appUser, '', newsBlock);
 			}
 		};
 
 		try {
-			// news = await techCrunchNewsSource.getNews(
-			// 	this.read,
-			// 	this.modify,
-			// 	this.room,
-			// 	this.http,
-			// 	this.persistence
-			// );
-			// news = (await newsStorage.getAllNews()) as NewsItem[];
-			// news = (await newsStorage.getAllSubscribedNews(subscription.categories))
-
 			// get only the news of subscribed categories to subscribed rooms
 			await Promise.all([
 				allSubscriptions?.map((subscription) => deliverNews(subscription)),
@@ -117,13 +118,6 @@ export class DailyNewsProcessor implements IProcessor {
 			// 	await sendMessage(this.modify, this.room, appUser, '', newsBlock);
 			// }
 
-			// await sendNewsMessage(
-			// 	this.modify,
-			// 	this.room,
-			// 	this.sender,
-			// 	'',
-			// 	newsBlocks
-			// );
 			console.log('news displayed!');
 		} catch (err) {
 			this.app.getLogger().error(err);
