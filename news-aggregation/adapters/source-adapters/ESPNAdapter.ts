@@ -136,6 +136,7 @@ export class ESPNAdapter implements INewsSourceAdapter {
 					link: linkMatch[1],
 					image: enclosureMatch ? enclosureMatch[1] : '',
 					source: 'ESPN',
+					category: 'Sports',
 					author: creatorMatch ? creatorMatch[1] : 'NA',
 					publishedAt: new Date(publishDateMatch[1]),
 				});

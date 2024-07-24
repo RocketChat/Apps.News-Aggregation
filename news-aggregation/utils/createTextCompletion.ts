@@ -6,7 +6,11 @@ import {
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { sendNotification } from './message';
-import { convertToStringifiedFormat, systemPrompt } from './prompts';
+import {
+	convertToStringifiedFormat,
+	systemPrompt,
+	techCrunchSystemPrompt,
+} from './prompts';
 
 export async function createTextCompletion(
 	read: IRead,
@@ -14,7 +18,7 @@ export async function createTextCompletion(
 	user: IUser,
 	modify: IModify,
 	http: IHttp,
-	prompts: { id: string; prompt: string }[]
+	prompts: { id: string; prompt: string }[] | string[]
 ): Promise<{ [key: string]: string }[]> {
 	const model = await read
 		.getEnvironmentReader()
@@ -42,15 +46,26 @@ export async function createTextCompletion(
 	// 		};
 	// 	})
 
-	const stringifiedPrompt = convertToStringifiedFormat(prompts);
-	console.log('strifiedPrompt: ', stringifiedPrompt);
+	let stringifiedPrompt = '';
+	if (typeof prompts === 'object' && !Array.isArray(prompts)) {
+		stringifiedPrompt = convertToStringifiedFormat(prompts);
+		console.log('strifiedPrompt: ', stringifiedPrompt);
+	} else if (
+		Array.isArray(prompts)
+		// prompts.every((item: any) => typeof item === 'string')
+	) {
+		stringifiedPrompt = prompts.join(' ');
+	}
+	console.log('stringify: ', stringifiedPrompt);
 
 	const body = {
 		model,
 		messages: [
 			{
 				role: 'system',
-				content: systemPrompt(),
+				content: Array.isArray(prompts)
+					? techCrunchSystemPrompt()
+					: systemPrompt(),
 			},
 			{
 				role: 'user',
