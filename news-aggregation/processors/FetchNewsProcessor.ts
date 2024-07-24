@@ -57,13 +57,13 @@ export class FetchNewsProcessor implements IProcessor {
 		}
 
 		const currentUser = (await read.getUserReader().getById(userId)) as IUser;
-		const dm = await read
-			.getRoomReader()
-			.getDirectByUsernames([currentUser.username]);
 		if (!currentUser) {
 			console.error('User not found');
 			return;
 		}
+		const dm = await read
+			.getRoomReader()
+			.getDirectByUsernames([currentUser.username]);
 
 		const settingsReader = read.getEnvironmentReader().getSettings();
 		const techCrunchSetting = await settingsReader.getById(
