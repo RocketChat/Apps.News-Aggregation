@@ -20,17 +20,15 @@ import { NewsItem } from '../definitions/NewsItem';
 import { SettingEnum } from '../enums/settingEnum';
 import { ESPNAdapter } from '../adapters/source-adapters/ESPNAdapter';
 import { IConfig } from '../definitions/IConfig';
+import { RoomPersistence } from '../persistence/RoomPersistence';
+import { IUser } from '@rocket.chat/apps-engine/definition/users';
+import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
+import { UserPersistence } from '../persistence/UserPersistence';
 
 export class FetchNewsProcessor implements IProcessor {
 	id: string = 'fetch-news';
-	config: IConfig;
-	// app: NewsAggregationApp;
-	newsItems: NewsItem[] = [];
 
-	constructor(config: IConfig) {
-		this.config = config;
-		console.log('proc: ', this);
-	}
+	constructor() {}
 
 	public async processor(
 		jobContext: IJobContext,
@@ -39,14 +37,33 @@ export class FetchNewsProcessor implements IProcessor {
 		http: IHttp,
 		persis: IPersistence
 	): Promise<void> {
-		console.log('proc1: ', this);
+		let techCrunchNews: NewsItem[] = [];
+		let bbcNews: NewsItem[] = [];
+		let espnNews: NewsItem[] = [];
+
+		const userStorage = new UserPersistence(
+			persis,
+			read.getPersistenceReader()
+		);
+		const userId = await userStorage.getUserId();
+		console.log('userFId: ', userId);
 
 		const data = jobContext;
-		console.log('jc: ', data);
-		console.log('proc2: ', this);
+		console.log('jc-fN: ', data);
 
-		const persisRead = read.getPersistenceReader();
-		console.log('proc3: ', this);
+		if (!userId) {
+			console.error('No user ID found in job context');
+			return;
+		}
+
+		const currentUser = (await read.getUserReader().getById(userId)) as IUser;
+		if (!currentUser) {
+			console.error('User not found');
+			return;
+		}
+		const dm = await read
+			.getRoomReader()
+			.getDirectByUsernames([currentUser.username]);
 
 		const settingsReader = read.getEnvironmentReader().getSettings();
 		const techCrunchSetting = await settingsReader.getById(
@@ -54,49 +71,105 @@ export class FetchNewsProcessor implements IProcessor {
 		);
 		const bbcSetting = await settingsReader.getById(SettingEnum.BBC);
 		const espnSetting = await settingsReader.getById(SettingEnum.ESPN);
-		console.log(
-			JSON.stringify(techCrunchSetting, null, 2) +
-				' -- ' +
-				JSON.stringify(bbcSetting, null, 2)
-		);
-		console.log('proc4: ', this);
+
 		// Fetch news items from sources
 		if (techCrunchSetting.value) {
 			const techCrunchAdapter = new TechCrunchAdapter();
 			console.log('hello');
 			console.log(this);
-			const techCrunchNewsSource = new NewsSource(
-				techCrunchAdapter,
-				this.newsItems
-			);
-			this.newsItems = [
-				...this.newsItems,
+			const techCrunchNewsSource = new NewsSource(techCrunchAdapter);
+			techCrunchNews = [
+				...techCrunchNews,
 				...(await techCrunchNewsSource.fetchNews(read, modify, http, persis)),
 			];
 			console.log('fetch-processor-working2');
+
+			// To implement in next PR
+			const categoryMapping = await techCrunchNewsSource.determineCategory(
+				bbcNews,
+				read,
+				dm,
+				currentUser,
+				modify,
+				http
+			);
+			// console.log('tcCATS:', categoryMapping);
+
+			// const parsedMapping = JSON.parse(categoryMapping);
+
+			// for (const news of techCrunchNews) {
+			// 	for (const mapping of parsedMapping) {
+			// 		if (news.id == Object.keys(mapping)[0]) {
+			// 			const key = Object.keys(mapping)[0];
+			// 			news.category = mapping[key];
+			// 			console.log('category assigned');
+			// 		}
+			// 	}
+			// }
 		}
 
 		if (bbcSetting.value) {
 			const bbcAdapter = new BBCAdapter();
 
-			const bbcNewsSource = new NewsSource(bbcAdapter, this.newsItems);
+			const bbcNewsSource = new NewsSource(bbcAdapter);
 			console.log('fetch-processor-working2.1');
-			this.newsItems = [
-				...this.newsItems,
+			bbcNews = [
+				...bbcNews,
 				...(await bbcNewsSource.fetchNews(read, modify, http, persis)),
 			];
+			console.log('bcbcNEws', bbcNews);
+
+			const categoryMapping = await bbcNewsSource.determineCategory(
+				bbcNews,
+				read,
+				dm,
+				currentUser,
+				modify,
+				http
+			);
+
+			const parsedMapping = JSON.parse(categoryMapping);
+
+			for (const news of bbcNews) {
+				for (const mapping of parsedMapping) {
+					if (news.id == Object.keys(mapping)[0]) {
+						const key = Object.keys(mapping)[0];
+						news.category = mapping[key];
+						console.log('category assigned');
+					}
+				}
+			}
 		}
 
-		if (espnSetting.value) {
+		if (espnSetting.packageValue) {
 			const espnAdapter = new ESPNAdapter();
-			const espnNewsSource = new NewsSource(espnAdapter, this.newsItems);
-			this.newsItems = [
-				...this.newsItems,
+			const espnNewsSource = new NewsSource(espnAdapter);
+			espnNews = [
+				...espnNews,
 				...(await espnNewsSource.fetchNews(read, modify, http, persis)),
 			];
-		}
 
-		console.log('fetch-processor-working3');
+			// const categoryMapping = await espnNewsSource.determineCategory(
+			// 	bbcNews,
+			// 	read,
+			// 	dm,
+			// 	currentUser,
+			// 	modify,
+			// 	http
+			// );
+
+			// const parsedMapping = JSON.parse(categoryMapping);
+
+			// for (const news of espnNews) {
+			// 	for (const mapping of parsedMapping) {
+			// 		if (news.id == Object.keys(mapping)[0]) {
+			// 			const key = Object.keys(mapping)[0];
+			// 			news.category = mapping[key];
+			// 			console.log('category assigned');
+			// 		}
+			// 	}
+			// }
+		}
 
 		const newsStorage = new NewsItemPersistence({
 			read: read,
@@ -104,17 +177,26 @@ export class FetchNewsProcessor implements IProcessor {
 			persistence: persis,
 		});
 		try {
-			const saveNews = this.newsItems.map(
-				(newsItem) => newsStorage.saveNews(newsItem, 'TechCrunch') // source needs to change from where it is fetched.
+			const saveTechCrunchNews = techCrunchNews.map((newsItem) => {
+				if (newsItem.category) {
+					newsStorage.saveNews(newsItem, newsItem.category);
+				}
+			});
+			const saveBBCNews = bbcNews.map((newsItem) => {
+				if (newsItem.category) {
+					newsStorage.saveNews(newsItem, newsItem.category);
+				}
+			});
+			const saveESPNNews = espnNews.map((newsItem) =>
+				newsStorage.saveNews(newsItem, 'Sports')
 			);
-			await Promise.all(saveNews);
+			await Promise.all([saveTechCrunchNews, saveBBCNews, saveESPNNews]);
 			console.log('all news-items saved!!');
 		} catch (err) {
 			console.error('News Items could not be save', err);
 			// this.app.getLogger().error('News Items could not be save', err);
 		}
 
-		console.log('Data', data);
 		console.log('FetchNewsProcessor completed.');
 	}
 }

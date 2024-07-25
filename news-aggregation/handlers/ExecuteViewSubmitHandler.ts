@@ -11,6 +11,8 @@ import {
 } from '@rocket.chat/apps-engine/definition/accessors';
 import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence';
 import { ModalEnum } from '../enums/modalEnum';
+import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
+import { RoomPersistence } from '../persistence/RoomPersistence';
 
 export class ExecuteViewSubmitHandler {
 	private context: UIKitViewSubmitInteractionContext;
@@ -26,24 +28,82 @@ export class ExecuteViewSubmitHandler {
 	}
 
 	public async handleActions(): Promise<IUIKitResponse> {
-		const { actionId, user, room, view } = this.context.getInteractionData();
+		const { actionId, user, view } = this.context.getInteractionData();
+		console.log('contextView: ', this.context.getInteractionData());
+
 		const subscriptionStorage = new SubscriptionPersistence(
 			this.app,
 			this.read.getPersistenceReader(),
 			this.persistence
 		);
 
+		const roomStorage = new RoomPersistence(
+			user?.id,
+			this.persistence,
+			this.read.getPersistenceReader()
+		);
+		const roomId = await roomStorage.getSubscriptionRoomId();
+		const room = (await this.read.getRoomReader().getById(roomId)) as IRoom;
+		let schedule =
+			view.state?.['schedule-dropdown-block-id']?.[
+				'schedule-dropdown-action-id'
+			];
+
+		let categories =
+			view.state?.['category-dropdown-block-id']?.[
+				'category-dropdown-action-id'
+			];
+
+		// Applying these two below functions to store array in a proper format because of Ui-Kit bug.
+		function flattenArray(arr: []) {
+			return arr.reduce(
+				(acc, val) =>
+					Array.isArray(val) ? acc.concat(flattenArray(val)) : acc.concat(val),
+				[]
+			);
+		}
+		function getUniqueCategories(arr: []) {
+			return [...new Set(arr)];
+		}
+		categories = flattenArray(categories);
+		categories = getUniqueCategories(categories);
+
 		console.log('viewsubmit');
 		console.log('aid', actionId);
 		console.log('uid', user);
-		console.log('rid', room);
-		console.log('vid', view);
+		console.log('ridView', room);
+		console.log('vid', view.state);
+		console.log(
+			'scheduleView: ',
+			view.state?.['schedule-dropdown-block-id']?.[
+				'schedule-dropdown-action-id'
+			]
+		);
+		console.log(
+			'categoriesView: ',
+			view.state?.['category-dropdown-block-id']?.[
+				'category-dropdown-action-id'
+			]
+		);
+		console.log('flatArr: ', categories);
 
 		try {
-			switch (actionId) {
-				case ModalEnum.SUBSCRIBE_NEWS_MODAL_SUBMIT_ACTION_ID:
+			console.log('try working');
+			switch (view?.id) {
+				// View Submit not working.
+				case ModalEnum.SUBSCRIBE_VIEW_ID:
+					console.log('switch working');
+
 					if (room) {
-						await subscriptionStorage.createSubscription('daily', user, room);
+						console.log('room present hai');
+
+						// add temp default values as params - TO CHANGE
+						await subscriptionStorage.createSubscription(
+							schedule,
+							categories,
+							user,
+							room
+						);
 					}
 			}
 			return this.context.getInteractionResponder().successResponse();

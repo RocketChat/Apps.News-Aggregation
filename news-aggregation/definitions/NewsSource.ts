@@ -7,14 +7,14 @@ import {
 import { NewsAggregationApp } from '../NewsAggregationApp';
 import { NewsItem } from './NewsItem';
 import { INewsSourceAdapter } from '../adapters/INewsSourceAdapter';
+import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
+import { IUser } from '@rocket.chat/apps-engine/definition/users';
 
 export class NewsSource {
 	adapter: INewsSourceAdapter;
-	news: NewsItem[] = [];
 
-	constructor(adapter: INewsSourceAdapter, news: NewsItem[]) {
+	constructor(adapter: INewsSourceAdapter) {
 		this.adapter = adapter;
-		this.news = news;
 	}
 
 	public async fetchNews(
@@ -24,5 +24,23 @@ export class NewsSource {
 		persis: IPersistence
 	): Promise<NewsItem[]> {
 		return this.adapter.fetchNews(read, modify, http, persis);
+	}
+
+	public async determineCategory(
+		newsItems: NewsItem[],
+		read: IRead,
+		room: IRoom,
+		user: IUser,
+		modify: IModify,
+		http: IHttp
+	) {
+		return this.adapter.determineCategory(
+			newsItems,
+			read,
+			room,
+			user,
+			modify,
+			http
+		);
 	}
 }

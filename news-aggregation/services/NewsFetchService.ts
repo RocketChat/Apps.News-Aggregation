@@ -13,6 +13,7 @@ import { NewsItem } from '../definitions/NewsItem';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 import { BBCAdapter } from '../adapters/source-adapters/BBCAdapter';
 import { SettingEnum } from '../enums/settingEnum';
+import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { IConfig } from '../definitions/IConfig';
 import { ESPNAdapter } from '../adapters/source-adapters/ESPNAdapter';
 
@@ -31,7 +32,13 @@ export class NewsFetchService {
 		this.config = config;
 	}
 
-	async fetchNewsAndStore(read: IRead, modify: IModify, http: IHttp) {
+	async fetchNewsAndStore(
+		read: IRead,
+		modify: IModify,
+		http: IHttp,
+		room: IRoom
+	) {
+		const appUser = (await read.getUserReader().getAppUser()) as IUser;
 		let news: NewsItem[] = [];
 		const settingsReader = read.getEnvironmentReader().getSettings();
 		const techCrunchSetting = await settingsReader.getById(
@@ -47,7 +54,7 @@ export class NewsFetchService {
 
 		if (techCrunchSetting.value) {
 			const techCrunchAdapter = new TechCrunchAdapter();
-			const techCrunchNewsSource = new NewsSource(techCrunchAdapter, news);
+			const techCrunchNewsSource = new NewsSource(techCrunchAdapter);
 			news = [
 				...news,
 				...(await techCrunchNewsSource.fetchNews(
@@ -57,11 +64,21 @@ export class NewsFetchService {
 					this.config.persistence
 				)),
 			];
+
+			for (const newsItem of news) {
+				// const res = await techCrunchNewsSource.determineCategory(
+				// 	newsItem,
+				//     read,
+				// 	http
+				// );
+				// this.app.getLogger().info('catsfs: ', res);
+				// console.log('catsfs: ', res);
+			}
 		}
 
 		if (bbcSetting.value) {
 			const bbcAdapter = new BBCAdapter();
-			const bbcNewsSource = new NewsSource(bbcAdapter, news);
+			const bbcNewsSource = new NewsSource(bbcAdapter);
 			news = [
 				...news,
 				...(await bbcNewsSource.fetchNews(
@@ -71,11 +88,21 @@ export class NewsFetchService {
 					this.config.persistence
 				)),
 			];
+
+			const categories = await bbcNewsSource.determineCategory(
+				news,
+				read,
+				room,
+				appUser,
+				modify,
+				http
+			);
+			console.log('fnsCat: ', categories);
 		}
 
 		if (espnSetting.value) {
 			const espnAdapter = new ESPNAdapter();
-			const espnNewsSource = new NewsSource(espnAdapter, news);
+			const espnNewsSource = new NewsSource(espnAdapter);
 			news = [
 				...news,
 				...(await espnNewsSource.fetchNews(
@@ -86,6 +113,7 @@ export class NewsFetchService {
 				)),
 			];
 		}
+
 		console.log('newsafterfetch: ', news);
 
 		// to fetch and store news manually as scheduler not working
@@ -94,7 +122,7 @@ export class NewsFetchService {
 		const newsStorage = new NewsItemPersistence(this.config);
 		try {
 			for (const item of news) {
-				await newsStorage.saveNews(item, 'TechCrunch');
+				await newsStorage.saveNews(item, 'news-category');
 			}
 			console.log('all news-items saved!!');
 		} catch (err) {
@@ -112,7 +140,7 @@ export class NewsFetchService {
 	) {
 		let news: NewsItem[] = [];
 		const techCrunchAdapter = new TechCrunchAdapter();
-		const techCrunchNewsSource = new NewsSource(techCrunchAdapter, news);
+		const techCrunchNewsSource = new NewsSource(techCrunchAdapter);
 
 		try {
 			// await techCrunchNewsSource.deleteNews(read, modify, room, http, persis);

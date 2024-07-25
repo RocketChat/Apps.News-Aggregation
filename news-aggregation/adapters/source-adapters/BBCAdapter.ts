@@ -9,6 +9,10 @@ import { NewsItem } from '../../definitions/NewsItem';
 import { INewsSourceAdapter } from '../INewsSourceAdapter';
 import * as https from 'https';
 import { randomBytes } from 'crypto';
+import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
+import { IUser } from '@rocket.chat/apps-engine/definition/users';
+import { createTextCompletion } from '../../utils/createTextCompletion';
+import { generateRandomId } from '../../utils/generateRandomId';
 
 export class BBCAdapter implements INewsSourceAdapter {
 	app: NewsAggregationApp;
@@ -36,6 +40,35 @@ export class BBCAdapter implements INewsSourceAdapter {
 		})();
 
 		return this.newsItems;
+	}
+
+	public async determineCategory(
+		newsItems: NewsItem[],
+		read: IRead,
+		room: IRoom,
+		user: IUser,
+		modify: IModify,
+		http: IHttp
+	) {
+		const prompts = newsItems.map((newsItem) => ({
+			id: newsItem?.id,
+			prompt: newsItem?.description,
+		}));
+		console.log('prmot', prompts);
+
+		console.log('lol');
+
+		const categories = await createTextCompletion(
+			read,
+			room,
+			user,
+			modify,
+			http,
+			prompts
+		);
+		console.log('llm-response: ', categories);
+
+		return categories;
 	}
 
 	async fetchRssFeed(url: string): Promise<NewsItem[]> {
@@ -90,7 +123,10 @@ export class BBCAdapter implements INewsSourceAdapter {
 				imageMatch
 			) {
 				items.push({
-					id: this.generateRandomId(),
+					id: generateRandomId({
+						source: 'BBC',
+						title: titleMatch[1],
+					}),
 					title: titleMatch[1],
 					description: descriptionMatch[1],
 					link: linkMatch[1],
@@ -102,6 +138,6 @@ export class BBCAdapter implements INewsSourceAdapter {
 				// id++;
 			}
 		}
-		return items;
+		return items.slice(0, 10);
 	}
 }

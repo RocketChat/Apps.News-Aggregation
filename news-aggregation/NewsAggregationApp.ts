@@ -31,6 +31,7 @@ import {
 import { ExecuteViewSubmitHandler } from './handlers/ExecuteViewSubmitHandler';
 import { Settings } from './settings/Settings';
 import { IConfig } from './definitions/IConfig';
+import { UserPersistence } from './persistence/UserPersistence';
 // import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 
 export class NewsAggregationApp
@@ -38,7 +39,6 @@ export class NewsAggregationApp
 	implements IUIKitInteractionHandler
 {
 	// implements IUIKitInteractionHandler
-	config: IConfig;
 	persistence: IPersistence;
 	persistenceRead: IPersistenceRead;
 	constructor(info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
@@ -51,6 +51,10 @@ export class NewsAggregationApp
 	// ): Promise<void> {
 	// 	// this.elementBuilder = new ElementBuilder(this.getID());
 	// 	// this.blockBuilder = new BlockBuilder(this.getID());
+
+	// 	// how to initialize persistence
+	// 	// this.persistence
+	// 	this.persistenceRead = this.getAccessors().reader.getPersistenceReader();
 	// }
 
 	public async onInstall(
@@ -63,6 +67,13 @@ export class NewsAggregationApp
 		console.log('news app installed');
 
 		const user = context.user;
+		const userStorage = new UserPersistence(
+			persistence,
+			read.getPersistenceReader()
+		);
+		await userStorage.storeUserId(user?.id);
+		console.log('userid stored');
+
 		await sendDirectMessageOnInstall(read, modify, user, persistence);
 	}
 
@@ -74,7 +85,7 @@ export class NewsAggregationApp
 		await Promise.all([
 			configurationModify.scheduler.scheduleRecurring({
 				id: 'fetch-news',
-				interval: '*/10 * * * * *',
+				interval: '* * * * *',
 				data: {
 					interval: 'daily',
 				},
@@ -101,7 +112,7 @@ export class NewsAggregationApp
 
 		// To fetch news periodically
 		await configuration.scheduler.registerProcessors([
-			new FetchNewsProcessor(this.config),
+			new FetchNewsProcessor(),
 		]);
 	}
 
@@ -111,25 +122,7 @@ export class NewsAggregationApp
 		await Promise.all([configurationModify.scheduler.cancelJob('fetch-news')]);
 	}
 
-	// public async executeViewSubmitHandler(
-	// 	context: UIKitViewSubmitInteractionContext,
-	// 	read: IRead,
-	// 	http: IHttp,
-	// 	persistence: IPersistence,
-	// 	modify: IModify
-	// ): Promise<IUIKitResponse> {
-	// 	const handler = new ExecuteViewSubmitHandler(
-	// 		this,
-	// 		read,
-	// 		modify,
-	// 		http,
-	// 		persistence,
-	// 		context
-	// 	);
-	// 	return await handler.handleActions();
-	// }
-
-	public async [AppMethod.UIKIT_VIEW_SUBMIT](
+	public async executeViewSubmitHandler(
 		context: UIKitViewSubmitInteractionContext,
 		read: IRead,
 		http: IHttp,
@@ -146,6 +139,24 @@ export class NewsAggregationApp
 		);
 		return await handler.handleActions();
 	}
+
+	// public async [AppMethod.UIKIT_VIEW_SUBMIT](
+	// 	context: UIKitViewSubmitInteractionContext,
+	// 	read: IRead,
+	// 	http: IHttp,
+	// 	persistence: IPersistence,
+	// 	modify: IModify
+	// ): Promise<IUIKitResponse> {
+	// 	const handler = new ExecuteViewSubmitHandler(
+	// 		this,
+	// 		read,
+	// 		modify,
+	// 		http,
+	// 		persistence,
+	// 		context
+	// 	);
+	// 	return await handler.handleActions();
+	// }
 
 	// public async executeBlockActionHandler(
 	// 	context: UIKitBlockInteractionContext,

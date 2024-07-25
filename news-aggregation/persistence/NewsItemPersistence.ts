@@ -23,14 +23,17 @@ export class NewsItemPersistence {
 		// this.persistenceRead = persistenceRead;
 	}
 
-	public async newsExists(newsId: string, source: string): Promise<boolean> {
+	public async newsExists(newsId: string, category: string): Promise<boolean> {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,
 				'news-aggregation'
 			),
 			new RocketChatAssociationRecord(RocketChatAssociationModel.MISC, newsId),
-			new RocketChatAssociationRecord(RocketChatAssociationModel.MISC, source),
+			new RocketChatAssociationRecord(
+				RocketChatAssociationModel.MISC,
+				category
+			),
 		];
 
 		let news: object[] = [];
@@ -48,18 +51,21 @@ export class NewsItemPersistence {
 		return false;
 	}
 
-	public async saveNews(news: NewsItem, source: string) {
+	public async saveNews(news: NewsItem, category: string) {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
 				RocketChatAssociationModel.MISC,
 				'news-aggregation'
 			),
-			new RocketChatAssociationRecord(RocketChatAssociationModel.MISC, source),
+			new RocketChatAssociationRecord(
+				RocketChatAssociationModel.MISC,
+				category
+			),
 			new RocketChatAssociationRecord(RocketChatAssociationModel.MISC, news.id),
 		];
 
 		let recordId: string;
-		if ((await this.newsExists(news.id, source)) === true) {
+		if ((await this.newsExists(news.id, category)) === true) {
 			console.log('news with this id exists');
 			return;
 		} else {
@@ -162,6 +168,44 @@ export class NewsItemPersistence {
 		console.log('allnews', allNewsObjectArray);
 
 		return allNewsObjectArray;
+	}
+
+	public async getAllSubscribedNews(category: string) {
+		const associations: Array<RocketChatAssociationRecord> = [
+			new RocketChatAssociationRecord(
+				RocketChatAssociationModel.MISC,
+				'news-aggregation'
+			),
+			new RocketChatAssociationRecord(
+				RocketChatAssociationModel.MISC,
+				category
+			),
+		];
+
+		let newsObjectArray: object[];
+		try {
+			newsObjectArray = (await this.config.read
+				.getPersistenceReader()
+				.readByAssociations(associations)) as NewsItem[];
+
+			if (newsObjectArray.length === 0) {
+				console.error("News with the given category doesn't exist");
+				// this.app
+				// 	.getLogger()
+				// 	.error("News with the given category doesn't exist");
+				return [];
+			}
+		} catch (err) {
+			newsObjectArray = [];
+			console.error('Could not get the desired news by category', err);
+			// this.app
+			// 	.getLogger()
+			// 	.error('Could not get the desired news by category', err);
+		}
+
+		console.log('catNews: ', newsObjectArray);
+
+		return newsObjectArray;
 	}
 
 	public async getNewsById(newsId: string, source: string): Promise<object> {
