@@ -21,7 +21,7 @@ import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { ISubscription } from '../definitions/ISubscription';
 import { UserPersistence } from '../persistence/UserPersistence';
 
-export class DailyNewsProcessor implements IProcessor {
+export class DeliverNewsProcessor implements IProcessor {
 	id: string = 'deliver-news';
 	// app: NewsAggregationApp;
 
@@ -128,4 +128,3 @@ export class DailyNewsProcessor implements IProcessor {
 		}
 	}
 }
-

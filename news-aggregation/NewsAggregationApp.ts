@@ -34,7 +34,7 @@ import { Settings } from './settings/Settings';
 import { IConfig } from './definitions/IConfig';
 import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 import { ExecuteViewClosedHandler } from './handlers/ExecuteViewClosedHandler';
-import { DailyNewsProcessor } from './processors/DailyNewsProcessor';
+import { DeliverNewsProcessor } from './processors/DeliverNewsProcessor';
 import { UserPersistence } from './persistence/UserPersistence';
 // import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 
@@ -116,7 +116,7 @@ export class NewsAggregationApp extends App {
 		// To fetch news periodically
 		await configuration.scheduler.registerProcessors([
 			new FetchNewsProcessor(),
-			new DailyNewsProcessor(),
+			new DeliverNewsProcessor(),
 		]);
 	}
 
