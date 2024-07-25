@@ -51,17 +51,10 @@ export class NewsFetchService {
 				' -- ' +
 				JSON.stringify(bbcSetting, null, 2)
 		);
-		const bbcSetting = await settingsReader.getById(SettingEnum.BBC);
-		const espnSetting = await settingsReader.getById(SettingEnum.ESPN);
-		console.log(
-			JSON.stringify(techCrunchSetting, null, 2) +
-				' -- ' +
-				JSON.stringify(bbcSetting, null, 2)
-		);
 
 		if (techCrunchSetting.value) {
 			const techCrunchAdapter = new TechCrunchAdapter();
-			const techCrunchNewsSource = new NewsSource(techCrunchAdapter, news);
+			const techCrunchNewsSource = new NewsSource(techCrunchAdapter);
 			news = [
 				...news,
 				...(await techCrunchNewsSource.fetchNews(
@@ -75,7 +68,7 @@ export class NewsFetchService {
 
 		if (bbcSetting.value) {
 			const bbcAdapter = new BBCAdapter();
-			const bbcNewsSource = new NewsSource(bbcAdapter, news);
+			const bbcNewsSource = new NewsSource(bbcAdapter);
 			news = [
 				...news,
 				...(await bbcNewsSource.fetchNews(
@@ -89,7 +82,7 @@ export class NewsFetchService {
 
 		if (espnSetting.value) {
 			const espnAdapter = new ESPNAdapter();
-			const espnNewsSource = new NewsSource(espnAdapter, news);
+			const espnNewsSource = new NewsSource(espnAdapter);
 			news = [
 				...news,
 				...(await espnNewsSource.fetchNews(
