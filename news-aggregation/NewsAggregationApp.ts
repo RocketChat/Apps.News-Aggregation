@@ -36,7 +36,7 @@ import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler'
 import { ExecuteViewClosedHandler } from './handlers/ExecuteViewClosedHandler';
 import { DeliverNewsProcessor } from './processors/DeliverNewsProcessor';
 import { UserPersistence } from './persistence/UserPersistence';
-import { DailyNewsProcessor } from './processors/DailyNewsProcessor';
+import { DeliverNewsProcessor } from './processors/DeliverNewsProcessor';
 // import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 
 export class NewsAggregationApp extends App {
