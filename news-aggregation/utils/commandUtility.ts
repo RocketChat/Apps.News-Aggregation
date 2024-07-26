@@ -141,7 +141,7 @@ export class CommandUtility implements ICommandUtility {
 			if (subscription?.categories) {
 				for (const category of subscription?.categories) {
 					news = (await newsStorage.getAllSubscribedNews(
-						'news-category'
+						category
 					)) as NewsItem[];
 
 					for (const item of news) {
