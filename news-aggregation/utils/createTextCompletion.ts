@@ -46,6 +46,8 @@ export async function createTextCompletion(
 	// 		};
 	// 	})
 
+	console.log('incomingprompot: ', prompts);
+
 	let stringifiedPrompt = '';
 	if (typeof prompts === 'object' && !Array.isArray(prompts)) {
 		stringifiedPrompt = convertToStringifiedFormat(prompts);
@@ -54,16 +56,19 @@ export async function createTextCompletion(
 		Array.isArray(prompts)
 		// prompts.every((item: any) => typeof item === 'string')
 	) {
-		stringifiedPrompt = prompts.join(' ');
+		stringifiedPrompt = prompts
+			.map((prompt) => JSON.stringify(prompt))
+			.join(' ');
 	}
-	console.log('stringify: ', stringifiedPrompt);
+	console.log('stringifyfyis: ', stringifiedPrompt);
+	console.log('isarray?', Array.isArray(prompts));
 
 	const body = {
 		model,
 		messages: [
 			{
 				role: 'system',
-				content: Array.isArray(prompts)
+				content: !Array.isArray(prompts)
 					? techCrunchSystemPrompt()
 					: systemPrompt(),
 			},

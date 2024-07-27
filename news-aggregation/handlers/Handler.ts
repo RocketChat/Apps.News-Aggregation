@@ -113,7 +113,6 @@ export class Handler implements IHandler {
 		console.log('triggId:', this.triggerId);
 
 		const subscriptionStorage = new SubscriptionPersistence(
-			this.app,
 			this.read.getPersistenceReader(),
 			this.persis
 		);
@@ -137,7 +136,6 @@ export class Handler implements IHandler {
 		console.log('triggId:', this.triggerId);
 
 		const subscriptionStorage = new SubscriptionPersistence(
-			this.app,
 			this.read.getPersistenceReader(),
 			this.persis
 		);

@@ -23,6 +23,11 @@ export async function buildNewsBlock(news: NewsItem) {
 	const sourceBlock = getSourceBlock(news.source);
 	blocks.push(sourceBlock);
 
+	if (news.category) {
+		const categoryBlock = getSourceBlock(news.category);
+		blocks.push(categoryBlock);
+	}
+
 	const authorBlock = getOptionalsBlock(news.author);
 	blocks.push(authorBlock);
 

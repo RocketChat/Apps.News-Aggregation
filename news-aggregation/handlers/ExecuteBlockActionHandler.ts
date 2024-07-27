@@ -30,7 +30,6 @@ export class ExecuteBlockActionHandler {
 		console.log('blockacinteract: ', this.context.getInteractionData());
 
 		const subscriptionStorage = new SubscriptionPersistence(
-			this.app,
 			this.read.getPersistenceReader(),
 			this.persistence
 		);

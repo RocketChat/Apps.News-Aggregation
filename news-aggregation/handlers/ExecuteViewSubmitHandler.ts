@@ -32,7 +32,6 @@ export class ExecuteViewSubmitHandler {
 		console.log('contextView: ', this.context.getInteractionData());
 
 		const subscriptionStorage = new SubscriptionPersistence(
-			this.app,
 			this.read.getPersistenceReader(),
 			this.persistence
 		);

@@ -12,16 +12,10 @@ import {
 import { ISubscription } from '../definitions/ISubscription';
 
 export class SubscriptionPersistence {
-	app: NewsAggregationApp;
 	persistenceRead: IPersistenceRead;
 	persistence: IPersistence;
 
-	constructor(
-		app: NewsAggregationApp,
-		persistenceRead: IPersistenceRead,
-		persistence: IPersistence
-	) {
-		this.app = app;
+	constructor(persistenceRead: IPersistenceRead, persistence: IPersistence) {
 		this.persistenceRead = persistenceRead;
 		this.persistence = persistence;
 	}
@@ -50,7 +44,7 @@ export class SubscriptionPersistence {
 		const subscriptions = await this.getSubscription(interval, room);
 		if (subscriptions.length !== 0) {
 			console.log('News subscription already exists');
-			this.app.getLogger().info('News subscription already exists');
+			// this.app.getLogger().info('News subscription already exists');
 			return;
 		}
 
@@ -72,35 +66,58 @@ export class SubscriptionPersistence {
 		} catch (err) {
 			subscriptionId = null;
 			console.error('Could not create news subscription', err);
-			this.app.getLogger().info('Could not create news subscription', err);
+			// this.app.getLogger().info('Could not create news subscription', err);
 		}
 
 		console.log('saved subs');
 		return subscriptionId;
 	}
 
-	public async getSubscribedRooms(room: IRoom): Promise<Array<ISubscription>> {
-		const associations: Array<RocketChatAssociationRecord> = [
-			new RocketChatAssociationRecord(
-				RocketChatAssociationModel.MISC,
-				'news-aggregation-subscription'
-			),
-			new RocketChatAssociationRecord(RocketChatAssociationModel.ROOM, room.id),
-		];
+	// public async getSubscribedRooms(room: IRoom): Promise<Array<ISubscription>> {
+	// 	const associations: Array<RocketChatAssociationRecord> = [
+	// 		new RocketChatAssociationRecord(
+	// 			RocketChatAssociationModel.MISC,
+	// 			'news-aggregation-subscription'
+	// 		),
+	// 		new RocketChatAssociationRecord(RocketChatAssociationModel.ROOM, room.id),
+	// 	];
 
-		let subscriptions: Array<ISubscription>;
-		try {
-			subscriptions = (await this.persistenceRead.readByAssociations(
-				associations
-			)) as Array<ISubscription>;
-		} catch (err) {
-			subscriptions = [];
-			console.error('Could not get subscribed rooms', err);
-			this.app.getLogger().info('Could not get subscribed rooms', err);
-		}
+	// 	let subscriptions: Array<ISubscription>;
+	// 	try {
+	// 		subscriptions = (await this.persistenceRead.readByAssociations(
+	// 			associations
+	// 		)) as Array<ISubscription>;
+	// 	} catch (err) {
+	// 		subscriptions = [];
+	// 		console.error('Could not get subscribed rooms', err);
+	// 		this.app.getLogger().info('Could not get subscribed rooms', err);
+	// 	}
 
-		return subscriptions;
-	}
+	// 	return subscriptions;
+	// }
+
+	// public async getSubscribedRooms(subscription: ISubscription): Promise<Array<ISubscription>> {
+	// 	const associations: Array<RocketChatAssociationRecord> = [
+	// 		new RocketChatAssociationRecord(
+	// 			RocketChatAssociationModel.MISC,
+	// 			'news-aggregation-subscription'
+	// 		),
+	// 		new RocketChatAssociationRecord(RocketChatAssociationModel.ROOM, subscription.id),
+	// 	];
+
+	// 	let subscriptions: Array<ISubscription>;
+	// 	try {
+	// 		subscriptions = (await this.persistenceRead.readByAssociations(
+	// 			associations
+	// 		)) as Array<ISubscription>;
+	// 	} catch (err) {
+	// 		subscriptions = [];
+	// 		console.error('Could not get subscribed rooms', err);
+	// 		this.app.getLogger().info('Could not get subscribed rooms', err);
+	// 	}
+
+	// 	return subscriptions;
+	// }
 
 	public async getSubscriptions(): Promise<Array<ISubscription>> {
 		const associations: Array<RocketChatAssociationRecord> = [
@@ -118,7 +135,7 @@ export class SubscriptionPersistence {
 		} catch (err) {
 			subscriptions = [];
 			console.error('Could not get subscriptions', err);
-			this.app.getLogger().info('Could not get subscriptions', err);
+			// this.app.getLogger().info('Could not get subscriptions', err);
 		}
 
 		return subscriptions;
@@ -146,7 +163,7 @@ export class SubscriptionPersistence {
 		} catch (err) {
 			subscriptions = [];
 			console.error('Could not get subscriptions', err);
-			this.app.getLogger().info('Could not get subscriptions', err);
+			// this.app.getLogger().info('Could not get subscriptions', err);
 		}
 
 		return subscriptions;
@@ -174,7 +191,7 @@ export class SubscriptionPersistence {
 		} catch (err) {
 			subscriptions = [];
 			console.error('Could not get subscriptions', err);
-			this.app.getLogger().info('Could not get subscriptions', err);
+			// this.app.getLogger().info('Could not get subscriptions', err);
 		}
 
 		return subscriptions;
@@ -196,7 +213,7 @@ export class SubscriptionPersistence {
 		} catch (err) {
 			subscription = { userId: '', roomId: '', interval: '' };
 			console.error('Could not get subscription', err);
-			this.app.getLogger().info('Could not get subscription', err);
+			// this.app.getLogger().info('Could not get subscription', err);
 		}
 
 		return subscription;
@@ -226,7 +243,7 @@ export class SubscriptionPersistence {
 		} catch (err) {
 			subscriptions = [];
 			console.error('Could not get subscriptions', err);
-			this.app.getLogger().info('Could not get subscriptions', err);
+			// this.app.getLogger().info('Could not get subscriptions', err);
 		}
 
 		return subscriptions;
@@ -245,7 +262,7 @@ export class SubscriptionPersistence {
 			await this.persistence.removeByAssociations(associations);
 		} catch (err) {
 			console.error('Could not delete subscriptions by room', err);
-			this.app.getLogger().info('Could not delete subscriptions by room', err);
+			// this.app.getLogger().info('Could not delete subscriptions by room', err);
 		}
 	}
 
@@ -262,7 +279,7 @@ export class SubscriptionPersistence {
 			await this.persistence.removeByAssociations(associations);
 		} catch (err) {
 			console.error('Could not delete subscriptions by room', err);
-			this.app.getLogger().info('Could not delete subscriptions by room', err);
+			// this.app.getLogger().info('Could not delete subscriptions by room', err);
 		}
 	}
 
@@ -288,7 +305,7 @@ export class SubscriptionPersistence {
 			await this.persistence.removeByAssociations(associations);
 		} catch (err) {
 			console.error('Could not delete subscription by id', err);
-			this.app.getLogger().info('Could not delete subscription by id', err);
+			// this.app.getLogger().info('Could not delete subscription by id', err);
 		}
 	}
 
@@ -310,7 +327,7 @@ export class SubscriptionPersistence {
 			await this.persistence.removeByAssociations(associations);
 		} catch (err) {
 			console.error('Could not delete subscriptions by room', err);
-			this.app.getLogger().info('Could not delete subscriptions by room', err);
+			// this.app.getLogger().info('Could not delete subscriptions by room', err);
 		}
 	}
 
@@ -335,7 +352,7 @@ export class SubscriptionPersistence {
 			console.log('DEL');
 		} catch (err) {
 			console.error('Could not delete subscriptions by room', err);
-			this.app.getLogger().info('Could not delete subscriptions by room', err);
+			// this.app.getLogger().info('Could not delete subscriptions by room', err);
 		}
 	}
 
