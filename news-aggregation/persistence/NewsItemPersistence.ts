@@ -266,6 +266,7 @@ export class NewsItemPersistence {
 			// 	.getLogger()
 			// 	.error('Could not remove desired news from persistence.', err);
 		}
+		return removedNews;
 	}
 
 	public async removeAllNews() {

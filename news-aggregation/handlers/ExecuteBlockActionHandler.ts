@@ -10,6 +10,7 @@ import {
 	IRead,
 } from '@rocket.chat/apps-engine/definition/accessors';
 import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence';
+import { ModalEnum } from '../enums/modalEnum';
 
 export class ExecuteBlockActionHandler {
 	private context: UIKitBlockInteractionContext;
@@ -24,34 +25,42 @@ export class ExecuteBlockActionHandler {
 		this.context = context;
 	}
 
-	// public async handleActions(): Promise<IUIKitResponse> {
-	// 	const { actionId, blockId, user, room } = this.context.getInteractionData();
-	// 	const subscriptionStorage = new SubscriptionPersistence(
-	// 		this.app,
-	// 		this.read.getPersistenceReader(),
-	// 		this.persistence
-	// 	);
-	// 	console.log('blockaction');
-	// 	console.log('aid', actionId);
-	// 	console.log('uid', user);
-	// 	console.log('rid', room);
+	public async handleActions(): Promise<IUIKitResponse> {
+		const { actionId, blockId, user, room } = this.context.getInteractionData();
+		console.log('blockacinteract: ', this.context.getInteractionData());
 
-	// 	try {
-	// 		switch (actionId) {
-	// 			case 'subcribe-news-submit-action-id':
-	// 				if (room) {
-	// 					await subscriptionStorage.createSubscription(
-	// 						'* * * * *',
-	// 						user,
-	// 						room
-	// 					);
-	// 				}
-	// 		}
-	// 		return this.context.getInteractionResponder().successResponse();
-	// 	} catch (err) {
-	// 		console.error(err);
-	// 		this.app.getLogger().error(err);
-	// 		return this.context.getInteractionResponder().errorResponse();
-	// 	}
-	// }
+		const subscriptionStorage = new SubscriptionPersistence(
+			this.read.getPersistenceReader(),
+			this.persistence
+		);
+		console.log('blockaction');
+		console.log('aid', actionId);
+		console.log('uid', user);
+		console.log('rid', room);
+
+		try {
+			console.log('try working2');
+
+			switch (actionId) {
+				case ModalEnum.SUBSCRIBE_NEWS_MODAL_SUBMIT_ACTION_ID:
+					console.log('switch working2');
+
+					if (room) {
+						console.log('room present');
+
+						await subscriptionStorage.createSubscription(
+							'daily',
+							[],
+							user,
+							room
+						);
+					}
+			}
+			return this.context.getInteractionResponder().successResponse();
+		} catch (err) {
+			console.error(err);
+			this.app.getLogger().error(err);
+			return this.context.getInteractionResponder().errorResponse();
+		}
+	}
 }

@@ -26,18 +26,20 @@ import {
 	IUIKitInteractionHandler,
 	IUIKitResponse,
 	UIKitBlockInteractionContext,
+	UIKitViewCloseInteractionContext,
 	UIKitViewSubmitInteractionContext,
 } from '@rocket.chat/apps-engine/definition/uikit';
 import { ExecuteViewSubmitHandler } from './handlers/ExecuteViewSubmitHandler';
 import { Settings } from './settings/Settings';
 import { IConfig } from './definitions/IConfig';
+import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
+import { ExecuteViewClosedHandler } from './handlers/ExecuteViewClosedHandler';
+import { DeliverNewsProcessor } from './processors/DeliverNewsProcessor';
 import { UserPersistence } from './persistence/UserPersistence';
+import { DeleteNewsProcessor } from './processors/DeleteNewsProcessor';
 // import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 
-export class NewsAggregationApp
-	extends App
-	implements IUIKitInteractionHandler
-{
+export class NewsAggregationApp extends App {
 	// implements IUIKitInteractionHandler
 	persistence: IPersistence;
 	persistenceRead: IPersistenceRead;
@@ -86,9 +88,20 @@ export class NewsAggregationApp
 			configurationModify.scheduler.scheduleRecurring({
 				id: 'fetch-news',
 				interval: '* * * * *',
+			}),
+
+			configurationModify.scheduler.scheduleRecurring({
+				id: 'deliver-news',
+				interval: '* * * * *',
+				skipImmediate: false,
 				data: {
 					interval: 'daily',
 				},
+			}),
+
+			configurationModify.scheduler.scheduleRecurring({
+				id: 'delete-news',
+				interval: '*/30 * * * * *',
 			}),
 		]);
 		return true;
@@ -113,6 +126,8 @@ export class NewsAggregationApp
 		// To fetch news periodically
 		await configuration.scheduler.registerProcessors([
 			new FetchNewsProcessor(),
+			new DeliverNewsProcessor(),
+			new DeleteNewsProcessor(),
 		]);
 	}
 
@@ -130,6 +145,24 @@ export class NewsAggregationApp
 		modify: IModify
 	): Promise<IUIKitResponse> {
 		const handler = new ExecuteViewSubmitHandler(
+			this,
+			read,
+			modify,
+			http,
+			persistence,
+			context
+		);
+		return await handler.handleActions();
+	}
+
+	public async executeViewClosedHandler(
+		context: UIKitViewCloseInteractionContext,
+		read: IRead,
+		http: IHttp,
+		persistence: IPersistence,
+		modify: IModify
+	): Promise<IUIKitResponse> {
+		const handler = new ExecuteViewClosedHandler(
 			this,
 			read,
 			modify,
@@ -158,23 +191,23 @@ export class NewsAggregationApp
 	// 	return await handler.handleActions();
 	// }
 
-	// public async executeBlockActionHandler(
-	// 	context: UIKitBlockInteractionContext,
-	// 	read: IRead,
-	// 	http: IHttp,
-	// 	persistence: IPersistence,
-	// 	modify: IModify
-	// ): Promise<IUIKitResponse> {
-	// 	const handler = new ExecuteBlockActionHandler(
-	// 		this,
-	// 		read,
-	// 		modify,
-	// 		http,
-	// 		persistence,
-	// 		context
-	// 	);
-	// 	return await handler.handleActions();
-	// }
+	public async executeBlockActionHandler(
+		context: UIKitBlockInteractionContext,
+		read: IRead,
+		http: IHttp,
+		persistence: IPersistence,
+		modify: IModify
+	): Promise<IUIKitResponse> {
+		const handler = new ExecuteBlockActionHandler(
+			this,
+			read,
+			modify,
+			http,
+			persistence,
+			context
+		);
+		return await handler.handleActions();
+	}
 
 	// public getBuilders(): IAppBuilders {
 	// 	return {

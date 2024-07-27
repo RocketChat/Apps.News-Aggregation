@@ -11,8 +11,8 @@ import {
 } from '@rocket.chat/apps-engine/definition/accessors';
 import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence';
 import { ModalEnum } from '../enums/modalEnum';
-import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { RoomPersistence } from '../persistence/RoomPersistence';
+import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 
 export class ExecuteViewSubmitHandler {
 	private context: UIKitViewSubmitInteractionContext;
@@ -32,7 +32,6 @@ export class ExecuteViewSubmitHandler {
 		console.log('contextView: ', this.context.getInteractionData());
 
 		const subscriptionStorage = new SubscriptionPersistence(
-			this.app,
 			this.read.getPersistenceReader(),
 			this.persistence
 		);

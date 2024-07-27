@@ -16,7 +16,7 @@ export class UserPersistence {
 	public async storeUserId(userId: string) {
 		const association = new RocketChatAssociationRecord(
 			RocketChatAssociationModel.USER,
-			`news-app-user-id`
+			'news-app-user-id'
 		);
 		await this.persistence.updateByAssociation(
 			association,
@@ -28,7 +28,7 @@ export class UserPersistence {
 	public async getUserId(): Promise<string> {
 		const association = new RocketChatAssociationRecord(
 			RocketChatAssociationModel.USER,
-			`news-app-user-id`
+			'news-app-user-id'
 		);
 		const [result] = (await this.persistenceRead.readByAssociation(
 			association

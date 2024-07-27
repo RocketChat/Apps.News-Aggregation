@@ -84,11 +84,11 @@ export class CommandUtility implements ICommandUtility {
 		// await techCrunchNewsSource.saveNews(this.persistence, this.persistenceRead);
 
 		// Manually fetch and store news
-		// const fetchService = new NewsFetchService(
-		// 	this.app,
-		// 	this.persistence,
-		// 	this.persistenceRead
-		// );
+		// const fetchService = new NewsFetchService({
+		// 	read: this.read,
+		// 	modify: this.modify,
+		// 	persistence: this.persistence,
+		// });
 		// await fetchService.fetchNewsAndStore(
 		// 	this.read,
 		// 	this.modify,
@@ -115,13 +115,13 @@ export class CommandUtility implements ICommandUtility {
 		});
 
 		const subscriptionStorage = new SubscriptionPersistence(
-			this.app,
 			this.persistenceRead,
 			this.persistence
 		);
 		const subscription = await subscriptionStorage.getSubscriptionByRoom(
 			this.room
 		);
+		console.log('subs: ', subscription);
 
 		try {
 			// news = await techCrunchNewsSource.getNews(
