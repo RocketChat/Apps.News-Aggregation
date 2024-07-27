@@ -36,6 +36,7 @@ import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler'
 import { ExecuteViewClosedHandler } from './handlers/ExecuteViewClosedHandler';
 import { DeliverNewsProcessor } from './processors/DeliverNewsProcessor';
 import { UserPersistence } from './persistence/UserPersistence';
+import { DeleteNewsProcessor } from './processors/DeleteNewsProcessor';
 // import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 
 export class NewsAggregationApp extends App {
@@ -97,6 +98,11 @@ export class NewsAggregationApp extends App {
 					interval: 'daily',
 				},
 			}),
+
+			configurationModify.scheduler.scheduleRecurring({
+				id: 'delete-news',
+				interval: '*/20 * * * * *',
+			}),
 		]);
 		return true;
 	}
@@ -121,6 +127,7 @@ export class NewsAggregationApp extends App {
 		await configuration.scheduler.registerProcessors([
 			new FetchNewsProcessor(),
 			new DeliverNewsProcessor(),
+			new DeleteNewsProcessor(),
 		]);
 	}
 
