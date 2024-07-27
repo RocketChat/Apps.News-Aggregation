@@ -61,6 +61,10 @@
 
 The News Aggregation App aims to provide a centralized platform for seamless access to curated news content within Rocket.Chat. It aggregates news from top websites, displaying them in a user-friendly format with complete configurability of sources and categories.
 
+## 👷‍♀️ Architecture:
+
+![arch](https://github.com/user-attachments/assets/55d2d763-24b4-4e84-8a23-50bed4b58070)
+
 ## 🚀 Usage:
 
 Use the following slash commands to interact with the app:
@@ -68,7 +72,7 @@ Use the following slash commands to interact with the app:
 ```
 /news alert: Get the latest news summaries on demand.
 /news help: Learn about the app, its features, and how to configure it.
-/news channels: List all channels where the app is configured.
+<!-- /news channels: List all channels where the app is configured. -->
 /news subscribe: Configure your news preferences through a modal.
 /news unsubscribe: Unsubscribe from receiving periodic news updates.
 ```
