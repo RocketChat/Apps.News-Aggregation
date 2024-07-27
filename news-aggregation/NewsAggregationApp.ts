@@ -101,7 +101,7 @@ export class NewsAggregationApp extends App {
 
 			configurationModify.scheduler.scheduleRecurring({
 				id: 'delete-news',
-				interval: '*/20 * * * * *',
+				interval: '*/30 * * * * *',
 			}),
 		]);
 		return true;
