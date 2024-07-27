@@ -72,14 +72,14 @@ export class FetchNewsProcessor implements IProcessor {
 		// Fetch news items from sources
 		if (techCrunchSetting.value) {
 			const techCrunchAdapter = new TechCrunchAdapter();
-			console.log('hello');
-			console.log(this);
+			console.log('Fetching TechCrunch news...');
+
 			const techCrunchNewsSource = new NewsSource(techCrunchAdapter);
 			techCrunchNews = [
 				...techCrunchNews,
 				...(await techCrunchNewsSource.fetchNews(read, modify, http, persis)),
 			];
-			console.log('fetch-processor-working2');
+			console.log('TechCrunch news fetched:', techCrunchNews);
 
 			// To implement in next PR
 			// const categoryMapping = await techCrunchNewsSource.determineCategory(
@@ -106,17 +106,15 @@ export class FetchNewsProcessor implements IProcessor {
 		}
 
 		if (bbcSetting.value) {
-			console.log('bbc enabled');
-
+			console.log('Fetching BBC news...');
 			const bbcAdapter = new BBCAdapter();
-
 			const bbcNewsSource = new NewsSource(bbcAdapter);
 			console.log('fetch-processor-working2.1');
 			bbcNews = [
 				...bbcNews,
 				...(await bbcNewsSource.fetchNews(read, modify, http, persis)),
 			];
-			console.log('bcbcNEws', bbcNews);
+			console.log('BBC news fetched:', bbcNews);
 
 			const categoryMapping = await bbcNewsSource.determineCategory(
 				bbcNews,
@@ -126,28 +124,38 @@ export class FetchNewsProcessor implements IProcessor {
 				modify,
 				http
 			);
+			console.log('Category mapping:', categoryMapping);
 
-			const parsedMapping = JSON.parse(categoryMapping);
+			try {
+				const parsedMapping = JSON.parse(categoryMapping);
+				console.log('Parsed category mapping:', parsedMapping);
 
-			for (const news of bbcNews) {
-				for (const mapping of parsedMapping) {
-					if (news.id == Object.keys(mapping)[0]) {
-						const key = Object.keys(mapping)[0];
-						news.category = mapping[key];
-						console.log('category assigned');
+				for (const news of bbcNews) {
+					console.log('Processing news item:', news.id);
+					for (const mapping of parsedMapping) {
+						console.log('Mapping object:', mapping);
+						const mappingId = mapping.id;
+						console.log('Mapping id:', mappingId);
+						if (news.id === mappingId) {
+							news.category = mapping.category;
+							console.log('Category assigned:', news.category);
+						}
 					}
 				}
+			} catch (parseError) {
+				console.error('Error parsing category mapping:', parseError);
 			}
 		}
 
 		if (espnSetting.packageValue) {
-			console.log('espn enabled');
+			console.log('Fetching ESPN news...');
 			const espnAdapter = new ESPNAdapter();
 			const espnNewsSource = new NewsSource(espnAdapter);
 			espnNews = [
 				...espnNews,
 				...(await espnNewsSource.fetchNews(read, modify, http, persis)),
 			];
+			console.log('ESPN news fetched:', espnNews);
 
 			// const categoryMapping = await espnNewsSource.determineCategory(
 			// 	bbcNews,
