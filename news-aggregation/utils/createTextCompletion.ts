@@ -19,7 +19,7 @@ export async function createTextCompletion(
 	modify: IModify,
 	http: IHttp,
 	prompts: { id: string; prompt: string }[] | string[]
-): Promise<{ [key: string]: string }[]> {
+): Promise<{ [key: string]: string }[] | []> {
 	const model = await read
 		.getEnvironmentReader()
 		.getSettings()

@@ -82,15 +82,18 @@ export class FetchNewsProcessor implements IProcessor {
 			console.log('TechCrunch news fetched:', techCrunchNews);
 
 			// To implement in next PR
-			// const categoryMapping = await techCrunchNewsSource.determineCategory(
-			// 	bbcNews,
-			// 	read,
-			// 	dm,
-			// 	currentUser,
-			// 	modify,
-			// 	http
-			// );
-			// console.log('tcCATS:', categoryMapping);
+			// for (const news of techCrunchNews) {
+			// 	let newsItem: NewsItem[] = [news];
+			// 	const categoryMapping = await techCrunchNewsSource.determineCategory(
+			// 		newsItem,
+			// 		read,
+			// 		dm,
+			// 		currentUser,
+			// 		modify,
+			// 		http
+			// 	);
+			// 	console.log('tcCATShuffle:', categoryMapping);
+			// }
 
 			// const parsedMapping = JSON.parse(categoryMapping);
 

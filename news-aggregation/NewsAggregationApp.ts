@@ -100,6 +100,15 @@ export class NewsAggregationApp extends App {
 			}),
 
 			configurationModify.scheduler.scheduleRecurring({
+				id: 'deliver-news',
+				interval: '*/30 * * * * *',
+				skipImmediate: false,
+				data: {
+					interval: 'monthly',
+				},
+			}),
+
+			configurationModify.scheduler.scheduleRecurring({
 				id: 'delete-news',
 				interval: '*/30 * * * * *',
 			}),
