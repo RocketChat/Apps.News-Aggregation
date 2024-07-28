@@ -1,6 +1,7 @@
 import { Block } from '@rocket.chat/ui-kit';
 import { NewsItem } from '../definitions/NewsItem';
 import {
+	getCategoryBlock,
 	getDescriptionBlock,
 	getOptionalsBlock,
 	getPreviewBlock,
@@ -24,12 +25,14 @@ export async function buildNewsBlock(news: NewsItem) {
 	blocks.push(sourceBlock);
 
 	if (news.category) {
-		const categoryBlock = getSourceBlock(news.category);
+		const categoryBlock = getCategoryBlock(news.category);
 		blocks.push(categoryBlock);
 	}
 
-	const authorBlock = getOptionalsBlock(news.author);
-	blocks.push(authorBlock);
+	if (news.author != 'NA') {
+		const authorBlock = getOptionalsBlock(news.author);
+		blocks.push(authorBlock);
+	}
 
 	return blocks;
 }

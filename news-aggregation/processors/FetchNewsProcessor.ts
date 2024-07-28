@@ -82,6 +82,35 @@ export class FetchNewsProcessor implements IProcessor {
 			console.log('TechCrunch news fetched:', techCrunchNews);
 
 			// To implement in next PR
+			const categoryMapping = await techCrunchNewsSource.determineCategory(
+				techCrunchNews,
+				read,
+				dm,
+				currentUser,
+				modify,
+				http
+			);
+			console.log('Category mappingtc:', categoryMapping);
+
+			try {
+				const parsedMapping = JSON.parse(categoryMapping);
+				console.log('Parsed category mappingtc:', parsedMapping);
+
+				for (const news of techCrunchNews) {
+					console.log('Processing news itemtc:', news.id);
+					for (const mapping of parsedMapping) {
+						console.log('Mapping objecttc:', mapping);
+						const mappingId = mapping.id;
+						console.log('Mapping idtc:', mappingId);
+						if (news.id === mappingId) {
+							news.category = mapping.category;
+							console.log('Category assignedtc:', news.category);
+						}
+					}
+				}
+			} catch (parseError) {
+				console.error('Error parsing category mappingtc:', parseError);
+			}
 			// for (const news of techCrunchNews) {
 			// 	let newsItem: NewsItem[] = [news];
 			// 	const categoryMapping = await techCrunchNewsSource.determineCategory(
