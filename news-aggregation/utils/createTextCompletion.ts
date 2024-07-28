@@ -68,9 +68,7 @@ export async function createTextCompletion(
 		messages: [
 			{
 				role: 'system',
-				content: !Array.isArray(prompts)
-					? techCrunchSystemPrompt()
-					: systemPrompt(),
+				content: systemPrompt(),
 			},
 			{
 				role: 'user',

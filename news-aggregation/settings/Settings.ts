@@ -45,6 +45,19 @@ export const Settings: Array<ISetting> = [
 		value: true,
 	},
 	{
+		// id: SettingEnum.ESPN,
+		id: 'cnbc',
+		type: SettingType.BOOLEAN,
+		i18nLabel: 'CNBC News',
+		i18nDescription:
+			'Setting to enable or disable the news from CNBC News Source',
+		i18nAlert: 'Toggle to enable or disable this news source',
+		packageValue: true,
+		required: true,
+		public: true,
+		value: true,
+	},
+	{
 		id: 'llm-model',
 		type: SettingType.SELECT,
 		i18nLabel: 'Model Selection',
