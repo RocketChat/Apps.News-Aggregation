@@ -84,6 +84,7 @@ export async function subscribeNewsModal(
 	blocks.push(dividerBlock);
 
 	let categoryOptions: any = [
+		'All Categories',
 		'General News',
 		'Business and Finance',
 		'Technology',

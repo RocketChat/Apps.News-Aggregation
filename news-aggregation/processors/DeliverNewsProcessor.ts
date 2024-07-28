@@ -86,13 +86,20 @@ export class DeliverNewsProcessor implements IProcessor {
 				.getById(subscription?.roomId)) as IRoom;
 
 			if (subscription?.categories) {
-				for (const category of subscription?.categories) {
-					news = (await newsStorage.getAllSubscribedNews(
-						category
-					)) as NewsItem[];
+				if (
+					subscription?.categories?.length === 1 &&
+					subscription?.categories[0] === 'All Categories'
+				) {
+					allSubscribedNews = (await newsStorage.getAllNews()) as NewsItem[];
+				} else {
+					for (const category of subscription?.categories) {
+						news = (await newsStorage.getAllSubscribedNews(
+							category
+						)) as NewsItem[];
 
-					news = news.slice(0, 10);
-					allSubscribedNews = [...allSubscribedNews, ...news];
+						news = news.slice(0, 10);
+						allSubscribedNews = [...allSubscribedNews, ...news];
+					}
 				}
 			}
 
