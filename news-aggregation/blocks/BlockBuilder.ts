@@ -29,6 +29,18 @@ export function getSourceBlock(labelText: string, accessory?: any) {
 	return block;
 }
 
+export function getCategoryBlock(labelText: string, accessory?: any) {
+	const block: SectionBlock = {
+		type: 'section',
+		text: {
+			type: 'mrkdwn',
+			text: `*Category: * ${labelText}`,
+		},
+		accessory: accessory,
+	};
+	return block;
+}
+
 export function getPlainTextBlock(labelText: string, accessory?: any) {
 	const block: SectionBlock = {
 		type: 'section',

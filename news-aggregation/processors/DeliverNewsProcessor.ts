@@ -20,6 +20,7 @@ import { RoomPersistence } from '../persistence/RoomPersistence';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { ISubscription } from '../definitions/ISubscription';
 import { UserPersistence } from '../persistence/UserPersistence';
+import { shuffleArray } from '../utils/shuffleArray';
 
 export class DeliverNewsProcessor implements IProcessor {
 	id: string = 'deliver-news';
@@ -37,23 +38,23 @@ export class DeliverNewsProcessor implements IProcessor {
 		console.log('dailynewsdeliverstarted');
 
 		let news: NewsItem[] = [];
-		const userStorage = new UserPersistence(
-			persis,
-			read.getPersistenceReader()
-		);
-		const userId = await userStorage.getUserId();
+		// const userStorage = new UserPersistence(
+		// 	persis,
+		// 	read.getPersistenceReader()
+		// );
+		// const userId = await userStorage.getUserId();
 		const appUser = (await read.getUserReader().getAppUser()) as IUser;
-		const roomStorage = new RoomPersistence(
-			userId,
-			persis,
-			read.getPersistenceReader()
-		);
+		// const roomStorage = new RoomPersistence(
+		// 	userId,
+		// 	persis,
+		// 	read.getPersistenceReader()
+		// );
 		console.log('dailynewsdeliverstarted2');
 
-		const roomId = await roomStorage.getSubscriptionRoomId();
-		console.log('ROOMIDDss:', roomId);
+		// const roomId = await roomStorage.getSubscriptionRoomId();
+		// console.log('ROOMIDDss:', roomId);
 
-		const room = (await read.getRoomReader().getById(roomId)) as IRoom;
+		// const room = (await read.getRoomReader().getById(roomId)) as IRoom;
 
 		// const techCrunchAdapter = new TechCrunchAdapter();
 		// const techCrunchNewsSource = new NewsSource(
@@ -72,32 +73,39 @@ export class DeliverNewsProcessor implements IProcessor {
 			read.getPersistenceReader(),
 			persis
 		);
-		const allSubscriptions = await subscriptionStorage.getSubscriptions();
-		console.log('allSubs: ', allSubscriptions);
+		// const allSubscriptions = await subscriptionStorage.getSubscriptions();
+		const allSubscriptions =
+			await subscriptionStorage.getSubscriptionByInterval(jobContext.interval);
+		console.log('allSubsbyInt: ', allSubscriptions);
 		console.log('deliver news working');
 
 		const deliverNews = async (subscription: ISubscription) => {
 			let allSubscribedNews: NewsItem[] = [];
+			const room = (await read
+				.getRoomReader()
+				.getById(subscription?.roomId)) as IRoom;
+
 			if (subscription?.categories) {
-				for (const category of subscription?.categories) {
-					news = (await newsStorage.getAllSubscribedNews(
-						category
-					)) as NewsItem[];
+				if (
+					subscription?.categories?.length === 1 &&
+					subscription?.categories[0] === 'All Categories'
+				) {
+					allSubscribedNews = (await newsStorage.getAllNews()) as NewsItem[];
+				} else {
+					for (const category of subscription?.categories) {
+						news = (await newsStorage.getAllSubscribedNews(
+							category
+						)) as NewsItem[];
 
-					news = news.slice(0, 10);
-					allSubscribedNews = [...allSubscribedNews, ...news];
+						news = news.slice(0, 10);
+						allSubscribedNews = [...allSubscribedNews, ...news];
+					}
 				}
-			}
-
-			function shuffleArray<T>(array: T[]): T[] {
-				for (let i = array.length - 1; i > 0; i--) {
-					const j = Math.floor(Math.random() * (i + 1));
-					[array[i], array[j]] = [array[j], array[i]]; // Swap elements
-				}
-				return array;
 			}
 
 			allSubscribedNews = shuffleArray(allSubscribedNews);
+
+			console.log('jobCont', jobContext);
 
 			for (const item of allSubscribedNews.slice(0, 10)) {
 				const newsBlock = await buildNewsBlock(item);

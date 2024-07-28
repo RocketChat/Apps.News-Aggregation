@@ -11,6 +11,7 @@ import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { generateRandomId } from '../../utils/generateRandomId';
 import { createTextCompletion } from '../../utils/createTextCompletion';
+import { shuffleArray } from '../../utils/shuffleArray';
 
 export class TechCrunchAdapter implements INewsSourceAdapter {
 	app: NewsAggregationApp;
@@ -60,40 +61,26 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 		modify: IModify,
 		http: IHttp
 	) {
-		try {
-			const response = await http.get(this.fetchUrl);
-			const categoryNames: string[] = [];
+		const prompts = newsItems.map((newsItem) => ({
+			id: newsItem?.id,
+			prompt: newsItem?.description,
+		}));
+		console.log('prmot', prompts);
+		// this.app.getLogger().info(prompts);
+		// modify.
 
-			// 	if (response?.data) {
-			// 		for (const newsItem of response.data) {
-			// 			const categoriesId = newsItem.categories;
-			// 			const categoryPromises = categoriesId?.map(async (categoryId) => {
-			// 				const categoryResponse = await http.get(
-			// 					`${this.categoryUrl}/${categoryId}`
-			// 				);
-			// 				return categoryResponse?.data?.name;
-			// 			});
-			// 			console.log('cProm: ', categoryPromises);
+		console.log('lol');
 
-			// 			if (categoryPromises) {
-			// 				const categories = await Promise.all(categoryPromises);
-			// 				console.log('cPromAll: ', categories);
+		const categories = await createTextCompletion(
+			read,
+			room,
+			user,
+			modify,
+			http,
+			prompts
+		);
+		console.log('llm-responsetc: ', categories);
 
-			// 				categoryNames.push(...categories.filter(Boolean)); // Add the category names to the array
-			// 			}
-			// 		}
-			// 	}
-
-			// Remove duplicates by converting to a Set and then back to an array
-			console.log('tcCATS', categoryNames);
-			createTextCompletion(read, room, user, modify, http, categoryNames);
-			// return Array.from(new Set(categoryNames));
-			return '';
-		} catch (err) {
-			console.error(err); // for development purposes
-			this.app.getLogger().error(err);
-			return '';
-		}
-		return [];
+		return categories;
 	}
 }

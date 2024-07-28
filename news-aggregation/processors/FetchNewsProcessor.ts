@@ -24,6 +24,7 @@ import { RoomPersistence } from '../persistence/RoomPersistence';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { UserPersistence } from '../persistence/UserPersistence';
+import { CNBCAdapter } from '../adapters/source-adapters/CNBCAdapter';
 
 export class FetchNewsProcessor implements IProcessor {
 	id: string = 'fetch-news';
@@ -40,6 +41,7 @@ export class FetchNewsProcessor implements IProcessor {
 		let techCrunchNews: NewsItem[] = [];
 		let bbcNews: NewsItem[] = [];
 		let espnNews: NewsItem[] = [];
+		let cnbcNews: NewsItem[] = [];
 
 		const userStorage = new UserPersistence(
 			persis,
@@ -68,6 +70,7 @@ export class FetchNewsProcessor implements IProcessor {
 		);
 		const bbcSetting = await settingsReader.getById(SettingEnum.BBC);
 		const espnSetting = await settingsReader.getById(SettingEnum.ESPN);
+		const cnbcSetting = await settingsReader.getById(SettingEnum.CNBC);
 
 		// Fetch news items from sources
 		if (techCrunchSetting.value) {
@@ -82,15 +85,47 @@ export class FetchNewsProcessor implements IProcessor {
 			console.log('TechCrunch news fetched:', techCrunchNews);
 
 			// To implement in next PR
-			// const categoryMapping = await techCrunchNewsSource.determineCategory(
-			// 	bbcNews,
-			// 	read,
-			// 	dm,
-			// 	currentUser,
-			// 	modify,
-			// 	http
-			// );
-			// console.log('tcCATS:', categoryMapping);
+			const categoryMapping = await techCrunchNewsSource.determineCategory(
+				techCrunchNews,
+				read,
+				dm,
+				currentUser,
+				modify,
+				http
+			);
+			console.log('Category mappingtc:', categoryMapping);
+
+			try {
+				const parsedMapping = JSON.parse(categoryMapping);
+				console.log('Parsed category mappingtc:', parsedMapping);
+
+				for (const news of techCrunchNews) {
+					console.log('Processing news itemtc:', news.id);
+					for (const mapping of parsedMapping) {
+						console.log('Mapping objecttc:', mapping);
+						const mappingId = mapping.id;
+						console.log('Mapping idtc:', mappingId);
+						if (news.id === mappingId) {
+							news.category = mapping.category;
+							console.log('Category assignedtc:', news.category);
+						}
+					}
+				}
+			} catch (parseError) {
+				console.error('Error parsing category mappingtc:', parseError);
+			}
+			// for (const news of techCrunchNews) {
+			// 	let newsItem: NewsItem[] = [news];
+			// 	const categoryMapping = await techCrunchNewsSource.determineCategory(
+			// 		newsItem,
+			// 		read,
+			// 		dm,
+			// 		currentUser,
+			// 		modify,
+			// 		http
+			// 	);
+			// 	console.log('tcCATShuffle:', categoryMapping);
+			// }
 
 			// const parsedMapping = JSON.parse(categoryMapping);
 
@@ -135,8 +170,10 @@ export class FetchNewsProcessor implements IProcessor {
 					for (const mapping of parsedMapping) {
 						console.log('Mapping object:', mapping);
 						const mappingId = mapping.id;
+						console.log('ek aurrfirse');
+
 						console.log('Mapping id:', mappingId);
-						if (news.id === mappingId) {
+						if (news.id == mappingId) {
 							news.category = mapping.category;
 							console.log('Category assigned:', news.category);
 						}
@@ -179,6 +216,50 @@ export class FetchNewsProcessor implements IProcessor {
 			// }
 		}
 
+		if (cnbcSetting.value) {
+			console.log('Fetching CNBC news...');
+			const cnbcAdapter = new CNBCAdapter();
+			const cnbcNewsSource = new NewsSource(cnbcAdapter);
+			console.log('fetch-processor-working2.1');
+			cnbcNews = [
+				...cnbcNews,
+				...(await cnbcNewsSource.fetchNews(read, modify, http, persis)),
+			];
+			console.log('CNBC news fetchednew:', cnbcNews);
+
+			const categoryMapping = await cnbcNewsSource.determineCategory(
+				cnbcNews,
+				read,
+				dm,
+				currentUser,
+				modify,
+				http
+			);
+			console.log('Category mappingcnbc:', categoryMapping);
+
+			try {
+				const parsedMapping = JSON.parse(categoryMapping);
+				console.log('Parsed category mappingcnbc:', parsedMapping);
+
+				for (const news of cnbcNews) {
+					console.log('Processing news itemcnbc:', news.id);
+					for (const mapping of parsedMapping) {
+						console.log('Mapping objectcnbc:', mapping);
+						const mappingId = mapping.id;
+						console.log('ek aurrfirse cnbcc');
+
+						console.log('Mapping id:', mappingId);
+						if (news.id == mappingId) {
+							news.category = mapping.category;
+							console.log('Category assignedcbc:', news.category);
+						}
+					}
+				}
+			} catch (parseError) {
+				console.error('Error parsing category mappingcnbc:', parseError);
+			}
+		}
+
 		const newsStorage = new NewsItemPersistence({
 			read: read,
 			modify: modify,
@@ -198,7 +279,17 @@ export class FetchNewsProcessor implements IProcessor {
 			const saveESPNNews = espnNews.map((newsItem) =>
 				newsStorage.saveNews(newsItem, 'Sports')
 			);
-			await Promise.all([saveTechCrunchNews, saveBBCNews, saveESPNNews]);
+			const saveCNBCNews = cnbcNews.map((newsItem) => {
+				if (newsItem.category) {
+					newsStorage.saveNews(newsItem, newsItem.category);
+				}
+			});
+			await Promise.all([
+				saveTechCrunchNews,
+				saveBBCNews,
+				saveESPNNews,
+				saveCNBCNews,
+			]);
 			console.log('all news-items saved!!');
 		} catch (err) {
 			console.error('News Items could not be save', err);
