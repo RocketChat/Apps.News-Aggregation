@@ -13,6 +13,15 @@ import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence'
 import { subscribeNewsModal } from '../modals/subscribeNewsModal';
 import { UIKitBlockInteractionContext } from '@rocket.chat/apps-engine/definition/uikit';
 import { SlashCommandContext } from '@rocket.chat/apps-engine/definition/slashcommands';
+import {
+	sendHelperMessage,
+	sendMessage,
+	sendNotification,
+} from '../utils/message';
+import { NewsItem } from '../definitions/NewsItem';
+import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
+import { shuffleArray } from '../utils/shuffleArray';
+import { buildNewsBlock } from '../blocks/UtilityBlocks';
 // import { NewsDeliveryService } from '../services/NewsDeliveryService';
 // import { getSubscribeBlock } from '../utils/blocks';
 
@@ -43,7 +52,23 @@ export class Handler implements IHandler {
 		console.log('news subscribe working.');
 		this.app.getLogger().info('news subscribe working.');
 		const persisRead = this.read.getPersistenceReader();
+		const subscriptionStorage = new SubscriptionPersistence(
+			persisRead,
+			this.persis
+		);
 
+		const isSubscribed = await subscriptionStorage.isSubscribed(this.room);
+		if (isSubscribed) {
+			const subscribedNotify = `### News Aggregation App
+                        *You have already subscribed in this room. Use \`/news unsubscribe\` to unsubscribe.*`;
+			return await sendNotification(
+				this.read,
+				this.modify,
+				this.sender,
+				this.room,
+				subscribedNotify
+			);
+		}
 		// TO-DO
 		const modal = await subscribeNewsModal(
 			this.app,
@@ -106,9 +131,6 @@ export class Handler implements IHandler {
 		console.log('news unsubscribe working.');
 		this.app.getLogger().info('news unsubscribe working.');
 
-		const user = this.context.getSender();
-		const room = this.context.getRoom();
-
 		this.triggerId = this.context.getTriggerId();
 		console.log('triggId:', this.triggerId);
 
@@ -125,6 +147,25 @@ export class Handler implements IHandler {
 			// 	room
 			// );
 			// console.log('unsubId:', id);
+			const unsubscribeNotify = `### News Aggregation App
+            *News Aggregation App unsubscribed in this room. Use \`/news subscribe\` to subscribe.*`;
+			return await sendNotification(
+				this.read,
+				this.modify,
+				this.sender,
+				this.room,
+				unsubscribeNotify
+			);
+		} else {
+			const unsubscribeNotify = `### News Aggregation App
+            *You have not subscribed to News Aggregation App. Use \`/news subscribe\` to subscribe.*`;
+			return await sendNotification(
+				this.read,
+				this.modify,
+				this.sender,
+				this.room,
+				unsubscribeNotify
+			);
 		}
 	}
 
@@ -146,5 +187,90 @@ export class Handler implements IHandler {
 			);
 		}
 		console.log('deleted by interval');
+	}
+
+	public async getNewsOnDemand(): Promise<void> {
+		let news: NewsItem[] = [];
+		const appUser = (await this.read.getUserReader().getAppUser()) as IUser;
+
+		const newsStorage = new NewsItemPersistence({
+			read: this.read,
+			modify: this.modify,
+			persistence: this.persis,
+		});
+
+		const subscriptionStorage = new SubscriptionPersistence(
+			this.read.getPersistenceReader(),
+			this.persis
+		);
+		const subscription = await subscriptionStorage.getSubscriptionByRoom(
+			this.room
+		);
+
+		if (!subscription) {
+			const subscriptionText = `### News Aggregation App
+            *The app is not subscribed in this room. Please subscribe to the news you want through the command \`/news subscribe\`*`;
+			return await sendNotification(
+				this.read,
+				this.modify,
+				this.sender,
+				this.room,
+				subscriptionText
+			);
+		}
+		console.log('subs: ', subscription);
+
+		try {
+			// get only the news of subscribed categories
+			console.log('subsFetch: ', subscription);
+
+			let allSubscribedNews: NewsItem[] = [];
+			const room = (await this.read
+				.getRoomReader()
+				.getById(subscription?.roomId)) as IRoom;
+
+			if (subscription?.categories) {
+				if (
+					subscription?.categories?.length === 1 &&
+					subscription?.categories[0] === 'All Categories'
+				) {
+					allSubscribedNews = (await newsStorage.getAllNews()) as NewsItem[];
+				} else {
+					for (const category of subscription?.categories) {
+						news = (await newsStorage.getAllSubscribedNews(
+							category
+						)) as NewsItem[];
+
+						news = news.slice(0, 10);
+						allSubscribedNews = [...allSubscribedNews, ...news];
+					}
+				}
+			}
+
+			allSubscribedNews = shuffleArray(allSubscribedNews);
+
+			for (const item of allSubscribedNews.slice(0, 10)) {
+				const newsBlock = await buildNewsBlock(item);
+				// newsBlocks.push(newsBlock);
+				await sendMessage(this.modify, room, appUser, '', newsBlock);
+			}
+			console.log('fetched!!', news, 'FETCHED FROM PERSISTENCE!');
+
+			console.log('news displayed!');
+		} catch (err) {
+			this.app.getLogger().error(err);
+			console.error(err);
+		}
+	}
+
+	public async helperMessage(): Promise<void> {
+		await sendHelperMessage(
+			this.room,
+			this.read,
+			this.modify,
+			this.sender,
+			this.http,
+			this.persis
+		);
 	}
 }

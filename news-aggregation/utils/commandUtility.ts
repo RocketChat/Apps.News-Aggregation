@@ -14,7 +14,7 @@ import {
 } from '@rocket.chat/apps-engine/definition/accessors';
 import { NewsAggregationApp } from '../NewsAggregationApp';
 import { CommandEnum } from '../enums/commandEnum';
-import { sendHelperMessage, sendMessage } from './message';
+import { sendHelperMessage, sendMessage, sendNotification } from './message';
 import { TechCrunchAdapter } from '../adapters/source-adapters/TechCrunchAdapter';
 import { NewsItem } from '../definitions/NewsItem';
 import { NewsSource } from '../definitions/NewsSource';
@@ -26,6 +26,7 @@ import { buildNewsBlock } from '../blocks/UtilityBlocks';
 import { createTextCompletion } from './createTextCompletion';
 import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence';
 import { RoomPersistence } from '../persistence/RoomPersistence';
+import { shuffleArray } from './shuffleArray';
 
 export class CommandUtility implements ICommandUtility {
 	sender: IUser;
@@ -52,17 +53,6 @@ export class CommandUtility implements ICommandUtility {
 		this.persistenceRead = props.persistenceRead;
 		this.app = props.app;
 		this.triggerId = props.triggerId;
-	}
-
-	private async helperMessage() {
-		await sendHelperMessage(
-			this.room,
-			this.read,
-			this.modify,
-			this.sender,
-			this.http,
-			this.persistence
-		);
 	}
 
 	private async fetchNewsFromSource() {
@@ -97,106 +87,7 @@ export class CommandUtility implements ICommandUtility {
 		// );
 	}
 
-	public async getNewsFromPersistence() {
-		let news: NewsItem[] = [];
-		const appUser = (await this.read.getUserReader().getAppUser()) as IUser;
-
-		// const techCrunchAdapter = new TechCrunchAdapter();
-		// const techCrunchNewsSource = new NewsSource(
-		// 	this.app,
-		// 	techCrunchAdapter,
-		// 	news
-		// );
-
-		const newsStorage = new NewsItemPersistence({
-			read: this.read,
-			modify: this.modify,
-			persistence: this.persistence,
-		});
-
-		const subscriptionStorage = new SubscriptionPersistence(
-			this.persistenceRead,
-			this.persistence
-		);
-		const subscription = await subscriptionStorage.getSubscriptionByRoom(
-			this.room
-		);
-		console.log('subs: ', subscription);
-
-		try {
-			// news = await techCrunchNewsSource.getNews(
-			// 	this.read,
-			// 	this.modify,
-			// 	this.room,
-			// 	this.http,
-			// 	this.persistence
-			// );
-			// news = (await newsStorage.getAllNews()) as NewsItem[];
-			// news = (await newsStorage.getAllSubscribedNews(subscription.categories))
-
-			// get only the news of subscribed categories
-			console.log('subsFetch: ', subscription);
-
-			if (subscription?.categories) {
-				for (const category of subscription?.categories) {
-					news = (await newsStorage.getAllSubscribedNews(
-						category
-					)) as NewsItem[];
-
-					for (const item of news) {
-						const newsBlock = await buildNewsBlock(item);
-						// newsBlocks.push(newsBlock);
-						await sendMessage(this.modify, this.room, appUser, '', newsBlock);
-					}
-				}
-			}
-			console.log('fetched!!', news, 'FETCHED FROM PERSISTENCE!');
-
-			// To implement
-			let newsBlocks: Array<Array<Block>> = [];
-			// for (const item of news) {
-			// 	const newsBlock = await buildNewsBlock(item);
-			// 	// newsBlocks.push(newsBlock);
-			// 	await sendMessage(this.modify, this.room, appUser, '', newsBlock);
-			// }
-
-			// await sendNewsMessage(
-			// 	this.modify,
-			// 	this.room,
-			// 	this.sender,
-			// 	'',
-			// 	newsBlocks
-			// );
-			console.log('news displayed!');
-		} catch (err) {
-			this.app.getLogger().error(err);
-			console.error(err);
-		}
-	}
-
 	public async deleteNewsFromPersistence() {
-		// let news: NewsItem[] = [];
-		// const techCrunchAdapter = new TechCrunchAdapter();
-		// const techCrunchNewsSource = new NewsSource(
-		// 	this.app,
-		// 	techCrunchAdapter,
-		// 	news
-		// );
-
-		// try {
-		// 	await techCrunchNewsSource.deleteNews(
-		// 		this.read,
-		// 		this.modify,
-		// 		this.room,
-		// 		this.http,
-		// 		this.persistence
-		// 	);
-
-		// 	console.log('all news deleted!');
-		// } catch (err) {
-		// 	console.error(err);
-		// }
-
 		const fetchService = new NewsFetchService({
 			read: this.read,
 			modify: this.modify,
@@ -211,27 +102,13 @@ export class CommandUtility implements ICommandUtility {
 		);
 	}
 
-	public async subscribeNews() {
-		console.log('news subscribe working.');
-		this.app.getLogger().info('news subscribe working.');
-	}
-
-	public async unsubscribeNews() {
-		console.log('news unsubscribe working.');
-		this.app.getLogger().info('news unsubscribe working.');
-	}
-
 	private async handleSingleParamCommand(handler: Handler) {
 		const singleParamCommand = this.command[0];
 		console.log(this.command);
 
 		switch (singleParamCommand) {
-			case CommandEnum.ALERT:
-				await this.fetchNewsFromSource();
-				break;
-
 			case CommandEnum.GET:
-				await this.getNewsFromPersistence();
+				await handler.getNewsOnDemand();
 				break;
 
 			case CommandEnum.DELETE:
@@ -248,7 +125,7 @@ export class CommandUtility implements ICommandUtility {
 
 			case CommandEnum.HELP:
 			default:
-				await this.helperMessage();
+				await handler.helperMessage();
 				break;
 		}
 	}
@@ -300,7 +177,7 @@ export class CommandUtility implements ICommandUtility {
 
 			case 0:
 			default:
-				await this.helperMessage();
+				await handler.helperMessage();
 				break;
 		}
 	}

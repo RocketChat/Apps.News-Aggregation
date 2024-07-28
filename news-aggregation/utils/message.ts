@@ -123,7 +123,7 @@ export async function sendHelperMessage(
 ): Promise<void> {
 	let helperText = `### News Aggregation App
     *The app can be accessed with the slash command /news*
-    1. Get news on-demand (if the app is configured)                    \`/news alert\`
+    1. Get news on-demand (if the app is configured)                    \`/news get\`
     2. Get the channels in which the app is configured                  \`/news channels\`
     3. Subscribe to the latest news through custom configuration        \`/news subscribe\`
     4. Unsubscribe from the news updates within the current channel     \`/news unsubscribe\`

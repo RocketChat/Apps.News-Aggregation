@@ -13,6 +13,7 @@ import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence'
 import { ModalEnum } from '../enums/modalEnum';
 import { RoomPersistence } from '../persistence/RoomPersistence';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
+import { sendNotification } from '../utils/message';
 
 export class ExecuteViewSubmitHandler {
 	private context: UIKitViewSubmitInteractionContext;
@@ -102,6 +103,16 @@ export class ExecuteViewSubmitHandler {
 							categories,
 							user,
 							room
+						);
+
+						const subscribedNotify = `### News Aggregation App
+                        *Subscribed to News Aggregation App*`;
+						await sendNotification(
+							this.read,
+							this.modify,
+							user,
+							room,
+							subscribedNotify
 						);
 					}
 			}
