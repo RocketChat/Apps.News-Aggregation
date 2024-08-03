@@ -2,6 +2,7 @@ import { Block } from '@rocket.chat/ui-kit';
 import { NewsItem } from '../definitions/NewsItem';
 import {
 	getCategoryBlock,
+	getChannelName,
 	getDescriptionBlock,
 	getOptionalsBlock,
 	getPreviewBlock,
@@ -33,6 +34,15 @@ export async function buildNewsBlock(news: NewsItem) {
 		const authorBlock = getOptionalsBlock(news.author);
 		blocks.push(authorBlock);
 	}
+
+	return blocks;
+}
+
+export async function getSubscribedRoom(roomName: string) {
+	let blocks: Block[] = [];
+
+	const roomNameBlock = getChannelName(roomName);
+	blocks.push(roomNameBlock);
 
 	return blocks;
 }

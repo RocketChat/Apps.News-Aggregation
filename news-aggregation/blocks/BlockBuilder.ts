@@ -117,3 +117,15 @@ export function getPreviewBlock(news: NewsItem) {
 
 	return block;
 }
+
+export function getChannelName(channelName: string, accessory?: any) {
+	const block: SectionBlock = {
+		type: 'section',
+		text: {
+			type: 'mrkdwn',
+			text: channelName,
+		},
+		accessory,
+	};
+	return block;
+}

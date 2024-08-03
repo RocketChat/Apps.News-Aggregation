@@ -115,6 +115,10 @@ export class CommandUtility implements ICommandUtility {
 				await this.deleteNewsFromPersistence();
 				break;
 
+			case CommandEnum.CHANNELS:
+				await handler.getAllSubscribedChannels();
+				break;
+
 			case CommandEnum.SUBSCRIBE:
 				await handler.subscribeNews();
 				break;

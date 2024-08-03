@@ -21,7 +21,7 @@ import {
 import { NewsItem } from '../definitions/NewsItem';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 import { shuffleArray } from '../utils/shuffleArray';
-import { buildNewsBlock } from '../blocks/UtilityBlocks';
+import { buildNewsBlock, getSubscribedRoom } from '../blocks/UtilityBlocks';
 // import { NewsDeliveryService } from '../services/NewsDeliveryService';
 // import { getSubscribeBlock } from '../utils/blocks';
 
@@ -260,6 +260,31 @@ export class Handler implements IHandler {
 		} catch (err) {
 			this.app.getLogger().error(err);
 			console.error(err);
+		}
+	}
+
+	public async getAllSubscribedChannels(): Promise<void> {
+		const appUser = (await this.read.getUserReader().getAppUser()) as IUser;
+		const subscriptionStorage = new SubscriptionPersistence(
+			this.read.getPersistenceReader(),
+			this.persis
+		);
+		const allSubscriptions = await subscriptionStorage.getSubscriptions();
+
+		let rooms: string[] = [];
+		for (const subscription of allSubscriptions) {
+			const room = await this.read
+				.getRoomReader()
+				.getById(subscription?.roomId);
+			console.log('subscribed room', room);
+			if (room?.displayName) {
+				rooms.push(room?.displayName);
+			}
+		}
+
+		for (const roomName of rooms) {
+			const channelNameBlock = await getSubscribedRoom(roomName);
+			await sendMessage(this.modify, this.room, appUser, '', channelNameBlock);
 		}
 	}
 
