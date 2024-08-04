@@ -1,6 +1,4 @@
-# News Aggregation App with Rocket.Chat
-
-![Apps News-Aggregation (1)](https://github.com/user-attachments/assets/054143da-9228-4212-8e2d-8e5566749b9f)
+![Apps News-Aggregation2](https://github.com/user-attachments/assets/1bbb82ff-08b1-4070-b1ff-deebf515bc33)
 
 <br />
 
@@ -56,6 +54,11 @@
    ```sh
    rc-apps deploy --url <url> --username <username> --password <password>
    ```
+4. Generate LLM API Key:
+   Generate an API key from [Mistral API Console](https://console.mistral.ai/api-keys/) and add it in the settings of the app. Navigate to:
+   ```
+   Installed -> Private Apps -> News-Aggregation App -> Settings -> Enter API Key.
+   ```
 
 <!-- ABOUT THE PROJECT -->
 
@@ -74,7 +77,7 @@ Use the following slash commands to interact with the app:
 ```
 /news alert: Get the latest news summaries on demand.
 /news help: Learn about the app, its features, and how to configure it.
-<!-- /news channels: List all channels where the app is configured. -->
+/news channels: List all channels where the app is configured.
 /news subscribe: Configure your news preferences through a modal.
 /news unsubscribe: Unsubscribe from receiving periodic news updates.
 ```
