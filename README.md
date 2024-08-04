@@ -2,7 +2,6 @@
 
 ![Apps News-Aggregation (1)](https://github.com/user-attachments/assets/054143da-9228-4212-8e2d-8e5566749b9f)
 
-
 <br />
 
 <div align="center">
