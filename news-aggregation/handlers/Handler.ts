@@ -272,20 +272,34 @@ export class Handler implements IHandler {
 		const allSubscriptions = await subscriptionStorage.getSubscriptions();
 
 		let rooms: string[] = [];
+		const directRoom = await this.read
+			.getRoomReader()
+			.getDirectByUsernames([appUser.username, this.sender.username]);
+		if (directRoom) {
+			rooms.push('Direct Room with News Aggregation Bot');
+		}
 		for (const subscription of allSubscriptions) {
 			const room = await this.read
 				.getRoomReader()
 				.getById(subscription?.roomId);
+
 			console.log('subscribed room', room);
 			if (room?.displayName) {
 				rooms.push(room?.displayName);
 			}
 		}
 
-		for (const roomName of rooms) {
-			const channelNameBlock = await getSubscribedRoom(roomName);
-			await sendMessage(this.modify, this.room, appUser, '', channelNameBlock);
-		}
+		const text = `*All Subscribed Rooms are*:\n
+                ${rooms.join('\n')}
+                `;
+
+		await sendNotification(
+			this.read,
+			this.modify,
+			this.sender,
+			this.room,
+			text
+		);
 	}
 
 	public async helperMessage(): Promise<void> {
