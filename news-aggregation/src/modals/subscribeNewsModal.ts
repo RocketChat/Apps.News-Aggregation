@@ -1,5 +1,5 @@
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
-import { NewsAggregationApp } from '../NewsAggregationApp';
+import { NewsAggregationApp } from '../../NewsAggregationApp';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import {
 	IHttp,
@@ -8,7 +8,7 @@ import {
 	IRead,
 	IUIKitSurfaceViewParam,
 } from '@rocket.chat/apps-engine/definition/accessors';
-import { ModalEnum } from '../enums/modalEnum';
+import { ModalEnum } from '../../enums/modalEnum';
 import {
 	ButtonStyle,
 	UIKitSurfaceType,

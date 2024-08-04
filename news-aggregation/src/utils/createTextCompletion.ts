@@ -12,6 +12,7 @@ import {
 	techCrunchSystemPrompt,
 } from './prompts';
 
+// StFDeHQqBIn8wA7PRtOxA3NZTRTmXMK7;
 export async function createTextCompletion(
 	read: IRead,
 	room: IRoom,
@@ -25,7 +26,13 @@ export async function createTextCompletion(
 		.getSettings()
 		.getValueById('llm-model');
 
+	const mistralApiKey = await read
+		.getEnvironmentReader()
+		.getSettings()
+		.getValueById('mistral-api-key');
+
 	console.log('model: ', model);
+	console.log('apikey-new: ', mistralApiKey);
 
 	let endpoint = ``;
 	if (model === 'mistral-small-latest') {
@@ -36,15 +43,6 @@ export async function createTextCompletion(
 		throw new Error(`Model settings doesn't exist.`);
 	}
 	console.log('testing1: ', model);
-	// console.log('promptss: ', prompts);
-
-	// prompts.map((item) => {
-	// 		const categoryPrompt = newsCategoryPrompt(item.prompt);
-	// 		return {
-	// 			role: 'user',
-	// 			content: categoryPrompt,
-	// 		};
-	// 	})
 
 	console.log('incomingprompot: ', prompts);
 
@@ -88,7 +86,7 @@ export async function createTextCompletion(
 	const response = await http.post(endpoint + `/chat/completions`, {
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: `Bearer uWUtKlbXTgvFt9tGXUlnMiZiFkkKCd4n`, // Add the API key here
+			Authorization: `Bearer ${mistralApiKey}`, // Add the API key here
 		},
 		content: JSON.stringify(body),
 	});

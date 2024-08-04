@@ -2,7 +2,7 @@ import {
 	IUIKitResponse,
 	UIKitViewSubmitInteractionContext,
 } from '@rocket.chat/apps-engine/definition/uikit';
-import { NewsAggregationApp } from '../NewsAggregationApp';
+import { NewsAggregationApp } from '../../NewsAggregationApp';
 import {
 	IHttp,
 	IModify,
@@ -10,7 +10,7 @@ import {
 	IRead,
 } from '@rocket.chat/apps-engine/definition/accessors';
 import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence';
-import { ModalEnum } from '../enums/modalEnum';
+import { ModalEnum } from '../../enums/modalEnum';
 import { RoomPersistence } from '../persistence/RoomPersistence';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { sendNotification } from '../utils/message';

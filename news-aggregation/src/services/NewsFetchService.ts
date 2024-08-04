@@ -5,16 +5,16 @@ import {
 	IPersistenceRead,
 	IRead,
 } from '@rocket.chat/apps-engine/definition/accessors';
-import { NewsAggregationApp } from '../NewsAggregationApp';
+import { NewsAggregationApp } from '../../NewsAggregationApp';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { TechCrunchAdapter } from '../adapters/source-adapters/TechCrunchAdapter';
-import { NewsSource } from '../definitions/NewsSource';
-import { NewsItem } from '../definitions/NewsItem';
+import { NewsSource } from '../../definitions/NewsSource';
+import { NewsItem } from '../../definitions/NewsItem';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 import { BBCAdapter } from '../adapters/source-adapters/BBCAdapter';
-import { SettingEnum } from '../enums/settingEnum';
+import { SettingEnum } from '../../enums/settingEnum';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
-import { IConfig } from '../definitions/IConfig';
+import { IConfig } from '../../definitions/IConfig';
 import { ESPNAdapter } from '../adapters/source-adapters/ESPNAdapter';
 
 export class NewsFetchService {

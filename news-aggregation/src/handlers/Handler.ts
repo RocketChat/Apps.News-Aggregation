@@ -4,8 +4,8 @@ import {
 	IPersistence,
 	IRead,
 } from '@rocket.chat/apps-engine/definition/accessors';
-import { NewsAggregationApp } from '../NewsAggregationApp';
-import { IHandler, IHandlerParams } from '../definitions/IHandler';
+import { NewsAggregationApp } from '../../NewsAggregationApp';
+import { IHandler, IHandlerParams } from '../../definitions/IHandler';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 // import { subscribeNewsModal } from '../modals/subscribeNewsModal';
@@ -18,10 +18,10 @@ import {
 	sendMessage,
 	sendNotification,
 } from '../utils/message';
-import { NewsItem } from '../definitions/NewsItem';
+import { NewsItem } from '../../definitions/NewsItem';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 import { shuffleArray } from '../utils/shuffleArray';
-import { buildNewsBlock, getSubscribedRoom } from '../blocks/UtilityBlocks';
+import { buildNewsBlock, getSubscribedRoom } from '../../blocks/UtilityBlocks';
 // import { NewsDeliveryService } from '../services/NewsDeliveryService';
 // import { getSubscribeBlock } from '../utils/blocks';
 

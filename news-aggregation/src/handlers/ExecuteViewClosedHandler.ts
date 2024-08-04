@@ -2,7 +2,7 @@ import {
 	IUIKitResponse,
 	UIKitViewCloseInteractionContext,
 } from '@rocket.chat/apps-engine/definition/uikit';
-import { NewsAggregationApp } from '../NewsAggregationApp';
+import { NewsAggregationApp } from '../../NewsAggregationApp';
 import {
 	IHttp,
 	IModify,
@@ -10,7 +10,7 @@ import {
 	IRead,
 } from '@rocket.chat/apps-engine/definition/accessors';
 import { RoomPersistence } from '../persistence/RoomPersistence';
-import { ModalEnum } from '../enums/modalEnum';
+import { ModalEnum } from '../../enums/modalEnum';
 
 export class ExecuteViewClosedHandler {
 	private context: UIKitViewCloseInteractionContext;

@@ -6,7 +6,7 @@ import {
 } from '@rocket.chat/apps-engine/definition/accessors';
 import { NewsAggregationApp } from '../NewsAggregationApp';
 import { NewsItem } from './NewsItem';
-import { INewsSourceAdapter } from '../adapters/INewsSourceAdapter';
+import { INewsSourceAdapter } from '../src/adapters/INewsSourceAdapter';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 

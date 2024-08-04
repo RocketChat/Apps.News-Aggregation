@@ -1,10 +1,10 @@
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
-import { ISubscription } from '../definitions/ISubscription';
-import { NewsItem } from '../definitions/NewsItem';
+import { ISubscription } from '../../definitions/ISubscription';
+import { NewsItem } from '../../definitions/NewsItem';
 import { IModify, IRead } from '@rocket.chat/apps-engine/definition/accessors';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 import { shuffleArray } from './shuffleArray';
-import { buildNewsBlock } from '../blocks/UtilityBlocks';
+import { buildNewsBlock } from '../../blocks/UtilityBlocks';
 import { sendMessage } from './message';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 

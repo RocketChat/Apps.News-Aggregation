@@ -16,12 +16,12 @@ import {
 	AppMethod,
 	IAppInfo,
 } from '@rocket.chat/apps-engine/definition/metadata';
-import { sendDirectMessageOnInstall } from './utils/message';
-import { NewsCommand } from './commands/NewsCommand';
+import { sendDirectMessageOnInstall } from './src/utils/message';
+import { NewsCommand } from './src/commands/NewsCommand';
 // import { IAppBuilders } from './definitions/IAppBuilders';
-import { BlockBuilder } from './builders/BlockBuilder';
-import { ElementBuilder } from './builders/ElementBuilder';
-import { FetchNewsProcessor } from './processors/FetchNewsProcessor';
+import { BlockBuilder } from './src/builders/BlockBuilder';
+import { ElementBuilder } from './src/builders/ElementBuilder';
+import { FetchNewsProcessor } from './src/processors/FetchNewsProcessor';
 import {
 	IUIKitInteractionHandler,
 	IUIKitResponse,
@@ -29,14 +29,14 @@ import {
 	UIKitViewCloseInteractionContext,
 	UIKitViewSubmitInteractionContext,
 } from '@rocket.chat/apps-engine/definition/uikit';
-import { ExecuteViewSubmitHandler } from './handlers/ExecuteViewSubmitHandler';
+import { ExecuteViewSubmitHandler } from './src/handlers/ExecuteViewSubmitHandler';
 import { Settings } from './settings/Settings';
 import { IConfig } from './definitions/IConfig';
-import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
-import { ExecuteViewClosedHandler } from './handlers/ExecuteViewClosedHandler';
-import { DeliverNewsProcessor } from './processors/DeliverNewsProcessor';
-import { UserPersistence } from './persistence/UserPersistence';
-import { DeleteNewsProcessor } from './processors/DeleteNewsProcessor';
+import { ExecuteBlockActionHandler } from './src/handlers/ExecuteBlockActionHandler';
+import { ExecuteViewClosedHandler } from './src/handlers/ExecuteViewClosedHandler';
+import { DeliverNewsProcessor } from './src/processors/DeliverNewsProcessor';
+import { UserPersistence } from './src/persistence/UserPersistence';
+import { DeleteNewsProcessor } from './src/processors/DeleteNewsProcessor';
 // import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 
 export class NewsAggregationApp extends App {

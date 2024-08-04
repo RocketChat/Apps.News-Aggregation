@@ -2,23 +2,23 @@ import {
 	IJobContext,
 	IProcessor,
 } from '@rocket.chat/apps-engine/definition/scheduler';
-import { NewsAggregationApp } from '../NewsAggregationApp';
+import { NewsAggregationApp } from '../../NewsAggregationApp';
 import {
 	IRead,
 	IModify,
 	IHttp,
 	IPersistence,
 } from '@rocket.chat/apps-engine/definition/accessors';
-import { NewsItem } from '../definitions/NewsItem';
+import { NewsItem } from '../../definitions/NewsItem';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
-import { buildNewsBlock } from '../blocks/UtilityBlocks';
+import { buildNewsBlock } from '../../blocks/UtilityBlocks';
 import { sendMessage } from '../utils/message';
 import { Block } from '@rocket.chat/ui-kit';
 import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence';
 import { RoomPersistence } from '../persistence/RoomPersistence';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
-import { ISubscription } from '../definitions/ISubscription';
+import { ISubscription } from '../../definitions/ISubscription';
 import { UserPersistence } from '../persistence/UserPersistence';
 import { shuffleArray } from '../utils/shuffleArray';
 

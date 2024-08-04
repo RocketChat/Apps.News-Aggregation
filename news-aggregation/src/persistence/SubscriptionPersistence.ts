@@ -2,14 +2,14 @@ import {
 	IPersistence,
 	IPersistenceRead,
 } from '@rocket.chat/apps-engine/definition/accessors';
-import { NewsAggregationApp } from '../NewsAggregationApp';
+import { NewsAggregationApp } from '../../NewsAggregationApp';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import {
 	RocketChatAssociationModel,
 	RocketChatAssociationRecord,
 } from '@rocket.chat/apps-engine/definition/metadata';
-import { ISubscription } from '../definitions/ISubscription';
+import { ISubscription } from '../../definitions/ISubscription';
 
 export class SubscriptionPersistence {
 	persistenceRead: IPersistenceRead;

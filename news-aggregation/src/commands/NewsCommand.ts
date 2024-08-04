@@ -2,7 +2,7 @@ import {
 	ISlashCommand,
 	SlashCommandContext,
 } from '@rocket.chat/apps-engine/definition/slashcommands';
-import { NewsAggregationApp } from '../NewsAggregationApp';
+import { NewsAggregationApp } from '../../NewsAggregationApp';
 import {
 	IRead,
 	IModify,

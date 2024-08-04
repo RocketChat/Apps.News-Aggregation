@@ -2,13 +2,13 @@ import {
 	IPersistence,
 	IPersistenceRead,
 } from '@rocket.chat/apps-engine/definition/accessors';
-import { NewsItem } from '../definitions/NewsItem';
+import { NewsItem } from '../../definitions/NewsItem';
 import {
 	RocketChatAssociationModel,
 	RocketChatAssociationRecord,
 } from '@rocket.chat/apps-engine/definition/metadata';
-import { NewsAggregationApp } from '../NewsAggregationApp';
-import { IConfig } from '../definitions/IConfig';
+import { NewsAggregationApp } from '../../NewsAggregationApp';
+import { IConfig } from '../../definitions/IConfig';
 
 export class NewsItemPersistence {
 	config: IConfig;

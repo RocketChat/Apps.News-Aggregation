@@ -4,8 +4,8 @@ import {
 	IHttp,
 	IPersistence,
 } from '@rocket.chat/apps-engine/definition/accessors';
-import { NewsAggregationApp } from '../../NewsAggregationApp';
-import { NewsItem } from '../../definitions/NewsItem';
+import { NewsAggregationApp } from '../../../NewsAggregationApp';
+import { NewsItem } from '../../../definitions/NewsItem';
 import { INewsSourceAdapter } from '../INewsSourceAdapter';
 import * as https from 'https';
 import { randomBytes, createHash } from 'crypto';

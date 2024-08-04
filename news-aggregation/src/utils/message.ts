@@ -7,7 +7,7 @@ import {
 import { IRoom, RoomType } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { Block } from '@rocket.chat/ui-kit';
-import { OnInstallContent } from '../enums/messageEnum';
+import { OnInstallContent } from '../../enums/messageEnum';
 
 // getDirect room creates a direct room for conversation betweeen the user and the bot.
 export async function getDirectRoom(

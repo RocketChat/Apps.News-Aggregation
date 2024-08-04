@@ -12,14 +12,14 @@ import {
 	StartupType,
 } from '@rocket.chat/apps-engine/definition/scheduler';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
-import { NewsAggregationApp } from '../NewsAggregationApp';
+import { NewsAggregationApp } from '../../NewsAggregationApp';
 import { TechCrunchAdapter } from '../adapters/source-adapters/TechCrunchAdapter';
 import { BBCAdapter } from '../adapters/source-adapters/BBCAdapter';
-import { NewsSource } from '../definitions/NewsSource';
-import { NewsItem } from '../definitions/NewsItem';
-import { SettingEnum } from '../enums/settingEnum';
+import { NewsSource } from '../../definitions/NewsSource';
+import { NewsItem } from '../../definitions/NewsItem';
+import { SettingEnum } from '../../enums/settingEnum';
 import { ESPNAdapter } from '../adapters/source-adapters/ESPNAdapter';
-import { IConfig } from '../definitions/IConfig';
+import { IConfig } from '../../definitions/IConfig';
 import { RoomPersistence } from '../persistence/RoomPersistence';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';

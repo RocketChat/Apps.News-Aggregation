@@ -1,7 +1,7 @@
 import * as https from 'https';
 import { randomBytes } from 'crypto';
-import { NewsAggregationApp } from '../../NewsAggregationApp';
-import { NewsItem } from '../../definitions/NewsItem';
+import { NewsAggregationApp } from '../../../NewsAggregationApp';
+import { NewsItem } from '../../../definitions/NewsItem';
 import { INewsSourceAdapter } from '../INewsSourceAdapter';
 import {
 	IHttp,

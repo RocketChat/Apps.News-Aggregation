@@ -2,7 +2,7 @@ import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import {
 	ICommandUtility,
 	ICommandUtilityParams,
-} from '../definitions/ICommandUtility';
+} from '../../definitions/ICommandUtility';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { SlashCommandContext } from '@rocket.chat/apps-engine/definition/slashcommands';
 import {
@@ -12,17 +12,17 @@ import {
 	IPersistenceRead,
 	IRead,
 } from '@rocket.chat/apps-engine/definition/accessors';
-import { NewsAggregationApp } from '../NewsAggregationApp';
-import { CommandEnum } from '../enums/commandEnum';
+import { NewsAggregationApp } from '../../NewsAggregationApp';
+import { CommandEnum } from '../../enums/commandEnum';
 import { sendHelperMessage, sendMessage, sendNotification } from './message';
 import { TechCrunchAdapter } from '../adapters/source-adapters/TechCrunchAdapter';
-import { NewsItem } from '../definitions/NewsItem';
-import { NewsSource } from '../definitions/NewsSource';
+import { NewsItem } from '../../definitions/NewsItem';
+import { NewsSource } from '../../definitions/NewsSource';
 import { NewsFetchService } from '../services/NewsFetchService';
 import { Handler } from '../handlers/Handler';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 import { Block } from '@rocket.chat/ui-kit';
-import { buildNewsBlock } from '../blocks/UtilityBlocks';
+import { buildNewsBlock } from '../../blocks/UtilityBlocks';
 import { createTextCompletion } from './createTextCompletion';
 import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence';
 import { RoomPersistence } from '../persistence/RoomPersistence';

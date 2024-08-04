@@ -9,7 +9,7 @@ import {
 	IProcessor,
 } from '@rocket.chat/apps-engine/definition/scheduler';
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
-import { NewsItem } from '../definitions/NewsItem';
+import { NewsItem } from '../../definitions/NewsItem';
 
 export class DeleteNewsProcessor implements IProcessor {
 	id: string = 'delete-news';
