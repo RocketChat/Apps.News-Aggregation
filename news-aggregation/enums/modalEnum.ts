@@ -1,3 +1,7 @@
+/**
+ * Enumeration representing various identifiers and labels
+ * used in the subscription modal for the News Aggregation App.
+ */
 export enum ModalEnum {
 	SUBSCRIBE_VIEW_ID = 'subscribe-news-view-id',
 	SUBSCRIBE_NEWS_TITLE = 'News Aggregator Configuration Settings',

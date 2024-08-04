@@ -5,6 +5,7 @@ import {
 } from '@rocket.chat/ui-kit';
 import { NewsItem } from '../definitions/NewsItem';
 
+// Code to generate UI-Kit blocks (later will be replaced with Block and Element Builders)
 export function getTitleBlock(labelText: string, accessory?: any) {
 	const block: SectionBlock = {
 		type: 'section',
@@ -115,5 +116,17 @@ export function getPreviewBlock(news: NewsItem) {
 		externalUrl: news.link,
 	};
 
+	return block;
+}
+
+export function getChannelName(channelName: string, accessory?: any) {
+	const block: SectionBlock = {
+		type: 'section',
+		text: {
+			type: 'mrkdwn',
+			text: channelName,
+		},
+		accessory,
+	};
 	return block;
 }
