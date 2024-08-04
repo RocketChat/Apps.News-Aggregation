@@ -25,6 +25,9 @@ import { buildNewsBlock, getSubscribedRoom } from '../../blocks/UtilityBlocks';
 // import { NewsDeliveryService } from '../services/NewsDeliveryService';
 // import { getSubscribeBlock } from '../utils/blocks';
 
+/**
+ * Handler for managing news subscriptions and notifications.
+ */
 export class Handler implements IHandler {
 	public app: NewsAggregationApp;
 	public context: SlashCommandContext;
@@ -48,6 +51,9 @@ export class Handler implements IHandler {
 		this.triggerId = params.triggerId;
 	}
 
+	/**
+	 * Handles the subscription of a room to news updates.
+	 */
 	public async subscribeNews(): Promise<void> {
 		console.log('news subscribe working.');
 		this.app.getLogger().info('news subscribe working.');
@@ -69,7 +75,8 @@ export class Handler implements IHandler {
 				subscribedNotify
 			);
 		}
-		// TO-DO
+
+		// Open a modal for subscribing to news
 		const modal = await subscribeNewsModal(
 			this.app,
 			this.room,
@@ -127,6 +134,9 @@ export class Handler implements IHandler {
 		// 	.scheduleRecurring(await deliveryService.deliverDailyNews());
 	}
 
+	/**
+	 * Handles the unsubscription of a room from news updates.
+	 */
 	public async unsubscribeNews(): Promise<void> {
 		console.log('news unsubscribe working.');
 		this.app.getLogger().info('news unsubscribe working.');
@@ -169,6 +179,10 @@ export class Handler implements IHandler {
 		}
 	}
 
+	/**
+	 * Unsubscribes a room from news updates based on the provided interval.
+	 * @param interval - The interval at which the room was subscribed
+	 */
 	public async unsubscribeNewsByInterval(interval: string): Promise<void> {
 		console.log('news unsubscribe working by interval.');
 		this.app.getLogger().info('news unsubscribe working.');
@@ -189,6 +203,9 @@ export class Handler implements IHandler {
 		console.log('deleted by interval');
 	}
 
+	/**
+	 * Fetches and sends the latest news based on the room's subscription.
+	 */
 	public async getNewsOnDemand(): Promise<void> {
 		let news: NewsItem[] = [];
 		const appUser = (await this.read.getUserReader().getAppUser()) as IUser;
@@ -263,6 +280,9 @@ export class Handler implements IHandler {
 		}
 	}
 
+	/**
+	 * Sends a list of all subscribed channels.
+	 */
 	public async getAllSubscribedChannels(): Promise<void> {
 		const appUser = (await this.read.getUserReader().getAppUser()) as IUser;
 		const subscriptionStorage = new SubscriptionPersistence(
@@ -302,6 +322,9 @@ export class Handler implements IHandler {
 		);
 	}
 
+	/**
+	 * Sends a helper message with information about the available commands.
+	 */
 	public async helperMessage(): Promise<void> {
 		await sendHelperMessage(
 			this.room,

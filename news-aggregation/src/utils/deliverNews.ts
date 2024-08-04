@@ -8,6 +8,15 @@ import { buildNewsBlock } from '../../blocks/UtilityBlocks';
 import { sendMessage } from './message';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 
+/**
+ * Delivers news items to a specific room based on user subscriptions.
+ *
+ * @param news - List of news items to be delivered.
+ * @param read - Provides read access to data sources.
+ * @param modify - Provides methods to modify the state of the app.
+ * @param subscription - Contains subscription details, including categories and room ID.
+ * @param newsStorage - Interface to interact with the news item persistence layer.
+ */
 export async function deliverNews(
 	news: NewsItem[],
 	read: IRead,

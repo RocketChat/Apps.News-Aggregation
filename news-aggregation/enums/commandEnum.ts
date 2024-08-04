@@ -1,3 +1,7 @@
+/**
+ * Enumeration representing various command types
+ * that can be used within the application.
+ */
 export enum CommandEnum {
 	ALERT = 'alert',
 	GET = 'get',

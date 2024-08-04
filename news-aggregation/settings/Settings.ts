@@ -4,6 +4,9 @@ import {
 } from '@rocket.chat/apps-engine/definition/settings';
 import { SettingEnum } from '../enums/settingEnum';
 
+/**
+ * Array of settings used to configure various options for the News Aggregation App.
+ */
 export const Settings: Array<ISetting> = [
 	{
 		// id: SettingEnum.TECHCRUNCH,

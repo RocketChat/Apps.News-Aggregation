@@ -11,9 +11,20 @@ import {
 import { NewsItemPersistence } from '../persistence/NewsItemPersistence';
 import { NewsItem } from '../../definitions/NewsItem';
 
+/**
+ * Processor for deleting old news items.
+ */
 export class DeleteNewsProcessor implements IProcessor {
 	id: string = 'delete-news';
 
+	/**
+	 * Handles the scheduled job to delete old news items.
+	 * @param jobContext - The context of the job.
+	 * @param read - Interface for reading data.
+	 * @param modify - Interface for modifying data.
+	 * @param http - Interface for making HTTP requests.
+	 * @param persis - Interface for persistence operations.
+	 */
 	async processor(
 		jobContext: IJobContext,
 		read: IRead,

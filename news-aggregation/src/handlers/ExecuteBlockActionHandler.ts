@@ -12,6 +12,9 @@ import {
 import { SubscriptionPersistence } from '../persistence/SubscriptionPersistence';
 import { ModalEnum } from '../../enums/modalEnum';
 
+/**
+ * Handles interactions with UI blocks, such as button clicks in modals.
+ */
 export class ExecuteBlockActionHandler {
 	private context: UIKitBlockInteractionContext;
 	constructor(
@@ -25,6 +28,10 @@ export class ExecuteBlockActionHandler {
 		this.context = context;
 	}
 
+	/**
+	 * Processes UI block actions based on the action ID.
+	 * @returns A response indicating success or error.
+	 */
 	public async handleActions(): Promise<IUIKitResponse> {
 		const { actionId, blockId, user, room } = this.context.getInteractionData();
 		console.log('blockacinteract: ', this.context.getInteractionData());

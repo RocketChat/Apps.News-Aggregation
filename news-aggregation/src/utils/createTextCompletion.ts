@@ -12,7 +12,17 @@ import {
 	techCrunchSystemPrompt,
 } from './prompts';
 
-// StFDeHQqBIn8wA7PRtOxA3NZTRTmXMK7;
+/**
+ * Creates a text completion by sending a request to the specified AI model API.
+ *
+ * @param read - Provides read access to environment and settings.
+ * @param room - The room where the command was executed.
+ * @param user - The user who invoked the command.
+ * @param modify - Provides access to modify the state of the app.
+ * @param http - Provides HTTP client for making API requests.
+ * @param prompts - An array of prompts or a single prompt object to be processed.
+ * @returns A promise that resolves to an array of key-value pairs or an empty array if no valid response is received.
+ */
 export async function createTextCompletion(
 	read: IRead,
 	room: IRoom,
@@ -21,11 +31,11 @@ export async function createTextCompletion(
 	http: IHttp,
 	prompts: { id: string; prompt: string }[] | string[]
 ): Promise<{ [key: string]: string }[] | []> {
+	// Retrieve model and API key from environment settings
 	const model = await read
 		.getEnvironmentReader()
 		.getSettings()
 		.getValueById('llm-model');
-
 	const mistralApiKey = await read
 		.getEnvironmentReader()
 		.getSettings()
@@ -34,6 +44,7 @@ export async function createTextCompletion(
 	console.log('model: ', model);
 	console.log('apikey-new: ', mistralApiKey);
 
+	// Determine the API endpoint based on the selected model
 	let endpoint = ``;
 	if (model === 'mistral-small-latest') {
 		endpoint = `https://api.mistral.ai/v1`;
@@ -61,6 +72,7 @@ export async function createTextCompletion(
 	console.log('stringifyfyis: ', stringifiedPrompt);
 	console.log('isarray?', Array.isArray(prompts));
 
+	// Prepare the request body for the AI API
 	const body = {
 		model,
 		messages: [
@@ -83,6 +95,7 @@ export async function createTextCompletion(
 	console.log('testing2: ', model);
 	console.log('bodaye: ', body);
 
+	// Send the request to the AI API
 	const response = await http.post(endpoint + `/chat/completions`, {
 		headers: {
 			'Content-Type': 'application/json',
@@ -131,6 +144,6 @@ export async function createTextCompletion(
 	// 	([key, value]) => ({ [key]: value })
 	// );
 
-	// return result;
+	// Extract the completion text from the response
 	return resultObject;
 }

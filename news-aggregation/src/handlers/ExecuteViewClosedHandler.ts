@@ -12,6 +12,9 @@ import {
 import { RoomPersistence } from '../persistence/RoomPersistence';
 import { ModalEnum } from '../../enums/modalEnum';
 
+/**
+ * Handles interactions when a UI view is closed.
+ */
 export class ExecuteViewClosedHandler {
 	private context: UIKitViewCloseInteractionContext;
 	constructor(
@@ -25,6 +28,10 @@ export class ExecuteViewClosedHandler {
 		this.context = context;
 	}
 
+	/**
+	 * Processes actions based on the closed view's ID.
+	 * @returns A response indicating success or error.
+	 */
 	public async handleActions(): Promise<IUIKitResponse> {
 		const { view, user, appId } = this.context.getInteractionData();
 		console.log('viewClosed: ', this.context.getInteractionData());
@@ -38,6 +45,7 @@ export class ExecuteViewClosedHandler {
 		try {
 			switch (view.id) {
 				case ModalEnum.SUBSCRIBE_VIEW_ID:
+					// Clear the subscription room ID when the subscribe view is closed
 					await roomStorage.clearSubscriptionRoomId();
 			}
 			return this.context.getInteractionResponder().successResponse();

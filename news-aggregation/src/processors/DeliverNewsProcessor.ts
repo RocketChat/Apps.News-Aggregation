@@ -22,12 +22,23 @@ import { ISubscription } from '../../definitions/ISubscription';
 import { UserPersistence } from '../persistence/UserPersistence';
 import { shuffleArray } from '../utils/shuffleArray';
 
+/**
+ * Processor for delivering news to users based on their subscriptions.
+ */
 export class DeliverNewsProcessor implements IProcessor {
 	id: string = 'deliver-news';
 	// app: NewsAggregationApp;
 
 	constructor() {}
 
+	/**
+	 * Handles the scheduled job to deliver news.
+	 * @param jobContext - The context of the job, including interval and other data.
+	 * @param read - Interface for reading data.
+	 * @param modify - Interface for modifying data.
+	 * @param http - Interface for making HTTP requests.
+	 * @param persis - Interface for persistence operations.
+	 */
 	public async processor(
 		jobContext: IJobContext,
 		read: IRead,
@@ -79,6 +90,7 @@ export class DeliverNewsProcessor implements IProcessor {
 		console.log('allSubsbyInt: ', allSubscriptions);
 		console.log('deliver news working');
 
+		// Function to deliver news based on subscription
 		const deliverNews = async (subscription: ISubscription) => {
 			let allSubscribedNews: NewsItem[] = [];
 			const room = (await read
@@ -115,7 +127,7 @@ export class DeliverNewsProcessor implements IProcessor {
 		};
 
 		try {
-			// get only the news of subscribed categories to subscribed rooms
+			// Process all subscriptions in parallel
 			await Promise.all([
 				allSubscriptions?.map((subscription) => deliverNews(subscription)),
 			]);

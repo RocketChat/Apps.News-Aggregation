@@ -19,9 +19,17 @@ import { ContextBlockParam } from '../ui-kit/block/IContextBlock';
 import { InputBlockParam } from '../ui-kit/block/IInputBlock';
 import { MardownBlockParam } from '../ui-kit/block/IMarkdownBlock';
 
+/**
+ * Implements IBlockBuilder to create various UI blocks for the Rocket.Chat UI Kit.
+ */
 export class BlockBuilder implements IBlockBuilder {
 	constructor(private readonly appId: string) {}
 
+	/**
+	 * Creates an array of TextObject instances from an array of strings.
+	 * @param fields - Array of strings to be converted into TextObject.
+	 * @returns Array of TextObject.
+	 */
 	public createTextObjects(fields: Array<string>): Array<TextObject> {
 		const objects = fields?.map((field) => {
 			const textObject: TextObject = {
@@ -36,6 +44,11 @@ export class BlockBuilder implements IBlockBuilder {
 		return objects;
 	}
 
+	/**
+	 * Creates a SectionBlock instance.
+	 * @param param - Parameters for the SectionBlock.
+	 * @returns SectionBlock instance.
+	 */
 	public createSectionBlock(param: SectionBlockParam): SectionBlock {
 		const { accessory, blockId, text, fields } = param;
 
@@ -55,6 +68,11 @@ export class BlockBuilder implements IBlockBuilder {
 		return block;
 	}
 
+	/**
+	 * Creates an ActionsBlock instance.
+	 * @param param - Parameters for the ActionsBlock.
+	 * @returns ActionsBlock instance.
+	 */
 	public createActionBlock(param: ActionBlockParam): ActionsBlock {
 		const { blockId, elements } = param;
 
@@ -68,6 +86,11 @@ export class BlockBuilder implements IBlockBuilder {
 		return block;
 	}
 
+	/**
+	 * Creates a PreviewBlock instance, either with or without a thumbnail.
+	 * @param param - Parameters for the PreviewBlock.
+	 * @returns PreviewBlockBase or PreviewBlockWithThumb instance.
+	 */
 	public createPreviewBlock(
 		param: PreviewBlockParam
 	): PreviewBlockBase | PreviewBlockWithThumb {
@@ -84,6 +107,11 @@ export class BlockBuilder implements IBlockBuilder {
 		return block;
 	}
 
+	/**
+	 * Creates a ContextBlock instance.
+	 * @param param - Parameters for the ContextBlock.
+	 * @returns ContextBlock instance.
+	 */
 	public createContextBlock(param: ContextBlockParam): ContextBlock {
 		const { contextElements, blockId } = param;
 
@@ -108,6 +136,11 @@ export class BlockBuilder implements IBlockBuilder {
 		return block;
 	}
 
+	/**
+	 * Creates an InputBlock instance.
+	 * @param param - Parameters for the InputBlock.
+	 * @returns InputBlock instance.
+	 */
 	public createInputBlock(param: InputBlockParam): InputBlock {
 		const { text, element, blockId, hint, optional } = param;
 
@@ -128,6 +161,11 @@ export class BlockBuilder implements IBlockBuilder {
 		return block;
 	}
 
+	/**
+	 * Creates a DividerBlock instance.
+	 * @param blockId - Optional blockId for the DividerBlock.
+	 * @returns DividerBlock instance.
+	 */
 	public createDividerBlock(blockId?: string | undefined): DividerBlock {
 		const block: DividerBlock = {
 			type: LayoutBlockType.DIVIDER,
@@ -138,6 +176,11 @@ export class BlockBuilder implements IBlockBuilder {
 		return block;
 	}
 
+	/**
+	 * Creates a Markdown block.
+	 * @param param - Parameters for the Markdown block.
+	 * @returns Markdown block instance.
+	 */
 	public createMarkdownBlock(param: MardownBlockParam): Markdown {
 		const { verbatim } = param;
 		const block: Markdown = {

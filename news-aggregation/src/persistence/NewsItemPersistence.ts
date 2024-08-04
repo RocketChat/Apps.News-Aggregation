@@ -10,19 +10,22 @@ import {
 import { NewsAggregationApp } from '../../NewsAggregationApp';
 import { IConfig } from '../../definitions/IConfig';
 
+/**
+ * Manages persistence operations for news items.
+ */
 export class NewsItemPersistence {
 	config: IConfig;
-	// app: NewsAggregationApp;
-	// persistenceRead: IPersistenceRead;
-	// persistence: IPersistence;
 
 	constructor(config: IConfig) {
 		this.config = config;
-		// this.app = app;
-		// this.persistence = persistence;
-		// this.persistenceRead = persistenceRead;
 	}
 
+	/**
+	 * Checks if a news item exists based on its ID and category.
+	 * @param newsId - The ID of the news item.
+	 * @param category - The category of the news item.
+	 * @returns A boolean indicating whether the news item exists.
+	 */
 	public async newsExists(newsId: string, category: string): Promise<boolean> {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
@@ -51,6 +54,11 @@ export class NewsItemPersistence {
 		return false;
 	}
 
+	/**
+	 * Saves a news item in persistence if it does not already exist.
+	 * @param news - The news item to save.
+	 * @param category - The category of the news item.
+	 */
 	public async saveNews(news: NewsItem, category: string) {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
@@ -101,6 +109,11 @@ export class NewsItemPersistence {
 	//     associations.push(idAssociation);
 	// }
 
+	/**
+	 * Retrieves all news items by their IDs.
+	 * @param newsIds - An array of news item IDs.
+	 * @returns An array of news items.
+	 */
 	public async getAllNewsById(newsIds: string[]): Promise<NewsItem[]> {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
@@ -138,6 +151,10 @@ export class NewsItemPersistence {
 		return allNewsObjectArray;
 	}
 
+	/**
+	 * Retrieves all news items.
+	 * @returns An array of all news items.
+	 */
 	public async getAllNews(): Promise<object[]> {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
@@ -170,6 +187,11 @@ export class NewsItemPersistence {
 		return allNewsObjectArray;
 	}
 
+	/**
+	 * Retrieves all subscribed news items by category.
+	 * @param category - The category to filter news items.
+	 * @returns An array of news items in the specified category.
+	 */
 	public async getAllSubscribedNews(category: string) {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
@@ -208,6 +230,12 @@ export class NewsItemPersistence {
 		return newsObjectArray;
 	}
 
+	/**
+	 * Retrieves a news item by its ID and source.
+	 * @param newsId - The ID of the news item.
+	 * @param source - The source of the news item.
+	 * @returns The news item with the specified ID and source.
+	 */
 	public async getNewsById(newsId: string, source: string): Promise<object> {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
@@ -244,6 +272,11 @@ export class NewsItemPersistence {
 		return newsObject;
 	}
 
+	/**
+	 * Removes a news item by its ID.
+	 * @param news - The news item to remove.
+	 * @returns The removed news item, if found.
+	 */
 	public async removeNewsById(news: NewsItem) {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
@@ -269,6 +302,9 @@ export class NewsItemPersistence {
 		return removedNews;
 	}
 
+	/**
+	 * Removes all news items from persistence.
+	 */
 	public async removeAllNews() {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(

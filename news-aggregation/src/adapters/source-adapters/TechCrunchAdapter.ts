@@ -13,12 +13,20 @@ import { generateRandomId } from '../../utils/generateRandomId';
 import { createTextCompletion } from '../../utils/createTextCompletion';
 import { shuffleArray } from '../../utils/shuffleArray';
 
+/**
+ * TechCrunchAdapter class implements INewsSourceAdapter.
+ * Handles fetching and categorizing news from TechCrunch.
+ */
 export class TechCrunchAdapter implements INewsSourceAdapter {
 	app: NewsAggregationApp;
 	newsItems: NewsItem[] = [];
 	fetchUrl: string = `https://techcrunch.com/wp-json/wp/v2/posts`;
 	categoryUrl: string = `https://techcrunch.com/wp-json/wp/v2/categories`;
 
+	/**
+	 * Fetches news items from TechCrunch API and transforms them into NewsItem format.
+	 * @returns A promise that resolves to an array of NewsItem
+	 */
 	public async fetchNews(
 		read: IRead,
 		modify: IModify,
@@ -53,6 +61,10 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 		return this.newsItems;
 	}
 
+	/**
+	 * Determines categories for the fetched news items using text completion.
+	 * @returns A promise that resolves to the categories of the news items
+	 */
 	public async determineCategory(
 		newsItems: NewsItem[],
 		read: IRead,
@@ -61,6 +73,7 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 		modify: IModify,
 		http: IHttp
 	) {
+		// Prepare prompts for text completion
 		const prompts = newsItems.map((newsItem) => ({
 			id: newsItem?.id,
 			prompt: newsItem?.description,
@@ -71,6 +84,7 @@ export class TechCrunchAdapter implements INewsSourceAdapter {
 
 		console.log('lol');
 
+		// Generate categories using text completion
 		const categories = await createTextCompletion(
 			read,
 			room,

@@ -11,15 +11,31 @@ import {
 } from '@rocket.chat/apps-engine/definition/metadata';
 import { ISubscription } from '../../definitions/ISubscription';
 
+/**
+ * Manages persistence operations related to news subscriptions.
+ */
 export class SubscriptionPersistence {
 	persistenceRead: IPersistenceRead;
 	persistence: IPersistence;
 
+	/**
+	 * Constructor for SubscriptionPersistence.
+	 * @param persistenceRead - The persistence interface for reading data.
+	 * @param persistence - The persistence interface for writing data.
+	 */
 	constructor(persistenceRead: IPersistenceRead, persistence: IPersistence) {
 		this.persistenceRead = persistenceRead;
 		this.persistence = persistence;
 	}
 
+	/**
+	 * Creates a new subscription for a user and room with specified interval and categories.
+	 * @param interval - The interval for the subscription (e.g., daily, weekly).
+	 * @param categories - The categories of news to subscribe to.
+	 * @param user - The user subscribing to the news.
+	 * @param room - The room where the news will be posted.
+	 * @returns The ID of the created subscription or null if creation failed.
+	 */
 	public async createSubscription(
 		interval: string,
 		categories: string[],
@@ -119,6 +135,10 @@ export class SubscriptionPersistence {
 	// 	return subscriptions;
 	// }
 
+	/**
+	 * Retrieves all subscriptions.
+	 * @returns A list of all subscriptions.
+	 */
 	public async getSubscriptions(): Promise<Array<ISubscription>> {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
@@ -141,6 +161,11 @@ export class SubscriptionPersistence {
 		return subscriptions;
 	}
 
+	/**
+	 * Retrieves a subscription by its ID.
+	 * @param subscriptionId - The ID of the subscription to retrieve.
+	 * @returns The subscription with the given ID or an empty array if not found.
+	 */
 	public async getSubscriptionById(
 		subscriptionId: string
 	): Promise<Array<ISubscription>> {
@@ -169,6 +194,11 @@ export class SubscriptionPersistence {
 		return subscriptions;
 	}
 
+	/**
+	 * Retrieves subscriptions by the interval.
+	 * @param interval - The interval to filter subscriptions by.
+	 * @returns A list of subscriptions matching the interval.
+	 */
 	public async getSubscriptionByInterval(
 		interval: string
 	): Promise<Array<ISubscription>> {
@@ -197,6 +227,11 @@ export class SubscriptionPersistence {
 		return subscriptions;
 	}
 
+	/**
+	 * Retrieves a subscription by room.
+	 * @param room - The room to filter subscriptions by.
+	 * @returns The subscription associated with the room or a default empty subscription.
+	 */
 	public async getSubscriptionByRoom(room: IRoom): Promise<ISubscription> {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
@@ -219,6 +254,12 @@ export class SubscriptionPersistence {
 		return subscription;
 	}
 
+	/**
+	 * Retrieves subscriptions by interval and room.
+	 * @param interval - The interval of the subscription.
+	 * @param room - The room associated with the subscription.
+	 * @returns A list of subscriptions matching the interval and room.
+	 */
 	public async getSubscription(
 		interval: string,
 		room: IRoom
@@ -249,6 +290,10 @@ export class SubscriptionPersistence {
 		return subscriptions;
 	}
 
+	/**
+	 * Deletes subscriptions associated with a specific room.
+	 * @param room - The room for which subscriptions should be deleted.
+	 */
 	public async deleteSubscriptionsByRoom(room: IRoom) {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
@@ -266,6 +311,10 @@ export class SubscriptionPersistence {
 		}
 	}
 
+	/**
+	 * Deletes subscriptions associated with a specific user.
+	 * @param user - The user for whom subscriptions should be deleted.
+	 */
 	public async deleteSubscriptionsByUser(user: IUser) {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
@@ -283,6 +332,12 @@ export class SubscriptionPersistence {
 		}
 	}
 
+	/**
+	 * Deletes a subscription by its ID, associated with a specific room and user.
+	 * @param subscriptionId - The ID of the subscription to delete.
+	 * @param room - The room associated with the subscription.
+	 * @param user - The user associated with the subscription.
+	 */
 	public async deleteSubscriptionById(
 		subscriptionId: string,
 		room: IRoom,
@@ -309,6 +364,11 @@ export class SubscriptionPersistence {
 		}
 	}
 
+	/**
+	 * Deletes a subscription for a specific user and room.
+	 * @param user - The user associated with the subscription.
+	 * @param room - The room associated with the subscription.
+	 */
 	public async deleteSubscription(user: IUser, room: IRoom) {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(
@@ -331,6 +391,11 @@ export class SubscriptionPersistence {
 		}
 	}
 
+	/**
+	 * Deletes subscriptions by interval and room.
+	 * @param interval - The interval of the subscription.
+	 * @param room - The room associated with the subscription.
+	 */
 	public async deleteSubscriptionByIntervalAndRoom(
 		interval: string,
 		room: IRoom
@@ -356,6 +421,11 @@ export class SubscriptionPersistence {
 		}
 	}
 
+	/**
+	 * Checks if a room has any subscriptions.
+	 * @param room - The room to check for subscriptions.
+	 * @returns True if there are subscriptions, otherwise false.
+	 */
 	public async isSubscribed(room: IRoom) {
 		const associations: Array<RocketChatAssociationRecord> = [
 			new RocketChatAssociationRecord(

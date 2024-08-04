@@ -9,7 +9,7 @@ import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { Block } from '@rocket.chat/ui-kit';
 import { OnInstallContent } from '../../enums/messageEnum';
 
-// getDirect room creates a direct room for conversation betweeen the user and the bot.
+// Creates a direct message room between the bot and the specified user.
 export async function getDirectRoom(
 	read: IRead,
 	modify: IModify,
@@ -41,6 +41,7 @@ export async function getDirectRoom(
 	}
 }
 
+// Sends a direct message to the user when the app is installed.
 export async function sendDirectMessageOnInstall(
 	read: IRead,
 	modify: IModify,
@@ -66,6 +67,7 @@ export async function sendDirectMessageOnInstall(
 	return await sendMessage(modify, directRoom, appUser, text);
 }
 
+// Sends a notification message to a user in a specific room.
 export async function sendNotification(
 	read: IRead,
 	modify: IModify,
@@ -90,6 +92,7 @@ export async function sendNotification(
 	return read.getNotifier().notifyUser(user, msg.getMessage());
 }
 
+// Sends a message to a room with optional blocks.
 export async function sendMessage(
 	modify: IModify,
 	room: IRoom,
@@ -112,6 +115,7 @@ export async function sendMessage(
 	return await modify.getCreator().finish(msg);
 }
 
+// Sends a helper message to a room with instructions on using the app.
 export async function sendHelperMessage(
 	room: IRoom,
 	read: IRead,

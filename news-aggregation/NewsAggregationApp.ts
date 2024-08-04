@@ -39,10 +39,21 @@ import { UserPersistence } from './src/persistence/UserPersistence';
 import { DeleteNewsProcessor } from './src/processors/DeleteNewsProcessor';
 // import { ExecuteBlockActionHandler } from './handlers/ExecuteBlockActionHandler';
 
+/**
+ * Main class for the News Aggregation App, extending the base App class.
+ * Manages app lifecycle events, settings, and interaction handlers.
+ */
 export class NewsAggregationApp extends App {
 	// implements IUIKitInteractionHandler
+	// Define persistence and read accessors
 	persistence: IPersistence;
 	persistenceRead: IPersistenceRead;
+	/**
+	 * Constructor for the NewsAggregationApp class.
+	 * @param info - App information metadata
+	 * @param logger - Logger for the app
+	 * @param accessors - Accessors for app functionality
+	 */
 	constructor(info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
 		super(info, logger, accessors);
 	}
@@ -59,6 +70,15 @@ export class NewsAggregationApp extends App {
 	// 	this.persistenceRead = this.getAccessors().reader.getPersistenceReader();
 	// }
 
+	/**
+	 * Called when the app is installed.
+	 * Stores user ID and sends a direct message on installation.
+	 * @param context - Installation context containing user and app data
+	 * @param read - Read accessor for fetching data
+	 * @param http - HTTP client for external requests
+	 * @param persistence - Persistence accessor for storing data
+	 * @param modify - Modify accessor for changing data
+	 */
 	public async onInstall(
 		context: IAppInstallationContext,
 		read: IRead,
@@ -79,6 +99,13 @@ export class NewsAggregationApp extends App {
 		await sendDirectMessageOnInstall(read, modify, user, persistence);
 	}
 
+	/**
+	 * Called when the app is enabled.
+	 * Sets up recurring jobs for fetching, delivering, and deleting news.
+	 * @param environment - Environment read accessor
+	 * @param configurationModify - Configuration modify accessor
+	 * @returns True if the enable process is successful
+	 */
 	public async onEnable(
 		environment: IEnvironmentRead,
 		configurationModify: IConfigurationModify
@@ -116,6 +143,11 @@ export class NewsAggregationApp extends App {
 		return true;
 	}
 
+	/**
+	 * Extends the app configuration with settings, slash commands, and processors.
+	 * @param configuration - Configuration extend accessor
+	 * @param environmentRead - Environment read accessor
+	 */
 	public async extendConfiguration(
 		configuration: IConfigurationExtend,
 		environmentRead: IEnvironmentRead
@@ -140,12 +172,22 @@ export class NewsAggregationApp extends App {
 		]);
 	}
 
+	/**
+	 * Called when the app is disabled.
+	 * Cancels the fetch-news recurring job.
+	 * @param configurationModify - Configuration modify accessor
+	 */
 	public async onDisable(
 		configurationModify: IConfigurationModify
 	): Promise<void> {
 		await Promise.all([configurationModify.scheduler.cancelJob('fetch-news')]);
 	}
 
+	/**
+	 * Handles UI Kit view submit interactions.
+	 * @param context - Context of the view submit interaction
+	 * @returns Response from the view submit handler
+	 */
 	public async executeViewSubmitHandler(
 		context: UIKitViewSubmitInteractionContext,
 		read: IRead,
@@ -164,6 +206,11 @@ export class NewsAggregationApp extends App {
 		return await handler.handleActions();
 	}
 
+	/**
+	 * Handles UI Kit view close interactions.
+	 * @param context - Context of the view close interaction
+	 * @returns Response from the view close handler
+	 */
 	public async executeViewClosedHandler(
 		context: UIKitViewCloseInteractionContext,
 		read: IRead,
@@ -182,24 +229,11 @@ export class NewsAggregationApp extends App {
 		return await handler.handleActions();
 	}
 
-	// public async [AppMethod.UIKIT_VIEW_SUBMIT](
-	// 	context: UIKitViewSubmitInteractionContext,
-	// 	read: IRead,
-	// 	http: IHttp,
-	// 	persistence: IPersistence,
-	// 	modify: IModify
-	// ): Promise<IUIKitResponse> {
-	// 	const handler = new ExecuteViewSubmitHandler(
-	// 		this,
-	// 		read,
-	// 		modify,
-	// 		http,
-	// 		persistence,
-	// 		context
-	// 	);
-	// 	return await handler.handleActions();
-	// }
-
+	/**
+	 * Handles UI Kit block action interactions.
+	 * @param context - Context of the block action interaction
+	 * @returns Response from the block action handler
+	 */
 	public async executeBlockActionHandler(
 		context: UIKitBlockInteractionContext,
 		read: IRead,

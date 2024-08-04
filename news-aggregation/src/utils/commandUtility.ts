@@ -29,6 +29,7 @@ import { RoomPersistence } from '../persistence/RoomPersistence';
 import { shuffleArray } from './shuffleArray';
 
 export class CommandUtility implements ICommandUtility {
+	// Class properties
 	sender: IUser;
 	room: IRoom;
 	command: string[];
@@ -41,6 +42,11 @@ export class CommandUtility implements ICommandUtility {
 	app: NewsAggregationApp;
 	triggerId?: string | undefined;
 
+	/**
+	 * Constructor to initialize CommandUtility with required parameters.
+	 *
+	 * @param props - Parameters including sender, room, command, context, etc.
+	 */
 	constructor(props: ICommandUtilityParams) {
 		this.sender = props.sender;
 		this.room = props.room;
@@ -55,6 +61,10 @@ export class CommandUtility implements ICommandUtility {
 		this.triggerId = props.triggerId;
 	}
 
+	/**
+	 * Fetches news from a predefined source and stores it.
+	 * (Currently commented out, can be used to implement news fetching logic)
+	 */
 	private async fetchNewsFromSource() {
 		let newsItems: NewsItem[] = [];
 		// const techCrunchAdapter = new TechCrunchAdapter();
@@ -87,6 +97,9 @@ export class CommandUtility implements ICommandUtility {
 		// );
 	}
 
+	/**
+	 * Deletes news entries from persistence storage.
+	 */
 	public async deleteNewsFromPersistence() {
 		const fetchService = new NewsFetchService({
 			read: this.read,
@@ -102,6 +115,11 @@ export class CommandUtility implements ICommandUtility {
 		);
 	}
 
+	/**
+	 * Handles commands with a single parameter.
+	 *
+	 * @param handler - The Handler instance to process the command.
+	 */
 	private async handleSingleParamCommand(handler: Handler) {
 		const singleParamCommand = this.command[0];
 		console.log(this.command);
@@ -134,6 +152,11 @@ export class CommandUtility implements ICommandUtility {
 		}
 	}
 
+	/**
+	 * Handles commands with two parameters.
+	 *
+	 * @param handler - The Handler instance to process the command.
+	 */
 	private async handleDualParamCommand(handler: Handler) {
 		console.log('dual param executed');
 		this.app.getLogger().info('dual param executed');
@@ -148,6 +171,9 @@ export class CommandUtility implements ICommandUtility {
 		}
 	}
 
+	/**
+	 * Resolves the command by invoking the appropriate handler method based on the number of command parameters.
+	 */
 	public async resolveCommand(): Promise<void> {
 		const handler = new Handler({
 			app: this.app,

@@ -1,3 +1,7 @@
+/**
+ * Enumeration representing various content strings
+ * used during the installation of the News Aggregation App.
+ */
 export enum OnInstallContent {
 	PREVIEW_TITLE = '[**News Aggregation App**](https://github.com/RocketChat/News-Aggregation-App)',
 	PREVIEW_DESCRIPTION = '**Installed and on your Server!**',

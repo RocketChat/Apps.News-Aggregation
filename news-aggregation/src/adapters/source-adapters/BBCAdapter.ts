@@ -16,11 +16,19 @@ import { generateRandomId } from '../../utils/generateRandomId';
 
 // type AtLeast<T, K extends keyof T> = Partial<T> & { [P in K]: T[P] };
 
+/**
+ * BBCAdapter class implements INewsSourceAdapter.
+ * Handles fetching and categorizing news from BBC RSS feeds.
+ */
 export class BBCAdapter implements INewsSourceAdapter {
 	app: NewsAggregationApp;
 	newsItems: NewsItem[] = [];
 	fetchUrl: string = `https://feeds.bbci.co.uk/news/rss.xml`;
 
+	/**
+	 * Fetches news items from the BBC RSS feed and transforms them into NewsItem format.
+	 * @returns A promise that resolves to an array of NewsItem
+	 */
 	public async fetchNews(
 		read: IRead,
 		modify: IModify,
@@ -42,6 +50,10 @@ export class BBCAdapter implements INewsSourceAdapter {
 		return this.newsItems;
 	}
 
+	/**
+	 * Determines categories for the fetched news items using text completion.
+	 * @returns A promise that resolves to the categories of the news items
+	 */
 	public async determineCategory(
 		newsItems: NewsItem[],
 		read: IRead,
@@ -73,6 +85,11 @@ export class BBCAdapter implements INewsSourceAdapter {
 		return categories;
 	}
 
+	/**
+	 * Fetches RSS feed from the specified URL.
+	 * @param url - URL of the RSS feed
+	 * @returns A promise that resolves to an array of NewsItem
+	 */
 	async fetchRssFeed(url: string): Promise<NewsItem[]> {
 		try {
 			const response = await new Promise<string>((resolve, reject) => {
@@ -101,6 +118,11 @@ export class BBCAdapter implements INewsSourceAdapter {
 		}
 	}
 
+	/**
+	 * Parses RSS XML to extract news items.
+	 * @param xml - RSS XML string
+	 * @returns A promise that resolves to an array of NewsItem
+	 */
 	async parseRssItems(xml: string): Promise<NewsItem[]> {
 		const items: NewsItem[] = [];
 		const itemRegex = /<item>([\s\S]*?)<\/item>/g;

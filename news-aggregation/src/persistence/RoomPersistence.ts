@@ -7,11 +7,20 @@ import {
 	RocketChatAssociationRecord,
 } from '@rocket.chat/apps-engine/definition/metadata';
 
+/**
+ * Manages persistence operations related to subscription rooms for users.
+ */
 export class RoomPersistence {
 	private userId: string;
 	persistence: IPersistence;
 	persistenceRead: IPersistenceRead;
 
+	/**
+	 * Constructor for RoomPersistence.
+	 * @param userId - The ID of the user for whom room data is being managed.
+	 * @param persistence - The persistence interface for writing data.
+	 * @param persistenceRead - The persistence interface for reading data.
+	 */
 	constructor(
 		userId: string,
 		persistence: IPersistence,
@@ -22,6 +31,10 @@ export class RoomPersistence {
 		this.persistenceRead = persistenceRead;
 	}
 
+	/**
+	 * Stores the ID of a subscription room for the user.
+	 * @param roomId - The ID of the room to store.
+	 */
 	public async storeSubscriptionRoomId(roomId: string) {
 		const association = new RocketChatAssociationRecord(
 			RocketChatAssociationModel.USER,
@@ -34,6 +47,10 @@ export class RoomPersistence {
 		);
 	}
 
+	/**
+	 * Retrieves the stored subscription room ID for the user.
+	 * @returns The ID of the stored room.
+	 */
 	public async getSubscriptionRoomId(): Promise<string> {
 		const association = new RocketChatAssociationRecord(
 			RocketChatAssociationModel.USER,
@@ -45,6 +62,9 @@ export class RoomPersistence {
 		return result.roomId;
 	}
 
+	/**
+	 * Clears the stored subscription room ID for the user.
+	 */
 	public async clearSubscriptionRoomId(): Promise<void> {
 		const association = new RocketChatAssociationRecord(
 			RocketChatAssociationModel.USER,

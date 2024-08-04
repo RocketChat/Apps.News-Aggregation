@@ -13,11 +13,19 @@ import { createTextCompletion } from '../../utils/createTextCompletion';
 import { generateRandomId } from '../../utils/generateRandomId';
 import * as https from 'https';
 
+/**
+ * CNBCAdapter class implements INewsSourceAdapter.
+ * Handles fetching and categorizing news from CNBC RSS feeds.
+ */
 export class CNBCAdapter implements INewsSourceAdapter {
 	app: NewsAggregationApp;
 	newsItems: NewsItem[] = [];
 	fetchUrl: string = `https://www.cnbctv18.com/commonfeeds/v1/cne/rss/latest.xml`;
 
+	/**
+	 * Fetches news items from the CNBC RSS feed and transforms them into NewsItem format.
+	 * @returns A promise that resolves to an array of NewsItem
+	 */
 	public async fetchNews(
 		read: IRead,
 		modify: IModify,
@@ -39,6 +47,10 @@ export class CNBCAdapter implements INewsSourceAdapter {
 		return this.newsItems;
 	}
 
+	/**
+	 * Determines categories for the fetched news items using text completion.
+	 * @returns A promise that resolves to the categories of the news items
+	 */
 	public async determineCategory(
 		newsItems: NewsItem[],
 		read: IRead,
@@ -68,6 +80,11 @@ export class CNBCAdapter implements INewsSourceAdapter {
 		return categories;
 	}
 
+	/**
+	 * Fetches RSS feed from the specified URL.
+	 * @param url - URL of the RSS feed
+	 * @returns A promise that resolves to an array of NewsItem
+	 */
 	async fetchRssFeed(url: string): Promise<NewsItem[]> {
 		try {
 			const response = await new Promise<string>((resolve, reject) => {
@@ -96,6 +113,11 @@ export class CNBCAdapter implements INewsSourceAdapter {
 		}
 	}
 
+	/**
+	 * Parses RSS XML to extract news items.
+	 * @param xml - RSS XML string
+	 * @returns A promise that resolves to an array of NewsItem
+	 */
 	async parseRssItems(xml: string): Promise<NewsItem[]> {
 		const items: NewsItem[] = [];
 		const itemRegex = /<item>([\s\S]*?)<\/item>/g;

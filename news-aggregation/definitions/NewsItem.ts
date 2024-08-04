@@ -1,3 +1,7 @@
+/**
+ * Represents a news item with details from various sources.
+ * Stores information such as the title, description, source, and more.
+ */
 export class NewsItem {
 	id: string;
 	title: string;

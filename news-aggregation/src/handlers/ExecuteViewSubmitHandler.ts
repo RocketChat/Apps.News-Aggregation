@@ -15,6 +15,9 @@ import { RoomPersistence } from '../persistence/RoomPersistence';
 import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { sendNotification } from '../utils/message';
 
+/**
+ * Handles interactions when a UI view is submitted.
+ */
 export class ExecuteViewSubmitHandler {
 	private context: UIKitViewSubmitInteractionContext;
 	constructor(
@@ -28,6 +31,10 @@ export class ExecuteViewSubmitHandler {
 		this.context = context;
 	}
 
+	/**
+	 * Processes actions based on the submitted view's ID and state.
+	 * @returns A response indicating success or error.
+	 */
 	public async handleActions(): Promise<IUIKitResponse> {
 		const { actionId, user, view } = this.context.getInteractionData();
 		console.log('contextView: ', this.context.getInteractionData());
@@ -54,7 +61,7 @@ export class ExecuteViewSubmitHandler {
 				'category-dropdown-action-id'
 			];
 
-		// Applying these two below functions to store array in a proper format because of Ui-Kit bug.
+		// Helper functions to handle array flattening and uniqueness
 		function flattenArray(arr: []) {
 			return arr.reduce(
 				(acc, val) =>
@@ -99,7 +106,7 @@ export class ExecuteViewSubmitHandler {
 
 						// add temp default values as params - TO CHANGE
 						await subscriptionStorage.createSubscription(
-							schedule,
+							schedule || 'daily', // Default value if not provided
 							categories,
 							user,
 							room

@@ -11,6 +11,9 @@ import {
 } from '@rocket.chat/apps-engine/definition/accessors';
 import { CommandUtility } from '../utils/commandUtility';
 
+/**
+ * Handles the 'news' slash command in Rocket.Chat.
+ */
 export class NewsCommand implements ISlashCommand {
 	public constructor(private readonly app: NewsAggregationApp) {}
 
@@ -19,6 +22,10 @@ export class NewsCommand implements ISlashCommand {
 	public i18nParamsExample: string = 'NewsCommandParams';
 	public providesPreview: boolean = false;
 
+	/**
+	 * Executes the slash command.
+	 * @param context - The context of the slash command including arguments, sender, and room
+	 */
 	public async executor(
 		context: SlashCommandContext,
 		read: IRead,
@@ -40,6 +47,7 @@ export class NewsCommand implements ISlashCommand {
 			return;
 		}
 
+		// Create an instance of CommandUtility with the context and accessors
 		const commandUtility = new CommandUtility({
 			sender: sender,
 			room: room,
@@ -52,6 +60,7 @@ export class NewsCommand implements ISlashCommand {
 			persistenceRead: persistenceRead,
 			app: this.app,
 		});
+		// Resolve the command using CommandUtility
 		await commandUtility.resolveCommand();
 	}
 }

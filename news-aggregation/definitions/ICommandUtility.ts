@@ -10,6 +10,10 @@ import { SlashCommandContext } from '@rocket.chat/apps-engine/definition/slashco
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { NewsAggregationApp } from '../NewsAggregationApp';
 
+/**
+ * The ICommandUtility interface acts as a contract for the command utility class,
+ * defining the properties and methods required for command handling.
+ */
 export interface ICommandUtility {
 	sender: IUser;
 	room: IRoom;
@@ -23,9 +27,17 @@ export interface ICommandUtility {
 	app: NewsAggregationApp;
 	triggerId?: string;
 
+	/**
+	 * Resolves the command issued by the user.
+	 * @returns A promise that resolves when the command handling is complete.
+	 */
 	resolveCommand(): Promise<void>;
 }
 
+/**
+ * The ICommandUtilityParams interface defines the parameters required to create an instance
+ * of a class implementing the ICommandUtility interface.
+ */
 export interface ICommandUtilityParams {
 	sender: IUser;
 	room: IRoom;

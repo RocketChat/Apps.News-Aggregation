@@ -17,6 +17,17 @@ import { Block, TextObjectType } from '@rocket.chat/ui-kit';
 import { ElementBuilder } from '../builders/ElementBuilder';
 import { BlockBuilder } from '../builders/BlockBuilder';
 
+/**
+ * Creates a subscription modal for news aggregation.
+ * @param app - The NewsAggregationApp instance.
+ * @param room - The room where the modal will be shown.
+ * @param sender - The user who initiated the modal.
+ * @param read - The IRead accessor.
+ * @param modify - The IModify accessor.
+ * @param http - The IHttp accessor.
+ * @param persis - The IPersistence accessor.
+ * @returns A UI Kit surface view parameter for the modal.
+ */
 export async function subscribeNewsModal(
 	app: NewsAggregationApp,
 	room: IRoom,

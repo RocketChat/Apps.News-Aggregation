@@ -5,6 +5,7 @@ import {
 } from '@rocket.chat/ui-kit';
 import { NewsItem } from '../definitions/NewsItem';
 
+// Code to generate UI-Kit blocks (later will be replaced with Block and Element Builders)
 export function getTitleBlock(labelText: string, accessory?: any) {
 	const block: SectionBlock = {
 		type: 'section',

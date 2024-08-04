@@ -10,6 +10,7 @@ import {
 } from '@rocket.chat/ui-kit';
 import { getButton } from './button';
 
+// Helper function to create TextObject instances from an array of strings
 // export function getTextObjects(fields: Array<string>): Array<TextObject> {
 // 	const objects = fields?.map((field) => {
 // 		const textObject: TextObject = {
@@ -24,6 +25,7 @@ import { getButton } from './button';
 // 	return objects;
 // }
 
+// Creates a SectionBlock with optional fields and accessory
 export function getSectionBlock(
 	blockId: string,
 	text: string,
@@ -47,6 +49,7 @@ export function getSectionBlock(
 	return block;
 }
 
+// Creates an ActionsBlock with a list of elements (buttons or static selects)
 export function getActionsBlock(
 	blockId: string,
 	elements: Array<ButtonElement> | Array<StaticSelectElement>
@@ -59,6 +62,7 @@ export function getActionsBlock(
 	return block;
 }
 
+// Creates a block array with a subscribe button and an actions block
 export async function getSubscribeBlock(appId: string): Promise<Array<Block>> {
 	let blocks: Block[] = [];
 	const button = getButton(

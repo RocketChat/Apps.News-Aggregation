@@ -21,9 +21,18 @@ import { ImageParam } from '../ui-kit/element/IImageElement';
 import { PlainTextInputParam } from '../ui-kit/element/IPlainTextInputElement';
 import { ChannelSelectParam } from '../ui-kit/element/IChannelSelectElement';
 
+/**
+ * Implements IElementBuilder to create various UI elements for the Rocket.Chat UI Kit.
+ */
 export class ElementBuilder implements IElementBuilder {
 	constructor(private readonly appId: string) {}
 
+	/**
+	 * Creates a ButtonElement instance.
+	 * @param param - Parameters for the ButtonElement.
+	 * @param interactionParam - Interaction parameters for the button.
+	 * @returns ButtonElement instance.
+	 */
 	public createButton(
 		param: ButtonParam,
 		interactionParam: ElementInteractionParam
@@ -49,6 +58,12 @@ export class ElementBuilder implements IElementBuilder {
 		return button;
 	}
 
+	/**
+	 * Creates a StaticSelectElement instance (dropdown).
+	 * @param param - Parameters for the StaticSelectElement.
+	 * @param interactionParam - Interaction parameters for the dropdown.
+	 * @returns StaticSelectElement instance.
+	 */
 	public createDropdown(
 		param: StaticSelectParam,
 		interactionParam: ElementInteractionParam
@@ -83,6 +98,11 @@ export class ElementBuilder implements IElementBuilder {
 		return dropdown;
 	}
 
+	/**
+	 * Creates an array of Option instances for a StaticSelectElement.
+	 * @param param - Array of static select options.
+	 * @returns Array of Option instances.
+	 */
 	public createDropdownOptions(param: StaticSelectOptionParam): Option[] {
 		const options: Array<Option> = param?.map((option) => {
 			const { text, value, description, url } = option;
@@ -109,6 +129,12 @@ export class ElementBuilder implements IElementBuilder {
 		return options;
 	}
 
+	/**
+	 * Creates a MultiStaticSelectElement instance (multi-select dropdown).
+	 * @param param - Parameters for the MultiStaticSelectElement.
+	 * @param interactionParam - Interaction parameters for the multi-select dropdown.
+	 * @returns MultiStaticSelectElement instance.
+	 */
 	public createMultiStaticSelectDropdown(
 		param: MultiStaticSelectParam,
 		interactionParam: ElementInteractionParam
@@ -147,6 +173,11 @@ export class ElementBuilder implements IElementBuilder {
 		return multiStaticSelectDropdown;
 	}
 
+	/**
+	 * Creates an ImageElement instance.
+	 * @param param - Parameters for the ImageElement.
+	 * @returns ImageElement instance.
+	 */
 	public createImage(param: ImageParam): ImageElement {
 		const { imageUrl, altText } = param;
 		const image: ImageElement = {
@@ -158,6 +189,12 @@ export class ElementBuilder implements IElementBuilder {
 		return image;
 	}
 
+	/**
+	 * Creates a PlainTextInputElement instance.
+	 * @param param - Parameters for the PlainTextInputElement.
+	 * @param interactionParam - Interaction parameters for the input.
+	 * @returns PlainTextInputElement instance.
+	 */
 	public createPlainTextInput(
 		param: PlainTextInputParam,
 		interactionParam: ElementInteractionParam
@@ -193,6 +230,12 @@ export class ElementBuilder implements IElementBuilder {
 		return input;
 	}
 
+	/**
+	 * Creates a ChannelsSelectElement instance (dropdown for selecting channels).
+	 * @param param - Parameters for the ChannelsSelectElement.
+	 * @param interactionParam - Interaction parameters for the channel select dropdown.
+	 * @returns ChannelsSelectElement instance.
+	 */
 	public createChannelSelectDropdown(
 		param: ChannelSelectParam,
 		interactionParam: ElementInteractionParam

@@ -10,6 +10,7 @@ import {
 	getTitleBlock,
 } from './BlockBuilder';
 
+// Code to build a news item block
 export async function buildNewsBlock(news: NewsItem) {
 	let blocks: Block[] = [];
 
@@ -38,6 +39,7 @@ export async function buildNewsBlock(news: NewsItem) {
 	return blocks;
 }
 
+// Code to display all subscribed rooms as list
 export async function getSubscribedRoom(roomName: string) {
 	let blocks: Block[] = [];
 

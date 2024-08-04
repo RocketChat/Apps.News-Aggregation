@@ -3,6 +3,15 @@ import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { IUser } from '@rocket.chat/apps-engine/definition/users';
 import { Block } from '@rocket.chat/ui-kit';
 
+/**
+ * Sends a message with optional blocks to a specific room.
+ * @param modify - The IModify instance for message creation.
+ * @param room - The room to which the message will be sent.
+ * @param sender - The user sending the message.
+ * @param message - The text message to send.
+ * @param blocks - Optional blocks to attach to the message.
+ * @returns The ID of the sent message.
+ */
 export async function sendNewsMessage(
 	modify: IModify,
 	room: IRoom,

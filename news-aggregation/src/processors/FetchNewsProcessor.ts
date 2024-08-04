@@ -26,11 +26,22 @@ import { IRoom } from '@rocket.chat/apps-engine/definition/rooms';
 import { UserPersistence } from '../persistence/UserPersistence';
 import { CNBCAdapter } from '../adapters/source-adapters/CNBCAdapter';
 
+/**
+ * Processor for fetching and categorizing news items from multiple sources.
+ */
 export class FetchNewsProcessor implements IProcessor {
 	id: string = 'fetch-news';
 
 	constructor() {}
 
+	/**
+	 * Handles the scheduled job to fetch news from various sources and save them.
+	 * @param jobContext - The context of the job, including interval and other data.
+	 * @param read - Interface for reading data.
+	 * @param modify - Interface for modifying data.
+	 * @param http - Interface for making HTTP requests.
+	 * @param persis - Interface for persistence operations.
+	 */
 	public async processor(
 		jobContext: IJobContext,
 		read: IRead,
@@ -43,6 +54,7 @@ export class FetchNewsProcessor implements IProcessor {
 		let espnNews: NewsItem[] = [];
 		let cnbcNews: NewsItem[] = [];
 
+		// Retrieve user ID from persistence
 		const userStorage = new UserPersistence(
 			persis,
 			read.getPersistenceReader()
@@ -64,6 +76,7 @@ export class FetchNewsProcessor implements IProcessor {
 			.getRoomReader()
 			.getDirectByUsernames([currentUser.username]);
 
+		// Read settings for news sources
 		const settingsReader = read.getEnvironmentReader().getSettings();
 		const techCrunchSetting = await settingsReader.getById(
 			SettingEnum.TECHCRUNCH
@@ -72,7 +85,7 @@ export class FetchNewsProcessor implements IProcessor {
 		const espnSetting = await settingsReader.getById(SettingEnum.ESPN);
 		const cnbcSetting = await settingsReader.getById(SettingEnum.CNBC);
 
-		// Fetch news items from sources
+		// Fetch and process news from TechCrunch if enabled
 		if (techCrunchSetting.value) {
 			const techCrunchAdapter = new TechCrunchAdapter();
 			console.log('Fetching TechCrunch news...');
@@ -140,6 +153,7 @@ export class FetchNewsProcessor implements IProcessor {
 			// }
 		}
 
+		// Fetch and process news from BBC if enabled
 		if (bbcSetting.value) {
 			console.log('Fetching BBC news...');
 			const bbcAdapter = new BBCAdapter();
@@ -184,6 +198,7 @@ export class FetchNewsProcessor implements IProcessor {
 			}
 		}
 
+		// Fetch and process news from ESPN if enabled
 		if (espnSetting.packageValue) {
 			console.log('Fetching ESPN news...');
 			const espnAdapter = new ESPNAdapter();
@@ -216,6 +231,7 @@ export class FetchNewsProcessor implements IProcessor {
 			// }
 		}
 
+		// Fetch and process news from CNBC if enabled
 		if (cnbcSetting.value) {
 			console.log('Fetching CNBC news...');
 			const cnbcAdapter = new CNBCAdapter();
@@ -260,6 +276,7 @@ export class FetchNewsProcessor implements IProcessor {
 			}
 		}
 
+		// Save all fetched news items to persistence
 		const newsStorage = new NewsItemPersistence({
 			read: read,
 			modify: modify,
