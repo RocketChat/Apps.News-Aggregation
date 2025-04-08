@@ -80,6 +80,7 @@ export async function subscribeNewsModal(
 		{
 			options: options1,
 			placeholder: 'Select schedule',
+            initialOption: options1[0]
 		},
 		{
 			blockId: 'schedule-dropdown-block-id',

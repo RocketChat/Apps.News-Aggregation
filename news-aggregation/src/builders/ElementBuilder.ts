@@ -144,8 +144,6 @@ export class ElementBuilder implements IElementBuilder {
 			options,
 			optionGroups,
 			maxSelectItems,
-			initialOption,
-			initialValue,
 			dispatchActionConfig,
 			confirm,
 		} = param;
@@ -161,8 +159,6 @@ export class ElementBuilder implements IElementBuilder {
 			options,
 			optionGroups,
 			maxSelectItems,
-			initialOption,
-			initialValue,
 			appId: this.appId,
 			blockId,
 			actionId,
